@@ -1,0 +1,46 @@
+<h1>Show Exercise</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.exercise_show_path(@socket, :show, @exercise)}>
+    <.live_component
+      module={FitnessWeb.ExerciseLive.FormComponent}
+      id={@exercise.id}
+      title={@page_title}
+      action={@live_action}
+      exercise={@exercise}
+      return_to={Routes.exercise_show_path(@socket, :show, @exercise)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @exercise.name %>
+  </li>
+
+  <li>
+    <strong>Description:</strong>
+    <%= @exercise.description %>
+  </li>
+
+  <li>
+    <strong>Gif url:</strong>
+    <%= @exercise.gif_url %>
+  </li>
+
+  <li>
+    <strong>Level:</strong>
+    <%= @exercise.level %>
+  </li>
+
+  <li>
+    <strong>Type:</strong>
+    <%= @exercise.type %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.exercise_show_path(@socket, :edit, @exercise), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.exercise_index_path(@socket, :index) %></span>
