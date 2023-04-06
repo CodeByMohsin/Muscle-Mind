@@ -18,6 +18,13 @@ defmodule FitnessWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
+
+    live "/exercises", ExerciseLive.Index, :index
+    live "/exercises/new", ExerciseLive.Index, :new
+    live "/exercises/:id/edit", ExerciseLive.Index, :edit
+
+    live "/exercises/:id", ExerciseLive.Show, :show
+    live "/exercises/:id/show/edit", ExerciseLive.Show, :edit
   end
 
   # Other scopes may use custom stacks.

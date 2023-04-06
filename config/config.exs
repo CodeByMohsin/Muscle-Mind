@@ -17,6 +17,16 @@ config :fitness, FitnessWeb.Endpoint,
   pubsub_server: Fitness.PubSub,
   live_view: [signing_salt: "vOF6D4CD"]
 
+
+  config :tailwind, version: "3.3.1", default: [
+    args: ~w(
+      --config=tailwind.config.js
+      --input=css/app.css
+      --output=../priv/static/assets/app.css
+    ),
+    cd: Path.expand("../assets", __DIR__)
+  ]
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails

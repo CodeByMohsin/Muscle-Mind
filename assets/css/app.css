@@ -1,5 +1,174 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+@import url('https://fonts.googleapis.com/css?family=Pacifico');
+
+@keyframes blinkH1 {
+  0%   {
+      color: #fff;
+    text-shadow: 0px 0px 20px #00aad4;
+  }
+  19%   {
+      color: #fff;
+    text-shadow: 0px 0px 20px #00aad4;
+  }
+  20% {
+      color: #9E9E9E;
+    text-shadow: none;  
+  }
+  21% {
+      color: #fff;
+    text-shadow: 0px 0px 20px #00aad4;  
+  }
+  60% {
+      color: #fff;
+    text-shadow: 0px 0px 20px #00aad4;  
+  }
+  61% {
+      color: #9E9E9E;
+    text-shadow: none;  
+  }
+  62% {
+      color: #fff;
+    text-shadow: 0px 0px 20px #00aad4;  
+  }
+  63% {
+      color: #9E9E9E;
+    text-shadow: none;  
+  }
+  64% {
+      color: #fff;
+    text-shadow: 0px 0px 20px #00aad4;  
+  }
+  100% {
+      color: #fff;
+    text-shadow: 0px 0px 20px #00aad4;  
+  }
+}
+
+@keyframes blinkH1After {
+  0%   {
+      color: #00aad4;
+  }
+  19%   {
+      color: #00aad4;
+  }
+  20% {
+      color: transparent; 
+  }
+  21% {
+      color: #00aad4;  
+  }
+  60% {
+      color: #00aad4;  
+  }
+  61% {
+      color: transparent; 
+  }
+  62% {
+      color: #00aad4;  
+  }
+  63% {
+      color: transparent; 
+  }
+  64% {
+      color: #00aad4;  
+  }
+  100% {
+      color: #00aad4;  
+  }
+}
+
+@keyframes blinkH1Before {
+  0%   {
+      background: #00aad4;
+  }
+  19%   {
+      background: #00aad4;
+  }
+  20% {
+      background: transparent; 
+  }
+  21% {
+      background: #00aad4;  
+  }
+  60% {
+      background: #00aad4;  
+  }
+  61% {
+      background: transparent; 
+  }
+  62% {
+      background: #00aad4;  
+  }
+  63% {
+      background: transparent; 
+  }
+  64% {
+      background: #00aad4;  
+  }
+  100% {
+      background: #00aad4;  
+  }
+}
+
+.header {
+  font-family: 'Pacifico', cursive;
+  font-weight: 100;
+  margin: 0px;
+  font-size: 2rem;
+  color: #fff;
+  text-shadow: 0px 0px 20px #00aad4;
+  -webkit-animation: blinkH1 5s infinite;
+  animation: blinkH1 5s infinite;
+}
+
+.header:after {
+  top: 0;
+  left: 0;
+  color: #00aad4;
+  z-index: -1;
+  filter: blur(15px);
+  -webkit-animation: blinkH1After 5s infinite;
+  animation: blinkH1After 5s infinite;
+}
+
+
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+.alert-info {
+  color: #31708f;
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+}
+.alert-warning {
+  color: #8a6d3b;
+  background-color: #fcf8e3;
+  border-color: #faebcc;
+}
+.alert-danger {
+  color: #a94442;
+  background-color: #f2dede;
+  border-color: #ebccd1;
+}
+.alert p {
+  margin-bottom: 0;
+}
+.alert:empty {
+  display: none;
+}
+.invalid-feedback {
+  color: #a94442;
+  display: block;
+  margin: -1rem 0 2rem;
+}
+
+
 /* This file is for your main application CSS */
-@import "./phoenix.css";
 
 /* Alerts and form errors used by phx.new */
 .alert {
