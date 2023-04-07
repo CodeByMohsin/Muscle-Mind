@@ -6,7 +6,7 @@ defmodule FitnessWeb.ExerciseLive.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    {:ok, assign(socket, :exercises, list_exercises())}
+    {:ok, assign(socket, exercises: list_exercises(), search: "")}
   end
 
   @impl true
@@ -39,6 +39,15 @@ defmodule FitnessWeb.ExerciseLive.Index do
 
     {:noreply, assign(socket, :exercises, list_exercises())}
   end
+
+  @impl true
+  def handle_event("search", %{"search" => %{"text" => name}}, socket) do
+    filter_list = Exercises.list_exercises(name)
+
+    {:noreply, assign(socket, :exercises, filter_list)}
+  end
+
+
 
   defp list_exercises do
     Exercises.list_exercises()
