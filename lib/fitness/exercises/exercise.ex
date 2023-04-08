@@ -3,7 +3,9 @@ defmodule Fitness.Exercises.Exercise do
   import Ecto.Changeset
 
   schema "exercises" do
+    field :body_part, :string
     field :description, :string
+    field :equipment, :string
     field :gif_url, :string
     field :level, :string
     field :name, :string
@@ -15,7 +17,7 @@ defmodule Fitness.Exercises.Exercise do
   @doc false
   def changeset(exercise, attrs) do
     exercise
-    |> cast(attrs, [:name, :description, :gif_url, :level, :type])
-    |> validate_required([:name, :type, :level])
+    |> cast(attrs, [:name, :description, :gif_url, :level, :type, :equipment, :body_part])
+    |> validate_required([:name, :level, :equipment, :body_part])
   end
 end

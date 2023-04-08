@@ -25,10 +25,12 @@
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Description</th>
-      <th>Gif url</th>
+      <th>Gif</th>
       <th>Level</th>
+      <th>Name</th>
+      <th>Body Part</th>
+      <th>Equipment</th>
+      <th>Description</th>
       <th>Type</th>
 
       <th></th>
@@ -37,10 +39,12 @@
   <tbody id="exercises">
     <%= for exercise <- @exercises do %>
       <tr id={"exercise-#{exercise.id}"}>
-        <td><%= exercise.name %></td>
-        <td><%= exercise.description %></td>
         <td><%= exercise.gif_url %></td>
         <td><%= exercise.level %></td>
+        <td><%= exercise.name %></td>
+        <td><%= exercise.body_part %></td>
+        <td><%= exercise.equipment %></td>
+        <td><%= exercise.description %></td>
         <td><%= exercise.type %></td>
 
         <td>

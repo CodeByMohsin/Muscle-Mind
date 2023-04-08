@@ -9,3 +9,10 @@
 #
 # We recommend using the bang functions (`insert!`, `update!`
 # and so on) as they will fail if something goes wrong.
+
+alias Fitness.Exercises
+
+File.read!("priv/repo/list_of_exercises.txt")
+|> :erlang.binary_to_term()
+|> Enum.uniq()
+|> Enum.each(fn workout -> Exercises.create_exercise(workout) end)
