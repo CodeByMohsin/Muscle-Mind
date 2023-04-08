@@ -68,27 +68,23 @@ defmodule FitnessWeb.ExerciseLive.Index do
 
           exercises
           |> Enum.filter(fn exercise ->
-
-            text =
+            texts =
               [
                 exercise.name |> String.downcase(),
                 exercise.level |> String.downcase(),
-                exercise.type |> String.downcase()
+                exercise.type |> String.downcase(),
+                exercise.body_part |> String.downcase(),
+                exercise.equipment |> String.downcase()
               ]
-              |> Enum.join(" ")
+              |> Enum.join()
 
-
-
-              Enum.all?(words, fn word ->
-                foo = Seqfuzz.match(text, word)
-                foo.match?
-
-              end)
+            Enum.all?(words, fn word ->
+              String.contains?(texts, word)
             end)
-          end
+          end)
+      end
 
-     found_search_query
-
+    found_search_query
   end
 
   defp list_exercises do
