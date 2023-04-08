@@ -1,4 +1,5 @@
 defmodule FitnessWeb.ExerciseLiveTest do
+  alias Fitness.Exercises
   use FitnessWeb.ConnCase
 
   import Phoenix.LiveViewTest
@@ -19,9 +20,31 @@ defmodule FitnessWeb.ExerciseLiveTest do
     test "lists all exercises", %{conn: conn, exercise: exercise} do
       {:ok, _index_live, html} = live(conn, Routes.exercise_index_path(conn, :index))
 
-      assert html =~ "Listing Exercises"
+      assert html =~ "Search Exercises"
       assert html =~ exercise.description
     end
+
+    test "lists all exercises not matching search query", %{conn: conn} do
+      exercise = exercise_fixture(name: "Decline Crunch")
+      {:ok, _index_live, html} = live(conn, Routes.exercise_index_path(conn, :index, search: "Hanging leg raise"))
+      assert html =~ exercise.name
+    end
+
+    test "list_exercise/1_ matching name, type, level" do
+      exercise = exercise_fixture(name: "Decline Crunch", level: "Intermediate", type: "Strength")
+      assert Exercises.list_exercises("Decline intermediate Strength") == [exercise]
+    end
+
+    # test "list_authors/1 _ matching name" do
+    #   author = author_fixture(name: "Andrew Rowe")
+    #   assert Authors.list_authors("Andrew Rowe") == [author]
+    # end
+
+    # test "list_authors/1 _ non matching name" do
+    #   author = author_fixture(name: "Andrew Rowe")
+    #   assert Authors.list_authors("Dennis E Taylor") == []
+    # end
+
 
     test "saves new exercise", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, Routes.exercise_index_path(conn, :index))

@@ -1,5 +1,11 @@
 {
     "cSpell.enableFiletypes": [
         "phoenix-heex"
+    ],
+    "cSpell.words": [
+        "ilike",
+        "noreply",
+        "tbody",
+        "thead"
     ]
 }

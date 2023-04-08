@@ -17,6 +17,14 @@ defmodule Fitness.Exercises do
       [%Exercise{}, ...]
 
   """
+  def list_exercises(search_query) do
+    search = "%#{search_query}%"
+
+    Exercise
+    |> where([exercise], ilike(exercise.name, ^search) or ilike(exercise.level, ^search) or ilike(exercise.type, ^search))
+    |> Repo.all()
+  end
+
   def list_exercises do
     Repo.all(Exercise)
   end

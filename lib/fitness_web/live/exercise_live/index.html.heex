@@ -1,4 +1,4 @@
-<h1>Listing Exercises</h1>
+<h1 class="text-black font-serif text-3xl font-light">Search Exercises</h1>
 
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.exercise_index_path(@socket, :index)}>
@@ -12,6 +12,15 @@
     />
   </.modal>
 <% end %>
+
+<form action="#" phx-submit="search" class="bg-gray-500 md:rounded-tl-none" phx-change="search">
+    <%= text_input(:search, :text,
+        autocomplete: "off",
+        class: "p-2 text-gray-200 placeholder:text-gray-400 w-full text-xl bg-transparent border-0",
+        placeholder: "Search",
+        value: @search) %>
+    <%= submit("Search", style: "display: none") %>
+</form>
 
 <table>
   <thead>
