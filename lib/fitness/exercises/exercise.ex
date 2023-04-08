@@ -16,6 +16,6 @@ defmodule Fitness.Exercises.Exercise do
   def changeset(exercise, attrs) do
     exercise
     |> cast(attrs, [:name, :description, :gif_url, :level, :type])
-    |> validate_required([:name])
+    |> validate_required([:name, :type, :level])
   end
 end

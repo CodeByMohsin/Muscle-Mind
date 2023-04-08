@@ -41,13 +41,55 @@ defmodule FitnessWeb.ExerciseLive.Index do
   end
 
   @impl true
-  def handle_event("search", %{"search" => %{"text" => name}}, socket) do
-    filter_list = Exercises.list_exercises(name)
+  def handle_event("search", %{"search" => %{"text" => search_query}}, socket) do
 
-    {:noreply, assign(socket, :exercises, filter_list)}
+    exercises = Exercises.list_exercises()
+
+    socket =
+      socket
+      |> assign(search: search_query)
+      |> assign(exercises: filter_by_search(exercises, search_query))
+
+    {:noreply, socket}
   end
 
 
+
+  defp filter_by_search(exercises, search_query) do
+
+
+    found_search_query =
+      case search_query do
+        "" ->
+          exercises
+
+        search_query ->
+          words = search_query |> String.downcase() |> String.split()
+
+          exercises
+          |> Enum.filter(fn exercise ->
+
+            text =
+              [
+                exercise.name |> String.downcase(),
+                exercise.level |> String.downcase(),
+                exercise.type |> String.downcase()
+              ]
+              |> Enum.join(" ")
+
+
+
+              Enum.all?(words, fn word ->
+                foo = Seqfuzz.match(text, word)
+                foo.match?
+
+              end)
+            end)
+          end
+
+     found_search_query
+
+  end
 
   defp list_exercises do
     Exercises.list_exercises()
