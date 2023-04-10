@@ -24,6 +24,7 @@ defmodule FitnessWeb.ExerciseLive.FormComponent do
   end
 
   def handle_event("save", %{"exercise" => exercise_params}, socket) do
+    IO.inspect(label: "save")
     save_exercise(socket, socket.assigns.action, exercise_params)
   end
 
@@ -44,12 +45,13 @@ defmodule FitnessWeb.ExerciseLive.FormComponent do
     case Exercises.create_exercise(exercise_params) do
       {:ok, _exercise} ->
         {:noreply,
-         socket
-         |> put_flash(:info, "Exercise created successfully")
-         |> push_redirect(to: socket.assigns.return_to)}
+        socket
+        |> put_flash(:info, "Exercise created successfully")
+        |> push_redirect(to: socket.assigns.return_to)}
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
+        {:error, %Ecto.Changeset{} = changeset} ->
+          IO.inspect(label: "save 2")
+          {:noreply, assign(socket, changeset: changeset)}
     end
   end
 end
