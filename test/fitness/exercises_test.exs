@@ -21,7 +21,7 @@ defmodule Fitness.ExercisesTest do
     end
 
     test "create_exercise/1 with valid data creates a exercise" do
-      valid_attrs = %{description: "some description", gif_url: "some gif_url", level: "some level", name: "some name", type: "some type"}
+      valid_attrs = %{description: "some description", gif_url: "some gif_url", level: "some level", name: "some name", type: "some type", equipment: "some equipment",body_part: "some body part"}
 
       assert {:ok, %Exercise{} = exercise} = Exercises.create_exercise(valid_attrs)
       assert exercise.description == "some description"
@@ -29,6 +29,8 @@ defmodule Fitness.ExercisesTest do
       assert exercise.level == "some level"
       assert exercise.name == "some name"
       assert exercise.type == "some type"
+      assert exercise.body_part == "some body part"
+      assert exercise.equipment == "some equipment"
     end
 
     test "create_exercise/1 with invalid data returns error changeset" do

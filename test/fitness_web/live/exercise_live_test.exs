@@ -5,8 +5,8 @@ defmodule FitnessWeb.ExerciseLiveTest do
   import Phoenix.LiveViewTest
   import Fitness.ExercisesFixtures
 
-  @create_attrs %{description: "some description", gif_url: "some gif_url", level: "some level", name: "some name", type: "some type"}
-  @update_attrs %{description: "some updated description", gif_url: "some updated gif_url", level: "some updated level", name: "some updated name", type: "some updated type"}
+  @create_attrs %{description: "some description", gif_url: "some gif_url", level: "some level", name: "some name", type: "some type", equipment: "some equipment", body_part: "some body part"}
+  @update_attrs %{description: "some updated description", gif_url: "some updated gif_url", level: "some updated level", name: "some updated name", type: "some updated type", equipment: "some undated equipment", body_part: "some updated body part"}
   @invalid_attrs %{description: nil, gif_url: nil, level: nil, name: nil, type: nil}
 
   defp create_exercise(_) do
@@ -21,7 +21,7 @@ defmodule FitnessWeb.ExerciseLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.exercise_index_path(conn, :index))
 
       assert html =~ "Search Exercises"
-      assert html =~ exercise.description
+      assert html =~ exercise.name
     end
 
     test "lists all exercises not matching search query", %{conn: conn} do
@@ -65,7 +65,7 @@ defmodule FitnessWeb.ExerciseLiveTest do
         |> follow_redirect(conn, Routes.exercise_index_path(conn, :index))
 
       assert html =~ "Exercise created successfully"
-      assert html =~ "some description"
+      assert html =~ "some name"
     end
 
     test "updates exercise in listing", %{conn: conn, exercise: exercise} do
@@ -87,7 +87,7 @@ defmodule FitnessWeb.ExerciseLiveTest do
         |> follow_redirect(conn, Routes.exercise_index_path(conn, :index))
 
       assert html =~ "Exercise updated successfully"
-      assert html =~ "some updated description"
+      assert html =~ "some updated name"
     end
 
     test "deletes exercise in listing", %{conn: conn, exercise: exercise} do
