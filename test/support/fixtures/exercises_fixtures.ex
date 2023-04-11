@@ -12,6 +12,8 @@ defmodule Fitness.ExercisesFixtures do
       attrs
       |> Enum.into(%{
         description: "some description",
+        body_part: "some body part",
+        equipment: "some equipment",
         gif_url: "some gif_url",
         level: "some level",
         name: "some name",

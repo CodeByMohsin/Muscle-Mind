@@ -25,13 +25,12 @@
 <table>
   <thead>
     <tr>
-      <th>Gif</th>
+      <th></th>
       <th>Level</th>
       <th>Name</th>
       <th>Body Part</th>
       <th>Equipment</th>
-      <th>Description</th>
-      <th>Type</th>
+      <th>Exercise Type</th>
 
       <th></th>
     </tr>
@@ -39,12 +38,11 @@
   <tbody id="exercises">
     <%= for exercise <- @exercises do %>
       <tr id={"exercise-#{exercise.id}"}>
-        <td><%= exercise.gif_url %></td>
+        <td><img src={exercise.gif_url}></td>
         <td><%= exercise.level %></td>
         <td><%= exercise.name %></td>
         <td><%= exercise.body_part %></td>
         <td><%= exercise.equipment %></td>
-        <td><%= exercise.description %></td>
         <td><%= exercise.type %></td>
 
         <td>
