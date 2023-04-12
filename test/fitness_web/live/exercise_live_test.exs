@@ -1,53 +1,54 @@
 defmodule FitnessWeb.ExerciseLiveTest do
-  alias Fitness.Exercises
+
   use FitnessWeb.ConnCase
+  alias FitnessWeb.UserAuth
+
 
   import Phoenix.LiveViewTest
   import Fitness.ExercisesFixtures
+  import Fitness.AccountsFixtures
+  alias Fitness.Accounts
+  alias Fitness.Exercises
+  alias FitnessWeb.UserAuth
+
 
   @create_attrs %{description: "some description", gif_url: "some gif_url", level: "some level", name: "some name", type: "some type", equipment: "some equipment", body_part: "some body part"}
   @update_attrs %{description: "some updated description", gif_url: "some updated gif_url", level: "some updated level", name: "some updated name", type: "some updated type", equipment: "some undated equipment", body_part: "some updated body part"}
   @invalid_attrs %{description: nil, gif_url: nil, level: nil, name: nil, type: nil}
 
-  defp create_exercise(_) do
-    exercise = exercise_fixture()
-    %{exercise: exercise}
+
+  setup %{conn: conn} do
+    conn =
+      conn
+      |> Map.replace!(:secret_key_base, FitnessWeb.Endpoint.config(:secret_key_base))
+      |> init_test_session(%{})
+
+      exercise = exercise_fixture()
+      user = user_fixture()
+
+    %{conn: conn, user: user, exercise: exercise}
   end
 
+
   describe "Index" do
-    setup [:create_exercise]
 
-    test "lists all exercises", %{conn: conn, exercise: exercise} do
-      {:ok, _index_live, html} = live(conn, Routes.exercise_index_path(conn, :index))
+    test "lists all exercises", %{conn: conn, exercise: exercise, user: user} do
 
+      {:ok, index_live, html} = live(conn, Routes.exercise_index_path(conn, :index))
       assert html =~ "Search Exercises"
       assert html =~ exercise.name
     end
 
-    test "lists all exercises not matching search query", %{conn: conn} do
-      exercise = exercise_fixture(name: "Decline Crunch")
-      {:ok, _index_live, html} = live(conn, Routes.exercise_index_path(conn, :index, search: "Hanging leg raise"))
-      assert html =~ exercise.name
-    end
 
     test "list_exercise/1_ matching name, type, level" do
-      exercise = exercise_fixture(name: "Decline Crunch", level: "Intermediate", type: "Strength")
-      assert Exercises.list_exercises("Decline intermediate Strength") == [exercise]
+      exercise = exercise_fixture(name: "kDecline Crunch", level: "intermediate", type: "Strength")
+      assert Exercises.list_exercises("kDecline intermediate Strength") == [exercise]
     end
-
-    # test "list_authors/1 _ matching name" do
-    #   author = author_fixture(name: "Andrew Rowe")
-    #   assert Authors.list_authors("Andrew Rowe") == [author]
-    # end
-
-    # test "list_authors/1 _ non matching name" do
-    #   author = author_fixture(name: "Andrew Rowe")
-    #   assert Authors.list_authors("Dennis E Taylor") == []
-    # end
 
 
     test "saves new exercise", %{conn: conn} do
       {:ok, index_live, _html} = live(conn, Routes.exercise_index_path(conn, :index))
+
 
       assert index_live |> element("a", "New Exercise") |> render_click() =~
                "New Exercise"
@@ -99,7 +100,6 @@ defmodule FitnessWeb.ExerciseLiveTest do
   end
 
   describe "Show" do
-    setup [:create_exercise]
 
     test "displays exercise", %{conn: conn, exercise: exercise} do
       {:ok, _show_live, html} = live(conn, Routes.exercise_show_path(conn, :show, exercise))

@@ -1,0 +1,26 @@
+<h1>Show Workout template</h1>
+
+<%= if @live_action in [:edit] do %>
+  <.modal return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}>
+    <.live_component
+      module={FitnessWeb.WorkoutTemplateLive.FormComponent}
+      id={@workout_template.id}
+      title={@page_title}
+      action={@live_action}
+      workout_template={@workout_template}
+      return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}
+    />
+  </.modal>
+<% end %>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @workout_template.name %>
+  </li>
+
+</ul>
+
+<span><%= live_patch "Edit", to: Routes.workout_template_show_path(@socket, :edit, @workout_template), class: "button" %></span> |
+<span><%= live_redirect "Back", to: Routes.workout_template_index_path(@socket, :index) %></span>

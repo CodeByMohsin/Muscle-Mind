@@ -3,10 +3,14 @@ defmodule FitnessWeb.ExerciseLive.Index do
 
   alias Fitness.Exercises
   alias Fitness.Exercises.Exercise
+  alias Fitness.Accounts
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, exercises: list_exercises(), search: "")}
+  def mount(_params, session, socket) do
+
+     user = Accounts.get_user_by_session_token(session["user_token"])
+     is_admin = Accounts.is_admin?(user)
+    {:ok, assign(socket, exercises: list_exercises(), search: "", is_admin: is_admin)}
   end
 
   @impl true

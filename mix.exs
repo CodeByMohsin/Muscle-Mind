@@ -20,7 +20,7 @@ defmodule Fitness.MixProject do
   def application do
     [
       mod: {Fitness.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:bcrypt_elixir, :logger, :runtime_tools]
     ]
   end
 
