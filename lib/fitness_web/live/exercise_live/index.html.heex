@@ -47,8 +47,10 @@
 
         <td>
           <span><%= live_redirect "Show", to: Routes.exercise_show_path(@socket, :show, exercise) %></span>
-          <span><%= live_patch "Edit", to: Routes.exercise_index_path(@socket, :edit, exercise) %></span>
-          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: exercise.id, data: [confirm: "Are you sure?"] %></span>
+          <%= if @is_admin do %>
+            <span><%= live_patch "Edit", to: Routes.exercise_index_path(@socket, :edit, exercise) %></span>
+            <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: exercise.id, data: [confirm: "Are you sure?"] %></span>
+          <% end %>
         </td>
       </tr>
     <% end %>
@@ -56,3 +58,4 @@
 </table>
 
 <span><%= live_patch "New Exercise", to: Routes.exercise_index_path(@socket, :new) %></span>
+

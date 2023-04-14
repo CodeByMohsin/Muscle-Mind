@@ -31,7 +31,7 @@ defmodule Fitness.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password])
+    |> cast(attrs, [:email, :password, :is_admin])
     |> validate_email()
     |> validate_password(opts)
   end

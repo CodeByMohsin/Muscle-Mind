@@ -8,6 +8,10 @@ defmodule Fitness.Accounts do
 
   alias Fitness.Accounts.{User, UserToken, UserNotifier}
 
+
+  def is_admin?(user) do
+    user.is_admin
+  end
   ## Database getters
 
   @doc """

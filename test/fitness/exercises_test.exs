@@ -12,7 +12,7 @@ defmodule Fitness.ExercisesTest do
 
     test "list_exercises/0 returns all exercises" do
       exercise = exercise_fixture()
-      assert Exercises.list_exercises() == [exercise]
+      assert Exercises.list_exercises("some level") == [exercise]
     end
 
     test "get_exercise!/1 returns the exercise with given id" do

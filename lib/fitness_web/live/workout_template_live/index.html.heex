@@ -1,0 +1,40 @@
+<h1>Listing Workout templates</h1>
+
+<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.workout_template_index_path(@socket, :index)}>
+    <.live_component
+      module={FitnessWeb.WorkoutTemplateLive.FormComponent}
+      id={@workout_template.id || :new}
+      title={@page_title}
+      action={@live_action}
+      workout_template={@workout_template}
+      return_to={Routes.workout_template_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody id="workout_templates">
+    <%= for workout_template <- @workout_templates do %>
+      <tr id={"workout_template-#{workout_template.id}"}>
+        <td><%= workout_template.name %></td>
+
+        <td>
+          
+          <span><%= live_redirect "Show", to: Routes.workout_template_show_path(@socket, :show, workout_template) %></span>
+          <span><%= live_patch "Edit", to: Routes.workout_template_index_path(@socket, :edit, workout_template) %></span>
+          <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: workout_template.id, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<span><%= live_patch "New Workout template", to: Routes.workout_template_index_path(@socket, :new) %></span>
