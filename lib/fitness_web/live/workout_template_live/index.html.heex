@@ -29,7 +29,7 @@
         <td>
           
           <span><%= live_redirect "Show", to: Routes.workout_template_show_path(@socket, :show, workout_template) %></span>
-          <span><%= live_redirect "Edit", to: Routes.workout_template_index_path(@socket, :edit, workout_template) %></span>
+          <span><%= live_patch "Edit", to: Routes.workout_template_index_path(@socket, :edit, workout_template) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: workout_template.id, data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>

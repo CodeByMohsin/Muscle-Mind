@@ -26,18 +26,17 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
     end
 
     test "saves new workout_template", %{conn: conn, user: user} do
-      
 
       {:ok, index_live, _html} = live(conn, Routes.workout_template_index_path(conn, :index))
 
       assert index_live |> element("a", "New Workout template") |> render_click() =~
-               "New Workout template"
+      "New Workout template"
 
       assert_patch(index_live, Routes.workout_template_index_path(conn, :new))
 
       assert index_live
-             |> form("#workout_template-form", workout_template: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+      |> form("#workout_template-form", workout_template: @invalid_attrs)
+      |> render_change() =~ "can&#39;t be blank"
 
       {:ok, _, html} =
         index_live

@@ -20,31 +20,32 @@ defmodule FitnessWeb.Router do
   end
 
   scope "/", FitnessWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    live_session :user, on_mount: {UserAuthLive, :user} do
+
+      live "/exercises/new", ExerciseLive.Index, :new
+      live "/exercises/:id/edit", ExerciseLive.Index, :edit
+      live "/exercises/:id/show/edit", ExerciseLive.Show, :edit
+
+      live "/workout_templates/new", WorkoutTemplateLive.Index, :new
+      live "/workout_templates/:id/edit", WorkoutTemplateLive.Index, :edit
+      live "/workout_templates/:id/show/edit", WorkoutTemplateLive.Show, :edit
+    end
+  end
+
+  scope "/", FitnessWeb do
     pipe_through :browser
 
     get "/", PageController, :index
 
     live "/exercises", ExerciseLive.Index, :index
     live "/exercises/:id", ExerciseLive.Show, :show
+
     live "/workout_templates", WorkoutTemplateLive.Index, :index
     live "/workout_templates/:id", WorkoutTemplateLive.Show, :show
   end
-  
-  scope "/", FitnessWeb do
-    pipe_through [:browser, :require_authenticated_user]
 
-    live_session :user, on_mount: {UserAuthLive, :user}, root_layout: {FitnessWeb.LayoutView, "authenticated.html"} do
-      live "/exercises/new", ExerciseLive.Index, :new
-      live "/exercises/:id/edit", ExerciseLive.Index, :edit
-
-      live "/exercises/:id/show/edit", ExerciseLive.Show, :edit
-
-      live "/workout_templates/new", WorkoutTemplateLive.Index, :new
-      live "/workout_templates/:id/edit", WorkoutTemplateLive.Index, :edit
-
-      live "/workout_templates/:id/show/edit", WorkoutTemplateLive.Show, :edit
-    end
-  end
 
 
   # Other scopes may use custom stacks.
