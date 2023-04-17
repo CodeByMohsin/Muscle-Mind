@@ -21,6 +21,7 @@
   </li>
 
 </ul>
-
-<span><%= live_patch "Edit", to: Routes.workout_template_show_path(@socket, :edit, @workout_template), class: "button" %></span> |
+<%= if assigns[:user] do %>
+  <span><%= live_patch "Edit", to: Routes.workout_template_show_path(@socket, :edit, @workout_template), class: "button" %></span>
+<% end %>
 <span><%= live_redirect "Back", to: Routes.workout_template_index_path(@socket, :index) %></span>

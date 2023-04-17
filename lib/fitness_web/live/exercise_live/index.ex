@@ -10,9 +10,9 @@ defmodule FitnessWeb.ExerciseLive.Index do
     if session["user_token"] do
       user = Accounts.get_user_by_session_token(session["user_token"])
       is_admin = Accounts.is_admin?(user)
-      {:ok, assign(socket, exercises: list_exercises(), search: "", is_admin: is_admin)}
+      {:ok, assign(socket, exercises: list_exercises(), search: "", is_admin: is_admin, user: user)}
     else
-      {:ok, assign(socket, exercises: list_exercises(), search: "", is_admin: false)}
+      {:ok, assign(socket, exercises: list_exercises(), search: "")}
     end
   end
 

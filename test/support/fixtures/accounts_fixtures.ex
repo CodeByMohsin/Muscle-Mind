@@ -11,7 +11,7 @@ defmodule Fitness.AccountsFixtures do
     Enum.into(attrs, %{
       email: unique_user_email(),
       password: valid_user_password(),
-      is_admin: false
+      is_admin: true
     })
   end
 
