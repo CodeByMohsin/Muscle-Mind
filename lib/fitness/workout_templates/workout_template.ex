@@ -4,6 +4,8 @@ defmodule Fitness.WorkoutTemplates.WorkoutTemplate do
 
   schema "workout_templates" do
     field :name, :string
+    belongs_to :user, Fitness.Accounts.User
+    has_many :workout_items, Fitness.WorkoutTemplates.WorkoutItem
 
     timestamps()
   end

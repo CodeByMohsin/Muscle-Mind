@@ -2,10 +2,11 @@ defmodule FitnessWeb.WorkoutTemplateLive.FormComponent do
   use FitnessWeb, :live_component
 
   alias Fitness.WorkoutTemplates
+  alias Fitness.WorkoutTemplates.WorkoutItem
 
   @impl true
   def update(%{workout_template: workout_template} = assigns, socket) do
-    changeset = WorkoutTemplates.change_workout_template(workout_template)
+    changeset = WorkoutTemplates.change_workout_template(workout_template) |> Ecto.Changeset.put_assoc(:workout_items, [WorkoutTemplates.change_workout_item(%WorkoutItem{})])
 
     {:ok,
      socket
@@ -15,9 +16,11 @@ defmodule FitnessWeb.WorkoutTemplateLive.FormComponent do
 
   @impl true
   def handle_event("validate", %{"workout_template" => workout_template_params}, socket) do
+
     changeset =
       socket.assigns.workout_template
       |> WorkoutTemplates.change_workout_template(workout_template_params)
+      |> Ecto.Changeset.put_assoc(:workout_items, [WorkoutTemplates.change_workout_item(%WorkoutItem{})])
       |> Map.put(:action, :validate)
 
     {:noreply, assign(socket, :changeset, changeset)}

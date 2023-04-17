@@ -4,6 +4,7 @@ defmodule Fitness.WorkoutTemplates do
   """
 
   import Ecto.Query, warn: false
+  alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.Repo
 
   alias Fitness.WorkoutTemplates.WorkoutTemplate
@@ -35,7 +36,12 @@ defmodule Fitness.WorkoutTemplates do
       ** (Ecto.NoResultsError)
 
   """
-  def get_workout_template!(id), do: Repo.get!(WorkoutTemplate, id)
+  def get_workout_template!(id) do
+    Repo.get!(WorkoutTemplate, id)
+    |> Repo.preload(workout_items: from(w in WorkoutItem, order_by: w.id))
+
+  end
+
 
   @doc """
   Creates a workout_template.
@@ -52,6 +58,12 @@ defmodule Fitness.WorkoutTemplates do
   def create_workout_template(attrs \\ %{}) do
     %WorkoutTemplate{}
     |> WorkoutTemplate.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_workout_item(attrs \\ %{}) do
+    %WorkoutItem{}
+    |> WorkoutItem.changeset(attrs)
     |> Repo.insert()
   end
 
@@ -73,6 +85,12 @@ defmodule Fitness.WorkoutTemplates do
     |> Repo.update()
   end
 
+  def update_workout_item(%WorkoutItem{} = workout_item, attrs) do
+    workout_item
+    |> WorkoutItem.changeset(attrs)
+    |> Repo.update()
+  end
+
   @doc """
   Deletes a workout_template.
 
@@ -89,6 +107,10 @@ defmodule Fitness.WorkoutTemplates do
     Repo.delete(workout_template)
   end
 
+  def delete_workout_item(%WorkoutItem{} = workout_item) do
+    Repo.delete(workout_item)
+  end
+
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking workout_template changes.
 
@@ -100,5 +122,9 @@ defmodule Fitness.WorkoutTemplates do
   """
   def change_workout_template(%WorkoutTemplate{} = workout_template, attrs \\ %{}) do
     WorkoutTemplate.changeset(workout_template, attrs)
+  end
+
+  def change_workout_item(%WorkoutItem{} = workout_item, attrs \\ %{}) do
+    WorkoutItem.changeset(workout_item, attrs)
   end
 end

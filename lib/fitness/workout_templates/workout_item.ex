@@ -1,13 +1,15 @@
-defmodule Fitness.WorkoutTemplates.Workout do
+defmodule Fitness.WorkoutTemplates.WorkoutItem do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "workouts" do
+  schema "workout_items" do
     field :check_box, :boolean, default: false
     field :set, :integer
     field :weight, :integer
     field :weight_unit, :string
+    field :reps, :integer
     field :exercise_id, :id
+    belongs_to :workout_template, Fitness.WorkoutTemplates.WorkoutTemplate
 
     timestamps()
   end

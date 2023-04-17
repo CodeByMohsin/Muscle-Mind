@@ -8,6 +8,8 @@ defmodule Fitness.Repo.Migrations.CreateExercises do
       add :gif_url, :string
       add :level, :string
       add :type, :string
+      add :body_part, :string
+      add :equipment, :string
 
       timestamps()
     end

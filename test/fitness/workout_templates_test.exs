@@ -16,7 +16,7 @@ defmodule Fitness.WorkoutTemplatesTest do
     end
 
     test "get_workout_template!/1 returns the workout_template with given id" do
-      workout_template = workout_template_fixture()
+      workout_template = workout_template_fixture() |> Repo.preload(:workout_items)
       assert WorkoutTemplates.get_workout_template!(workout_template.id) == workout_template
     end
 
@@ -40,7 +40,7 @@ defmodule Fitness.WorkoutTemplatesTest do
     end
 
     test "update_workout_template/2 with invalid data returns error changeset" do
-      workout_template = workout_template_fixture()
+      workout_template = workout_template_fixture() |> Repo.preload(:workout_items)
       assert {:error, %Ecto.Changeset{}} = WorkoutTemplates.update_workout_template(workout_template, @invalid_attrs)
       assert workout_template == WorkoutTemplates.get_workout_template!(workout_template.id)
     end
