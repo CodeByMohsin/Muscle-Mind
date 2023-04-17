@@ -5,6 +5,8 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
   import Fitness.WorkoutTemplatesFixtures
   import Fitness.AccountsFixtures
 
+  alias Fitness.Accounts
+
   @create_attrs %{name: "some name"}
   @update_attrs %{name: "some updated name"}
   @invalid_attrs %{name: nil}
@@ -26,10 +28,11 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
     end
 
     test "saves new workout_template", %{conn: conn, user: user} do
+      conn = conn |> log_in_user(user)
 
       {:ok, index_live, _html} = live(conn, Routes.workout_template_index_path(conn, :index))
 
-      assert index_live |> element("a", "New Workout template") |> render_click() =~
+      assert index_live |> element("a", "New Workout") |> render_click() =~
       "New Workout template"
 
       assert_patch(index_live, Routes.workout_template_index_path(conn, :new))
@@ -48,7 +51,9 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
       assert html =~ "some name"
     end
 
-    test "updates workout_template in listing", %{conn: conn, workout_template: workout_template} do
+    test "updates workout_template in listing", %{conn: conn, workout_template: workout_template, user: user} do
+      conn = conn |> log_in_user(user)
+
       {:ok, index_live, _html} = live(conn, Routes.workout_template_index_path(conn, :index))
 
       assert index_live |> element("#workout_template-#{workout_template.id} a", "Edit") |> render_click() =~
@@ -70,7 +75,9 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
       assert html =~ "some updated name"
     end
 
-    test "deletes workout_template in listing", %{conn: conn, workout_template: workout_template} do
+    test "deletes workout_template in listing", %{conn: conn, workout_template: workout_template, user: user} do
+      conn = conn |> log_in_user(user)
+
       {:ok, index_live, _html} = live(conn, Routes.workout_template_index_path(conn, :index))
 
       assert index_live |> element("#workout_template-#{workout_template.id} a", "Delete") |> render_click()
@@ -81,14 +88,17 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
   describe "Show" do
     setup [:create_workout_template]
 
-    test "displays workout_template", %{conn: conn, workout_template: workout_template} do
+    test "displays workout_template", %{conn: conn, workout_template: workout_template, user: user} do
+      conn = conn |> log_in_user(user)
       {:ok, _show_live, html} = live(conn, Routes.workout_template_show_path(conn, :show, workout_template))
 
       assert html =~ "Show Workout template"
       assert html =~ workout_template.name
     end
 
-    test "updates workout_template within modal", %{conn: conn, workout_template: workout_template} do
+    test "updates workout_template within modal", %{conn: conn, workout_template: workout_template, user: user} do
+      conn = conn |> log_in_user(user)
+
       {:ok, show_live, _html} = live(conn, Routes.workout_template_show_path(conn, :show, workout_template))
 
       assert show_live |> element("a", "Edit") |> render_click() =~

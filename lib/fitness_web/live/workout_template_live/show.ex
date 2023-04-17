@@ -2,10 +2,17 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
   use FitnessWeb, :live_view
 
   alias Fitness.WorkoutTemplates
-
+ alias Fitness.Accounts
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def mount(_params, session, socket) do
+    if session["user_token"] do
+      user = Accounts.get_user_by_session_token(session["user_token"])
+      is_admin = Accounts.is_admin?(user)
+
+      {:ok, assign(socket, is_admin: is_admin, user: user)}
+    else
+      {:ok, socket}
+    end
   end
 
   @impl true

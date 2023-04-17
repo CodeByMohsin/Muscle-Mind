@@ -56,7 +56,9 @@ defmodule FitnessWeb.ExerciseLiveTest do
       assert Exercises.list_exercises("kDecline intermediate Strength") == [exercise]
     end
 
-    test "saves new exercise", %{conn: conn} do
+    test "saves new exercise", %{conn: conn, user: user} do
+      conn = conn |> log_in_user(user)
+
       {:ok, index_live, _html} = live(conn, Routes.exercise_index_path(conn, :index))
 
       assert index_live |> element("a", "New Exercise") |> render_click() =~
@@ -114,15 +116,19 @@ defmodule FitnessWeb.ExerciseLiveTest do
   end
 
   describe "Show" do
-    test "displays exercise", %{conn: conn, exercise: exercise} do
+    test "displays exercise", %{conn: conn, exercise: exercise, user: user} do
+      conn = conn |> log_in_user(user)
       {:ok, _show_live, html} = live(conn, Routes.exercise_show_path(conn, :show, exercise))
 
       assert html =~ "Show Exercise"
       assert html =~ exercise.name
     end
 
-    test "updates exercise within modal", %{conn: conn, exercise: exercise} do
+    test "updates exercise within modal", %{conn: conn, exercise: exercise, user: user} do
+      conn = conn |> log_in_user(user)
+
       {:ok, show_live, _html} = live(conn, Routes.exercise_show_path(conn, :show, exercise))
+
 
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Exercise"

@@ -21,20 +21,23 @@
       <th></th>
     </tr>
   </thead>
+<%= if assigns[:user] do %>
+  <span class="flex float-right"><%= live_patch "New Workout", to: Routes.workout_template_index_path(@socket, :new) %></span>
+<% end %>
   <tbody id="workout_templates">
     <%= for workout_template <- @workout_templates do %>
       <tr id={"workout_template-#{workout_template.id}"}>
         <td><%= workout_template.name %></td>
 
         <td>
-          
+        
           <span><%= live_redirect "Show", to: Routes.workout_template_show_path(@socket, :show, workout_template) %></span>
+          <%= if assigns[:user]do %>
           <span><%= live_patch "Edit", to: Routes.workout_template_index_path(@socket, :edit, workout_template) %></span>
           <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: workout_template.id, data: [confirm: "Are you sure?"] %></span>
+          <% end %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
-
-<span><%= live_patch "New Workout template", to: Routes.workout_template_index_path(@socket, :new) %></span>

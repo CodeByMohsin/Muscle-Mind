@@ -35,6 +35,10 @@
       <th></th>
     </tr>
   </thead>
+  <%= if assigns[:user] do %>
+    <span class="flex float-right"><%= live_patch "New Exercise", to: Routes.exercise_index_path(@socket, :new) %></span>
+  <% end %>
+
   <tbody id="exercises">
     <%= for exercise <- @exercises do %>
       <tr id={"exercise-#{exercise.id}"}>
@@ -47,7 +51,7 @@
 
         <td>
           <span><%= live_redirect "Show", to: Routes.exercise_show_path(@socket, :show, exercise) %></span>
-          <%= if @is_admin do %>
+          <%= if assigns[:is_admin] do %>
             <span><%= live_patch "Edit", to: Routes.exercise_index_path(@socket, :edit, exercise) %></span>
             <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: exercise.id, data: [confirm: "Are you sure?"] %></span>
           <% end %>
@@ -56,6 +60,3 @@
     <% end %>
   </tbody>
 </table>
-
-<span><%= live_patch "New Exercise", to: Routes.exercise_index_path(@socket, :new) %></span>
-

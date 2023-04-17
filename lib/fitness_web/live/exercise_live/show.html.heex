@@ -49,6 +49,7 @@
   </li>
 
 </ul>
-
-<span><%= live_patch "Edit", to: Routes.exercise_show_path(@socket, :edit, @exercise), class: "button" %></span> |
+<%= if assigns[:user] do %>
+<span><%= live_patch "Edit", to: Routes.exercise_show_path(@socket, :edit, @exercise), class: "button" %></span>
+<% end %>
 <span><%= live_redirect "Back", to: Routes.exercise_index_path(@socket, :index) %></span>

@@ -3,10 +3,17 @@ defmodule FitnessWeb.WorkoutTemplateLive.Index do
 
   alias Fitness.WorkoutTemplates
   alias Fitness.WorkoutTemplates.WorkoutTemplate
+  alias Fitness.Accounts
 
   @impl true
-  def mount(_params, _session, socket) do
-    {:ok, assign(socket, :workout_templates, list_workout_templates())}
+  def mount(_params, session, socket) do
+    if session["user_token"] do
+      user = Accounts.get_user_by_session_token(session["user_token"])
+      is_admin = Accounts.is_admin?(user)
+      {:ok, assign(socket, workout_templates: list_workout_templates(), is_admin: is_admin, user: user)}
+    else
+      {:ok, assign(socket, workout_templates: list_workout_templates())}
+    end
   end
 
   @impl true
