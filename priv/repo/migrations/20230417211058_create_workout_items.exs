@@ -3,8 +3,8 @@ defmodule Fitness.Repo.Migrations.CreateWorkoutItems do
 
   def change do
     create table(:workout_items) do
-      add :set, :integer
-      add :weight, :integer
+      add :sets, :integer
+      add :weight, :float
       add :weight_unit, :string
       add :reps, :integer
       add :check_box, :boolean, default: false, null: false

@@ -4,11 +4,11 @@ defmodule Fitness.WorkoutTemplates.WorkoutItem do
 
   schema "workout_items" do
     field :check_box, :boolean, default: false
-    field :set, :integer
-    field :weight, :integer
+    field :sets, :integer
+    field :weight, :float
     field :weight_unit, :string
     field :reps, :integer
-    field :exercise_id, :id
+    belongs_to :exercise, Fitness.Exercises.Exercise
     belongs_to :workout_template, Fitness.WorkoutTemplates.WorkoutTemplate
 
     timestamps()
@@ -17,7 +17,7 @@ defmodule Fitness.WorkoutTemplates.WorkoutItem do
   @doc false
   def changeset(workout, attrs) do
     workout
-    |> cast(attrs, [:set, :weight, :weight_unit, :check_box])
-    |> validate_required([:set, :weight, :weight_unit, :check_box])
+    |> cast(attrs, [:sets, :weight, :weight_unit, :check_box, :reps, :exercise_id, :workout_template_id])
+    |> validate_required([:sets, :weight, :weight_unit, :reps, :workout_template_id, :exercise_id])
   end
 end

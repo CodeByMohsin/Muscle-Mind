@@ -12,8 +12,8 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
   @invalid_attrs %{name: nil}
 
   defp create_workout_template(_) do
-    workout_template = workout_template_fixture()
     user = user_fixture()
+    workout_template = workout_template_fixture(user_id: user.id)
     %{workout_template: workout_template, user: user}
   end
 
