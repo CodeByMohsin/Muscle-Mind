@@ -8,9 +8,16 @@ defmodule FitnessWeb.ExerciseLive.Index do
   @impl true
   def mount(_params, session, socket) do
     if session["user_token"] do
-      user = Accounts.get_user_by_session_token(session["user_token"])
-      is_admin = Accounts.is_admin?(user)
-      {:ok, assign(socket, exercises: list_exercises(), search: "", is_admin: is_admin, user: user)}
+      cond do
+        Accounts.get_user_by_session_token(session["user_token"]) == nil ->
+          {:ok, assign(socket, exercises: list_exercises(), search: "")}
+
+        Accounts.get_user_by_session_token(session["user_token"]) ->
+          user = Accounts.get_user_by_session_token(session["user_token"])
+          is_admin = Accounts.is_admin?(user)
+
+          {:ok, assign(socket, exercises: list_exercises(), search: "", is_admin: is_admin, user: user)}
+      end
     else
       {:ok, assign(socket, exercises: list_exercises(), search: "")}
     end

@@ -5,6 +5,7 @@
     <.live_component
       module={FitnessWeb.WorkoutTemplateLive.FormComponent}
       id={@workout_template.id || :new}
+      user_id={@user.id}
       title={@page_title}
       action={@live_action}
       workout_template={@workout_template}

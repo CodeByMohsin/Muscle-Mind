@@ -19,8 +19,85 @@
     <strong>Name:</strong>
     <%= @workout_template.name %>
   </li>
-
 </ul>
+
+<div>
+ <%= for item <- @workout_template.workout_items do %>
+ <div>
+   <strong>Exercise Name:</strong>
+   <%= Fitness.Exercises.get_exercise!(item.exercise_id).name %>
+   <table>
+    <tr>
+      <th>|SETS|</th> 
+      <th>REPS|</th> 
+      <th>WEIGHT|</th> 
+      <th>UNIT|</th> 
+    </tr>
+    <tr>
+      <td>
+        <%= item.sets %>
+      </td>
+    
+      <td>
+        <%= item.reps %>
+      </td>
+
+      <td>
+        <%= item.weight %>
+      </td>
+
+      <td>
+        <%= item.weight_unit %>
+      </td>
+    
+    </tr>
+    
+   </table>
+  </div>
+ <% end %>
+</div>
+
+
+
+
+  <.form let={f} for={@changeset} action="#" phx-submit="save" phx-change="workout-item">
+    
+  <table>
+    <tr>
+      <td>
+      <%= select f, :exercise_id, Enum.map(@exercises, fn exercise -> {exercise.name, exercise.id} end), prompt: "Select an exercise"%>
+    </td>
+  </tr>
+  <tr>
+    <th>SETS</th>
+    <th>REPS</th>
+    <th>WEIGHT</th>
+    <th>UNIT</th>
+  </tr>
+
+<tr> 
+  <td>
+    <%= number_input f, :sets, value: 1, disabled: false %>
+  </td>
+  
+  <td>
+     <%= number_input f, :reps, value: 12, disabled: false %>
+  </td>
+
+  <td>
+    <%= number_input f, :weight, step: "any" %>
+  </td>
+
+  <td>
+    <%= select f, :weight_unit, ["kg", "lbs"] %>
+  </td>
+</tr>
+</table>
+
+  <%= submit "save" %>
+
+</.form>
+
 <%= if assigns[:user] do %>
   <span><%= live_patch "Edit", to: Routes.workout_template_show_path(@socket, :edit, @workout_template), class: "button" %></span>
 <% end %>
