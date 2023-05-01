@@ -30,13 +30,13 @@ defmodule FitnessWeb.LiveHelpers do
     <div id="modal" class="phx-modal fade-in" phx-remove={hide_modal()}>
       <div
         id="modal-content"
-        class="phx-modal-content fade-in-scale"
+        class="phx-modal-content fade-in-scale rounded-lg p-8 mb-10"
         phx-click-away={JS.dispatch("click", to: "#close")}
         phx-window-keydown={JS.dispatch("click", to: "#close")}
         phx-key="escape"
       >
         <%= if @return_to do %>
-          <%= live_patch "✖",
+          <%= live_patch "X",
             to: @return_to,
             id: "close",
             class: "phx-modal-close",
