@@ -4,6 +4,8 @@ defmodule Fitness.WorkoutTemplates.WorkoutTemplate do
 
   schema "workout_templates" do
     field :name, :string
+    belongs_to :user, Fitness.Accounts.User
+    has_many :workout_items, Fitness.WorkoutTemplates.WorkoutItem
 
     timestamps()
   end
@@ -11,7 +13,9 @@ defmodule Fitness.WorkoutTemplates.WorkoutTemplate do
   @doc false
   def changeset(workout_template, attrs) do
     workout_template
-    |> cast(attrs, [:name])
-    |> validate_required([:name])
+    |> cast(attrs, [:name, :user_id])
+    |> validate_required([:name, :user_id])
+    |> foreign_key_constraint(:user_id)
+    |> cast_assoc(:workout_items)
   end
 end

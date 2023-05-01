@@ -26,12 +26,10 @@ defmodule FitnessWeb.Router do
 
       live "/exercises/new", ExerciseLive.Index, :new
       live "/exercises/:id/edit", ExerciseLive.Index, :edit
-      live "/exercises/:id", ExerciseLive.Show, :show
       live "/exercises/:id/show/edit", ExerciseLive.Show, :edit
 
       live "/workout_templates/new", WorkoutTemplateLive.Index, :new
       live "/workout_templates/:id/edit", WorkoutTemplateLive.Index, :edit
-      live "/workout_templates/:id", WorkoutTemplateLive.Show, :show
       live "/workout_templates/:id/show/edit", WorkoutTemplateLive.Show, :edit
     end
   end
@@ -42,8 +40,10 @@ defmodule FitnessWeb.Router do
     get "/", PageController, :index
 
     live "/exercises", ExerciseLive.Index, :index
+    live "/exercises/:id", ExerciseLive.Show, :show
 
     live "/workout_templates", WorkoutTemplateLive.Index, :index
+    live "/workout_templates/:id", WorkoutTemplateLive.Show, :show
   end
 
 

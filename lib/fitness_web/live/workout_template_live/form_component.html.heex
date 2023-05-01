@@ -1,20 +1,22 @@
-<div>
-  <h2><%= @title %></h2>
-
-  <.form
-    let={f}
-    for={@changeset}
-    id="workout_template-form"
-    phx-target={@myself}
-    phx-change="validate"
-    phx-submit="save">
+<div class="bg-white rounded-lg p-6">
+    <h2 class="flex justify-center pt-0 items-center text-3xl mb-4 font-poppins"><%= @title %></h2>
   
-    <%= label f, :name %>
-    <%= text_input f, :name %>
-    <%= error_tag f, :name %>
+    <.form
+      let={f}
+      for={@changeset}
+      id="workout_template-form"
+      phx-target={@myself}
+      phx-change="validate"
+      phx-submit="save">
   
-    <div>
-      <%= submit "Save", phx_disable_with: "Saving..." %>
-    </div>
-  </.form>
-</div>
+      <div class="flex justify-end">
+        <%= submit "Save", class: "bg-blue-500 hover:bg-blue-700 font-poppins text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline", phx_disable_with: "Saving..." %>
+      </div>
+      <div class="mb-4">
+        <%= label f, :name, class: "block text-gray-700 font-bold mb-2" %>
+        <%= text_input f, :name, class: "w-full font-poppins border rounded py-2 px-3 leading-tight focus:outline-none focus:shadow-outline", placeholder: "Enter workout name" %>
+        <%= error_tag f, :name %>
+      </div>
+    </.form> 
+  </div>
+  

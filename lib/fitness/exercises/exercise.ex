@@ -10,7 +10,7 @@ defmodule Fitness.Exercises.Exercise do
     field :level, :string
     field :name, :string
     field :type, :string
-
+    has_many :workoutItem, Fitness.WorkoutTemplates.WorkoutItem
     timestamps()
   end
 

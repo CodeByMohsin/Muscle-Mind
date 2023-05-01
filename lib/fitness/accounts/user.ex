@@ -8,6 +8,7 @@ defmodule Fitness.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
     field :is_admin, :boolean, default: false
+    has_many :workout_templates, Fitness.WorkoutTemplates.WorkoutTemplate
 
     timestamps()
   end

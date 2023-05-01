@@ -10,7 +10,11 @@ module.exports = {
     '../lib/*_web/**/*.*ex'
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        'poppins': ['Poppins', 'sans-serif']
+      }
+    },
   },
   plugins: [
     require('@tailwindcss/forms'),
