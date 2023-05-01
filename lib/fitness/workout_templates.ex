@@ -39,7 +39,10 @@ defmodule Fitness.WorkoutTemplates do
   def get_workout_template!(id) do
     Repo.get!(WorkoutTemplate, id)
     |> Repo.preload(workout_items: from(w in WorkoutItem, order_by: w.id))
+  end
 
+  def get_workout_item!(id) do
+    Repo.get!(WorkoutItem, id)
   end
 
 
