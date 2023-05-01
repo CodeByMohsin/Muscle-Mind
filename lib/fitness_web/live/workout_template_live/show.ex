@@ -5,6 +5,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
   alias Fitness.Accounts
   alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.Exercises
+  alias FitnessWeb.WorkoutTemplateLive.WorkoutItemForm
 
   @impl true
   def mount(_params, session, socket) do
@@ -37,28 +38,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
      |> assign(:exercises, exercises)}
   end
 
-  @impl true
-  def handle_event("workout-item", _params, socket) do
 
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("save", %{"workout_item" => param}, socket) do
-    workout_template_id = socket.assigns.workout_template.id
-
-    create_workout_item =
-      WorkoutTemplates.create_workout_item(
-        Map.put(param, "workout_template_id", workout_template_id)
-      )
-
-    {:noreply, assign(socket, create_workout_item: create_workout_item)}
-  end
-
-  def handle_event("add-exercise", _unsigned_params, socket) do
-    IO.inspect("i call exercise")
-    {:noreply, socket}
-  end
 
   defp page_title(:show), do: "Show Workout template"
   defp page_title(:edit), do: "Edit Workout template"

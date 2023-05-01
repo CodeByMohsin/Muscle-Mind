@@ -1,4 +1,10 @@
-<h1>Show Workout template</h1>
+<h1 class="flex justify-center pt-3 items-center text-3xl mb-4 font-poppins"><%= @workout_template.name %></h1>
+<div class="flex justify-between items-center px-6 pr-8">
+<%= if assigns[:user] do %>
+  <span><button class="bg-blue-500 font-poppins hover:bg-blue-600 text-white rounded-lg px-4 py-2 mr-2"><%= live_patch "Add", to: Routes.workout_template_show_path(@socket, :edit, @workout_template) %></button></span>
+<% end %>
+  <span><button class="bg-gray-500 font-poppins hover:bg-gray-600 text-white rounded-lg px-4 py-2"><%= live_redirect "Back", to: Routes.workout_template_index_path(@socket, :index) %></button></span>
+</div>
 
 <%= if @live_action in [:edit] do %>
   <.modal return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}>
@@ -13,92 +19,43 @@
   </.modal>
 <% end %>
 
-<ul>
+<div class="rounded-lg p-8 mb-10">
+  <% list_of_same_exercise = Enum.group_by(@workout_template.workout_items, fn each -> each.exercise_id end) |> Map.values() %>
 
-  <li>
-    <strong>Name:</strong>
-    <%= @workout_template.name %>
-  </li>
-</ul>
-
-<div>
- <%= for item <- @workout_template.workout_items do %>
- <div>
-   <strong>Exercise Name:</strong>
-   <%= Fitness.Exercises.get_exercise!(item.exercise_id).name %>
-   <table>
-    <tr>
-      <th>|SETS|</th> 
-      <th>REPS|</th> 
-      <th>WEIGHT|</th> 
-      <th>UNIT|</th> 
-    </tr>
-    <tr>
-      <td>
-        <%= item.sets %>
-      </td>
-    
-      <td>
-        <%= item.reps %>
-      </td>
-
-      <td>
-        <%= item.weight %>
-      </td>
-
-      <td>
-        <%= item.weight_unit %>
-      </td>
-    
-    </tr>
-    
-   </table>
-  </div>
- <% end %>
-</div>
+  <%= for each_list <- list_of_same_exercise do %>
+     <% [workout_item_map | _] = each_list %>
+     <div class="bg-gray-100 rounded-lg shadow-md p-4 mb-4 transform hover:scale-105 transition duration-300">
+        <div class="flex justify-between items-center mb-4">
+          <a href={"/exercises/#{workout_item_map.exercise_id}"}>
+             <h2 class="text-lg font-poppins text-gray-800"><%= Fitness.Exercises.get_exercise!(workout_item_map.exercise_id).name %></h2>
+          </a> 
+           <span class="bg-yellow-400 font-poppins text-white px-2 py-1 rounded-full text-sm font-semibold"><%= length(each_list) %> sets</span>
+        </div>
+        <table class="w-full">
+           <thead class="border-b border-gray-300">
+              <tr class="text-gray-600 font-poppins">
+                 <th class="text-left py-2">Sets</th>
+                 <th class="text-left py-2">Reps</th>
+                 <th class="text-left py-2">Weight</th>
+                 <th class="text-left py-2">Unit</th>
+              </tr>
+           </thead>
+           <tbody>
+              <%= for workout_item <- each_list do%>
+              <tr class=" border-gray-300 font-poppins">
+                 <td class="text-gray-800 py-2"><%= workout_item.sets %></td>
+                 <td class="text-gray-800 py-2"><%= workout_item.reps %></td>
+                 <td class="text-gray-800 py-2"><%= workout_item.weight %></td>
+                 <td class="text-gray-800 py-2"><%= workout_item.weight_unit %></td>
+              </tr>
+              <% end %>
+            </tbody>
+         </table>
+         <.live_component module={WorkoutItemForm} id={workout_item_map.id} workout_template={@workout_template} />
+      </div>
+      <% end %>
+   </div>
 
 
 
 
-  <.form let={f} for={@changeset} action="#" phx-submit="save" phx-change="workout-item">
-    
-  <table>
-    <tr>
-      <td>
-      <%= select f, :exercise_id, Enum.map(@exercises, fn exercise -> {exercise.name, exercise.id} end), prompt: "Select an exercise"%>
-    </td>
-  </tr>
-  <tr>
-    <th>SETS</th>
-    <th>REPS</th>
-    <th>WEIGHT</th>
-    <th>UNIT</th>
-  </tr>
-
-<tr> 
-  <td>
-    <%= number_input f, :sets, value: 1, disabled: false %>
-  </td>
-  
-  <td>
-     <%= number_input f, :reps, value: 12, disabled: false %>
-  </td>
-
-  <td>
-    <%= number_input f, :weight, step: "any" %>
-  </td>
-
-  <td>
-    <%= select f, :weight_unit, ["kg", "lbs"] %>
-  </td>
-</tr>
-</table>
-
-  <%= submit "save" %>
-
-</.form>
-
-<%= if assigns[:user] do %>
-  <span><%= live_patch "Edit", to: Routes.workout_template_show_path(@socket, :edit, @workout_template), class: "button" %></span>
-<% end %>
-<span><%= live_redirect "Back", to: Routes.workout_template_index_path(@socket, :index) %></span>
