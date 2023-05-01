@@ -18,9 +18,5 @@
         <%= error_tag f, :name %>
       </div>
     </.form> 
-  
-    <%= if assigns[:action] != :new do %>
-      <.live_component module={WorkoutItemForm} id="new-workout-item" workout_template={@workout_template} />
-    <% end %>
   </div>
   

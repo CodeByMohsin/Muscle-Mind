@@ -9,7 +9,7 @@
 <%= if @live_action in [:edit] do %>
   <.modal return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}>
     <.live_component
-      module={FitnessWeb.WorkoutTemplateLive.FormComponent}
+      module={FitnessWeb.WorkoutTemplateLive.WorkoutItemForm}
       id={@workout_template.id}
       title={@page_title}
       action={@live_action}
@@ -51,10 +51,15 @@
               <% end %>
             </tbody>
          </table>
-         <.live_component module={WorkoutItemForm} id={workout_item_map.id} workout_template={@workout_template} />
       </div>
       <% end %>
    </div>
+
+   <%= if @workout_template.workout_items != [] do %>
+      <%= for item <- @workout_template.workout_items do %>
+        <.live_component module={WorkoutItemCreatedForm} id={item.id} workout_template={@workout_template} workout_item={item}/>
+      <% end %> 
+    <% end %>
 
 
 

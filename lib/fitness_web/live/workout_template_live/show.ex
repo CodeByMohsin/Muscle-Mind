@@ -5,7 +5,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
   alias Fitness.Accounts
   alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.Exercises
-  alias FitnessWeb.WorkoutTemplateLive.WorkoutItemForm
+  alias FitnessWeb.WorkoutTemplateLive.WorkoutItemCreatedForm 
 
   @impl true
   def mount(_params, session, socket) do
