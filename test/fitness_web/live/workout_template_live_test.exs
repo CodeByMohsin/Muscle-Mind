@@ -7,8 +7,8 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
 
   alias Fitness.Accounts
 
-  @create_attrs %{name: "some name"}
-  @update_attrs %{name: "some updated name"}
+  @create_attrs %{name: "SOME NAME"}
+  @update_attrs %{name: "SOME UPDATED NAME"}
   @invalid_attrs %{name: nil}
 
   defp create_workout_template(_) do
@@ -24,7 +24,7 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
       {:ok, _index_live, html} = live(conn, Routes.workout_template_index_path(conn, :index))
 
       assert html =~ "Listing Workout templates"
-      assert html =~ workout_template.name
+      assert html =~ String.upcase(workout_template.name)
     end
 
     test "saves new workout_template", %{conn: conn, user: user} do
@@ -48,7 +48,7 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
         |> follow_redirect(conn, Routes.workout_template_index_path(conn, :index))
 
       assert html =~ "Workout template created successfully"
-      assert html =~ "some name"
+      assert html =~ "SOME NAME"
     end
 
     test "updates workout_template in listing", %{conn: conn, workout_template: workout_template, user: user} do
@@ -72,7 +72,7 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
         |> follow_redirect(conn, "/workout_templates/#{workout_template.id}")
 
       assert html =~ "Workout template updated successfully"
-      assert html =~ "some updated name"
+      assert html =~ "SOME UPDATED NAME"
     end
 
     test "deletes workout_template in listing", %{conn: conn, workout_template: workout_template, user: user} do
@@ -93,7 +93,7 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
       {:ok, _show_live, html} = live(conn, Routes.workout_template_show_path(conn, :show, workout_template))
 
       assert html =~ "Show Workout template"
-      assert html =~ workout_template.name
+      assert html =~ String.upcase(workout_template.name)
     end
 
     test "Add workout_items within modal", %{conn: conn, workout_template: workout_template, user: user} do
