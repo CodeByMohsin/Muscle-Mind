@@ -12,22 +12,22 @@ defmodule FitnessWeb.ExerciseLiveTest do
   @create_attrs %{
     description: "some description",
     gif_url: "some gif_url",
-    level: "some level",
+    level: "Others",
     name: "some name",
-    type: "some type",
-    equipment: "some equipment",
-    body_part: "some body part"
+    type: "Others",
+    equipment: "Others",
+    body_part: "Others"
   }
   @update_attrs %{
     description: "some updated description",
     gif_url: "some updated gif_url",
-    level: "some updated level",
+    level: "Others",
     name: "some updated name",
-    type: "some updated type",
-    equipment: "some undated equipment",
-    body_part: "some updated body part"
+    type: "Others",
+    equipment: "Others",
+    body_part: "Others"
   }
-  @invalid_attrs %{description: nil, gif_url: nil, level: nil, name: nil, type: nil, equipment: nil, body_part: nil}
+  @invalid_attrs %{description: nil, gif_url: nil, level: "Others", name: nil, type: "Others", equipment: "Others", body_part: "Others"}
 
   setup %{conn: conn} do
     conn =

@@ -1,62 +1,61 @@
-<h1 class="text-black font-serif text-3xl font-light">Search Exercises</h1>
+<div class="bg-blue-100 rounded-lg shadow-lg p-6 mb-8">
 
 <%= if @live_action in [:new, :edit] do %>
-  <.modal return_to={Routes.exercise_index_path(@socket, :index)}>
-    <.live_component
-      module={FitnessWeb.ExerciseLive.FormComponent}
-      id={@exercise.id || :new}
-      title={@page_title}
-      action={@live_action}
-      exercise={@exercise}
-      return_to={Routes.exercise_index_path(@socket, :index)}
-    />
-  </.modal>
+    <.modal return_to={Routes.exercise_index_path(@socket, :index)}>
+        <.live_component
+        module={FitnessWeb.ExerciseLive.FormComponent}
+        id={@exercise.id || :new}
+        title={@page_title}
+        action={@live_action}
+        exercise={@exercise}
+        return_to={Routes.exercise_index_path(@socket, :index)}
+        />
+    </.modal>         
 <% end %>
 
-<form action="#" phx-submit="search" class="bg-gray-500 md:rounded-tl-none" phx-change="search">
-    <%= text_input(:search, :text,
-        autocomplete: "off",
-        class: "p-2 text-gray-200 placeholder:text-gray-400 w-full text-xl bg-transparent border-0",
-        placeholder: "Search",
-        value: @search) %>
-    <%= submit("Search", style: "display: none") %>
+<form class="relative flex items-center border border-gray-200 rounded-md p-2" action="#" phx-submit="search" phx-change="search">
+  <%= text_input :search, :text, autocomplete: "off", placeholder: "Search Exercises", value: @search, class: "flex-grow outline-none pl-10 font-poppins rounded" %>
+  <div class="absolute inset-y-0 left-0 pl-4 flex items-center">
+    <svg class="h-8 w-6 text-blue-400" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+      <path d="M15.5 15.5L20 20" />
+      <path d="M10 6C7.23858 6 5 8.23858 5 11C5 13.7614 7.23858 16 10 16C12.7614 16 15 13.7614 15 11C15 8.23858 12.7614 6 10 6Z" />
+    </svg>
+  </div>
+  <%= submit "" %>
 </form>
 
-<table>
-  <thead>
-    <tr>
-      <th></th>
-      <th>Level</th>
-      <th>Name</th>
-      <th>Body Part</th>
-      <th>Equipment</th>
-      <th>Exercise Type</th>
+<%= if assigns[:user] do %>
+  <div class="flex justify-end pr-2 pt-3 ">
+    <%= live_patch "New Exercise", to: Routes.exercise_index_path(@socket, :new), class: "bg-blue-500 hover:bg-blue-700 text-white font-poppins py-2  px-4 rounded" %>
+  </div>
+<% end %>
 
-      <th></th>
-    </tr>
-  </thead>
-  <%= if assigns[:user] do %>
-    <span class="flex float-right"><%= live_patch "New Exercise", to: Routes.exercise_index_path(@socket, :new) %></span>
-  <% end %>
-
-  <tbody id="exercises">
-    <%= for exercise <- @exercises do %>
-      <tr id={"exercise-#{exercise.id}"}>
-        <td><img src={exercise.gif_url}></td>
-        <td><%= exercise.level %></td>
-        <td><%= exercise.name %></td>
-        <td><%= exercise.body_part %></td>
-        <td><%= exercise.equipment %></td>
-        <td><%= exercise.type %></td>
-
-        <td>
-          <span><%= live_redirect "Show", to: Routes.exercise_show_path(@socket, :show, exercise) %></span>
+<div  class="grid grid-cols-3 gap-6 mt-8">
+  <%= for exercise <- @exercises do %>
+    <div id={"exercise-#{exercise.id}"}, class="bg-white shadow-lg rounded-md overflow-hidden">   
+      <div class="flex justify-center h-56 bg-white">
+            <img class="w-100 h-60 mr-0 py-0 px-12 rounded overflow-hidden" src={exercise.gif_url}>
+          <span class="text-gray-500 text-base pt-4 mr-2"><%= exercise.level %></span>
+        </div>
+      <div class="px-4 py-3">
+        <h2 class="font-poppins text-lg mb-2"><%= exercise.name %></h2>
+        <div class="flex flex-wrap mb-2">
+          <span class="bg-blue-500 text-white px-2 py-1 font-poppins rounded-full text-sm font-semibold mr-2 mb-2"><%= exercise.body_part %></span>
+          <span class="bg-blue-500 text-white px-2 py-1 font-poppins rounded-full text-sm font-semibold mr-2 mb-2"><%= exercise.equipment %></span>
+          <span class="bg-blue-500 text-white px-2 py-1 font-poppins rounded-full text-sm font-semibold mr-2 mb-2"><%= exercise.type %></span>
+        </div>
+        <div class="flex justify-end">
+          <span class="mr-4"><%= live_redirect "Show", to: Routes.exercise_show_path(@socket, :show, exercise), class: "text-blue-500 font-poppins hover:underline" %></span>
           <%= if assigns[:is_admin] do %>
-            <span><%= live_patch "Edit", to: Routes.exercise_index_path(@socket, :edit, exercise) %></span>
-            <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: exercise.id, data: [confirm: "Are you sure?"] %></span>
+            <span class="mr-4"><%= live_patch "Edit", to: Routes.exercise_index_path(@socket, :edit, exercise), class: "text-blue-500 font-poppins hover:underline" %></span>
+            <span class="mr-4"><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: exercise.id, data: [confirm: "Are you sure?"], class: "text-blue-500 font-poppins hover:underline" %></span>
           <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+</div>
+
+
