@@ -1,4 +1,4 @@
-<h1 class="flex justify-center pt-3 items-center text-4xl mb-4 font-poppins"><%= @workout_template.name %></h1>
+<h1 class="flex justify-center pt-3 items-center text-4xl mb-4 font-poppins font-light "><%= String.upcase(@workout_template.name) %></h1>
 
 <div class="flex justify-end items-center px-6 pr-8">
    <span><button class="bg-gray-500 font-poppins hover:bg-gray-600 text-white rounded-lg px-4 py-2"><%= live_redirect "Back", to: Routes.workout_template_index_path(@socket, :index) %></button></span>

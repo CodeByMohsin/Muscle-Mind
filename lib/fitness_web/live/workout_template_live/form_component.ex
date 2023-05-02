@@ -28,7 +28,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.FormComponent do
 
     save_workout_template(socket, socket.assigns.action, workout_template_params)
   end
-  
+
 
   defp save_workout_template(socket, :edit, workout_template_params) do
     case WorkoutTemplates.update_workout_template(socket.assigns.workout_template, workout_template_params) do
@@ -49,7 +49,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.FormComponent do
         {:noreply,
         socket
         |> put_flash(:info, "Workout template created successfully")
-        |> push_redirect(to: "/workout_templates/#{workout_template.id}/show/edit")}
+        |> push_redirect(to: "/workout_templates")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
      {:noreply, assign(socket, changeset: changeset)}

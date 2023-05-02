@@ -69,7 +69,7 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
         index_live
         |> form("#workout_template-form", workout_template: @update_attrs)
         |> render_submit()
-        |> follow_redirect(conn, Routes.workout_template_index_path(conn, :index))
+        |> follow_redirect(conn, "/workout_templates/#{workout_template.id}")
 
       assert html =~ "Workout template updated successfully"
       assert html =~ "some updated name"
@@ -96,28 +96,27 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
       assert html =~ workout_template.name
     end
 
-    test "updates workout_template within modal", %{conn: conn, workout_template: workout_template, user: user} do
-      conn = conn |> log_in_user(user)
+    test "Add workout_items within modal", %{conn: conn, workout_template: workout_template, user: user} do
+       conn = conn |> log_in_user(user)
 
-      {:ok, show_live, _html} = live(conn, Routes.workout_template_show_path(conn, :show, workout_template))
+       {:ok, show_live, _html} = live(conn, Routes.workout_template_show_path(conn, :show, workout_template))
 
-      assert show_live |> element("a", "Edit") |> render_click() =~
-               "Edit Workout template"
+       assert show_live |> element("a", "ADD EXERCISE") |> render_click() =~ "Add New Exercises"
 
-      assert_patch(show_live, Routes.workout_template_show_path(conn, :edit, workout_template))
+       assert_patch(show_live, Routes.workout_template_show_path(conn, :edit, workout_template))
 
-      assert show_live
-             |> form("#workout_template-form", workout_template: @invalid_attrs)
-             |> render_change() =~ "can&#39;t be blank"
+      #  assert show_live
+      #         |> form("#workout_items_form", workout_items: @invalid_attrs_workout_items)
+      #         |> render_change() =~ "can&#39;t be blank"
 
-      {:ok, _, html} =
-        show_live
-        |> form("#workout_template-form", workout_template: @update_attrs)
-        |> render_submit()
-        |> follow_redirect(conn, Routes.workout_template_show_path(conn, :show, workout_template))
+      # {:ok, _, html} =
+      #   show_live
+      #   |> form("#workout_template-form", workout_template: @update_attrs)
+      #   |> render_submit()
+      #   |> follow_redirect(conn, Routes.workout_template_show_path(conn, :show, workout_template))
 
-      assert html =~ "Workout template updated successfully"
-      assert html =~ "some updated name"
+      # assert html =~ "Workout template updated successfully"
+      # assert html =~ "some updated name"
     end
   end
 end

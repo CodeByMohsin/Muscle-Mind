@@ -23,14 +23,17 @@
 
 <div class="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
   <%= for workout_template <- @workout_templates do %>
-    <div class="bg-white rounded-lg shadow-lg relative">
+    <div id={"workout_template-#{workout_template.id}"}, class="bg-white rounded-lg shadow-lg relative">
       <div class="px-6 py-4">
-        <div class="font-poppins text-2xl mb-2"><%= workout_template.name %></div>
+        <a href={"/workout_templates/#{workout_template.id}"} class="font-poppins text-xl mb-2"><%= String.upcase(workout_template.name) %></a>
       </div>
       <div class="absolute top-0 right-0 m-4">
         <%= if assigns[:user] do %>
           <%= link to: "#", phx_click: "delete", phx_value_id: workout_template.id, data: [confirm: "Are you sure?"] do %>
             <svg class="w-6 h-6 fill-current text-red-500 hover:text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414L13.414 12l3.293 3.293a1 1 0 1 1-1.414 1.414L12 13.414l-3.293 3.293a1 1 0 1 1-1.414-1.414L10.586 12 7.293 8.707a1 1 0 0 1 1.414-1.414L12 10.586z"/></svg>
+           <p class="hidden">
+            Delete
+           </p>
           <% end %>
         <% end %>
       </div>

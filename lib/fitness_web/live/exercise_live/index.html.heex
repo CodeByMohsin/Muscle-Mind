@@ -30,9 +30,9 @@
   </div>
 <% end %>
 
-<div class="grid grid-cols-3 gap-6 mt-8">
+<div  class="grid grid-cols-3 gap-6 mt-8">
   <%= for exercise <- @exercises do %>
-    <div class="bg-white shadow-lg rounded-md overflow-hidden">   
+    <div id={"exercise-#{exercise.id}"}, class="bg-white shadow-lg rounded-md overflow-hidden">   
       <div class="flex justify-center h-56 bg-white">
             <img class="w-100 h-60 mr-0 py-0 px-12 rounded overflow-hidden" src={exercise.gif_url}>
           <span class="text-gray-500 text-base pt-4 mr-2"><%= exercise.level %></span>
@@ -47,8 +47,8 @@
         <div class="flex justify-end">
           <span class="mr-4"><%= live_redirect "Show", to: Routes.exercise_show_path(@socket, :show, exercise), class: "text-blue-500 font-poppins hover:underline" %></span>
           <%= if assigns[:is_admin] do %>
-            <span class="mr-4"><%= live_patch "Edit", to: Routes.exercise_index_path(@socket, :edit, exercise), class: "text-blue-500 font-semibold hover:underline" %></span>
-            <span><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: exercise.id, data: [confirm: "Are you sure?"], class: "text-blue-500 font-semibold hover:underline" %></span>
+            <span class="mr-4"><%= live_patch "Edit", to: Routes.exercise_index_path(@socket, :edit, exercise), class: "text-blue-500 font-poppins hover:underline" %></span>
+            <span class="mr-4"><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: exercise.id, data: [confirm: "Are you sure?"], class: "text-blue-500 font-poppins hover:underline" %></span>
           <% end %>
         </div>
       </div>
