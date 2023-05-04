@@ -40,7 +40,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
 
   @impl true
   def handle_event("workout-item", %{"workout_item" => param}, socket) do
-    IO.inspect(param)
 
     update_workout_item = Map.put(socket.assigns.update_workout_item, "workout_item", param)
 
@@ -58,7 +57,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
   def handle_event("update", %{"id" => id}, socket) do
 
     update_workout_item = socket.assigns.update_workout_item["workout_item"]
-    IO.inspect(update_workout_item)
 
     workout_item = WorkoutTemplates.get_workout_item!(String.to_integer(id))
     WorkoutTemplates.update_workout_item(workout_item, update_workout_item)
