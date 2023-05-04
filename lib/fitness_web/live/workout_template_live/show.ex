@@ -35,66 +35,72 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
      |> assign(:workout_template, WorkoutTemplates.get_workout_template!(id))
      |> assign(:changeset, changeset)
      |> assign(:exercises, exercises)
-     |> assign(:update_param, %{})}
+     |> assign(:update_workout_item, %{})}
   end
 
   @impl true
   def handle_event("workout-item", %{"workout_item" => param}, socket) do
+    IO.inspect(param)
 
-     update_param = Map.put(socket.assigns.update_param, "workout_item", param)
+    update_workout_item = Map.put(socket.assigns.update_workout_item, "workout_item", param)
 
-    list_of_filter_same_exercise =
-      Enum.filter(socket.assigns.workout_template.workout_items, fn each ->
-        "#{each.exercise_id}" == param["exercise_id"]
-      end)
+    socket =
+      socket
+      |> assign(:update_workout_item, update_workout_item)
 
-    list_of_same_exercise =
-      Enum.group_by(list_of_filter_same_exercise, fn each -> each.exercise_id end)
-      |> Map.values()
-
-    [current| _tail] =
-      if list_of_same_exercise == [] do
-        [%{sets_number: 1, current_weight: 0, exercise_id: 0}]
-      else
-        Enum.map(list_of_same_exercise, fn each_list ->
-          workout_item = Enum.at(each_list, -1)
-
-            %{sets_number: workout_item.sets + 1, current_weight: workout_item.weight, exercise_id: workout_item.exercise_id}
-        end)
-      end
-
-    {:noreply, assign(socket, sets_number: current.sets_number, current_weight: current.current_weight, exercise_id: current.exercise_id, update_param: update_param)}
-  end
-
-  @impl true
-  def handle_event("add-set", %{"workout_item" => param}, socket) do
-    workout_template_id = socket.assigns.workout_template.id
-
-    case WorkoutTemplates.create_workout_item(
-           Map.put(param, "workout_template_id", workout_template_id)
-           |> Map.put( "sets", "#{ String.to_integer(param["sets"]) + 1}")
-         ) do
-      {:ok, workout_item} ->
-
-        socket =
-          socket
-          |> push_redirect(to: "/workout_templates/#{workout_item.workout_template_id}")
-
-         {:noreply, socket}
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        {:noreply, assign(socket, changeset: changeset)}
-    end
-
-  end
-
- @impl true
-  def handle_event("update", %{"id" => id} = params , socket) do
-    IO.inspect(params, label: "++++++++++++++++======++++++++++++")
 
     {:noreply, socket}
   end
 
+  # update changes
+
+  @impl true
+  def handle_event("update", %{"id" => id}, socket) do
+
+    update_workout_item = socket.assigns.update_workout_item["workout_item"]
+    IO.inspect(update_workout_item)
+
+    workout_item = WorkoutTemplates.get_workout_item!(String.to_integer(id))
+    WorkoutTemplates.update_workout_item(workout_item, update_workout_item)
+
+    socket =
+      socket
+      |> assign(:update_workout_item, %{})
+      |> live_redirect(to: "/workout_templates/#{String.to_integer(update_workout_item["workout_template_id"])}")
+
+     {:noreply, socket}
+   end
+
+  # Add more set in workout_items
+
+  @impl true
+  def handle_event("add-set", param, socket) do
+
+     exercise_id = param["exercise-id"]
+     workout_template_id= param["workout-template-id"]
+     weight_unit = param["weight-unit"]
+
+
+     WorkoutTemplates.create_workout_item(
+            Map.put(%{}, "sets", "#{ String.to_integer(param["sets"]) + 1}")
+            |> Map.put("exercise_id", exercise_id)
+            |> Map.put("workout_template_id", workout_template_id)
+            |> Map.put("weight_unit",weight_unit)
+            |> Map.put("reps", param["reps"])
+            |> Map.put("weight", param["weight"])
+         )
+
+        socket =
+          socket
+          |> push_redirect(to: "/workout_templates/#{workout_template_id}")
+
+         {:noreply, socket}
+
+  end
+
+
+
+  # delete workout item sets and update the set number
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
@@ -119,7 +125,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
         order_change_list = Enum.filter(each, fn workout_item -> workout_item.sets > list_of_workout_items_after_delete.sets end)
 
         if order_change_list != [] do
-          Enum.each(order_change_list, fn each -> WorkoutTemplates.update_workout_item(each, %{"sets" => "#{each.sets - 1}", "reps" => "#{each.reps}", "weight" => "#{each.weight}", "weight_unit" => "#{each.weight_unit}", "exercise_id" => "#{each.exercise_id}", "workout_template_id" => "#{each.workout_template_id}" }) end)
+          Enum.each(order_change_list, fn each -> WorkoutTemplates.update_workout_item(each, %{"sets" => "#{each.sets - 1}"}) end)
         end
 
       end)

@@ -30,6 +30,7 @@ defmodule FitnessWeb.Router do
 
       live "/workout_templates/new", WorkoutTemplateLive.Index, :new
       live "/workout_templates/:id/edit", WorkoutTemplateLive.Index, :edit
+      live "/workout_templates/:id/show/workout_zone", WorkoutTemplateLive.WorkoutZone, :workout_zone
       live "/workout_templates/:id/show/edit", WorkoutTemplateLive.Show, :edit
     end
   end
