@@ -3,6 +3,9 @@ defmodule Fitness.Accounts.User do
   import Ecto.Changeset
 
   schema "users" do
+    field :username, :string
+    field :name, :string
+    field :player_score, :integer, default: 0
     field :email, :string
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
@@ -32,8 +35,10 @@ defmodule Fitness.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :is_admin])
+    |> cast(attrs, [:email, :password, :is_admin, :username, :name, :player_score])
     |> validate_email()
+    |> validate_username()
+    |> validate_name()
     |> validate_password(opts)
   end
 
@@ -46,10 +51,26 @@ defmodule Fitness.Accounts.User do
     |> unique_constraint(:email)
   end
 
+  defp validate_username(changeset) do
+    changeset
+    |> validate_required([:username])
+    |> validate_format(:username, ~r/^[a-zA-Z0-9]+$/, message: "A username should consist of both letters and numbers, and should not contain any spaces or symbols")
+    |> validate_length(:username, min: 8, max: 20)
+    |> unsafe_validate_unique(:username, Fitness.Repo)
+    |> unique_constraint(:username)
+  end
+
+  defp validate_name(changeset) do
+    changeset
+    |> validate_required([:name])
+    |> validate_format(:name, ~r/\A[a-zA-Z ]+\z/, message: "A name must be made up of only letters and should not include any symbols or numbers.")
+    |> validate_length(:name, max: 20)
+  end
+
   defp validate_password(changeset, opts) do
     changeset
     |> validate_required([:password])
-    |> validate_length(:password, min: 12, max: 72)
+    |> validate_length(:password, min: 6, max: 72)
     # |> validate_format(:password, ~r/[a-z]/, message: "at least one lower case character")
     # |> validate_format(:password, ~r/[A-Z]/, message: "at least one upper case character")
     # |> validate_format(:password, ~r/[!?@#$%^&*_0-9]/, message: "at least one digit or punctuation character")
@@ -83,6 +104,27 @@ defmodule Fitness.Accounts.User do
     |> case do
       %{changes: %{email: _}} = changeset -> changeset
       %{} = changeset -> add_error(changeset, :email, "did not change")
+    end
+  end
+
+  def name_changeset(user, attrs) do
+
+    user
+    |> cast(attrs, [:name])
+    |> validate_name()
+    |> case do
+      %{changes: %{name: _}} = changeset -> changeset
+      %{} = changeset -> add_error(changeset, :name, "did not change")
+    end
+  end
+
+  def player_score_changeset(user, attrs) do
+
+    user
+    |> cast(attrs, [:player_score])
+    |> case do
+      %{changes: %{player_score: _}} = changeset -> changeset
+      %{} = changeset -> add_error(changeset, :player_score, "did not change")
     end
   end
 
