@@ -40,10 +40,19 @@ defmodule FitnessWeb.WorkoutTemplateLive.Index do
     |> assign(:workout_template, %WorkoutTemplate{})
   end
 
-  defp apply_action(socket, :index, _params) do
+  defp apply_action(socket, :index, params) do
+
+    preload_workout_template =
+
+    for each_workout_template<- socket.assigns.workout_templates do
+      WorkoutTemplates.get_workout_template!(each_workout_template.id)
+    end
+
     socket
     |> assign(:page_title, "Listing Workout templates")
-    |> assign(:workout_template, nil)
+    |> assign(:workout_templates, preload_workout_template)
+
+
   end
 
   @impl true

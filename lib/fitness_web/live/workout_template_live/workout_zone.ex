@@ -4,7 +4,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
   alias Fitness.WorkoutTemplates
   alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.Exercises
-  alias FitnessWeb.WorkoutTemplateLive.TimerLiveComponent
+  alias FitnessWeb.WorkoutTemplateLive.CheckBoxesLiveComponent
 
   @impl true
   def mount(params, session, socket) do
@@ -46,7 +46,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
       </div>
 
       <div>
-        <.live_component module={TimerLiveComponent} id={"stop-watch-#{Enum.random(1..100)}"} timer_status={@timer_status} workout_start={@workout_start} changeset={@changeset} workout_template={@workout_template} phx_target={TimerLiveComponent}/>
+        <.live_component module={CheckBoxesLiveComponent} id={"check-boxes"} timer_status={@timer_status} workout_start={@workout_start} changeset={@changeset} workout_template={@workout_template} />
       </div>
 
     """
