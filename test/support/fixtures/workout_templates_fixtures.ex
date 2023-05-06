@@ -11,7 +11,9 @@ defmodule Fitness.WorkoutTemplatesFixtures do
     {:ok, workout_template} =
       attrs
       |> Enum.into(%{
-        name: "some name"
+        name: "SOME NAME",
+        workout_template_score: 0,
+        is_finished: false
       })
       |> Fitness.WorkoutTemplates.create_workout_template()
 

@@ -1,108 +1,112 @@
-<h1 class="flex justify-center pt-3 items-center text-4xl mb-4 font-poppins font-light "><%= String.upcase(@workout_template.name) %></h1>
+<div class="bg-blue-100 rounded-lg shadow-lg p-6 mb-8">
 
-<div class="flex justify-end items-center px-6 pr-8">
-   <span><button class="bg-gray-500 font-poppins hover:bg-gray-600 text-white rounded-lg px-4 py-2"><%= live_redirect "Back", to: Routes.workout_template_index_path(@socket, :index) %></button></span>
-</div>
-<%= if @workout_template.workout_items == [] do %>
-<div class="flex justify-center items-center px-6 pr-8">
+   <h1 class="flex justify-center pt-3 items-center text-4xl mb-4 font-poppins font-light "><%= String.upcase(@workout_template.name) %></h1>
+   
+   <div class="flex justify-between items-center px-6 pr-8">
+      <%= if length(@workout_template.workout_items) >= 6 do %>
+      <a href={"#{@workout_template.id}/show/workout_zone"}><button class="bg-purple-400 font-poppins hover:bg-purple-500 text-white text-lg rounded-lg px-6 py-4">Start Workout</button></a>
+      <% else %>
+      <button></button>    
+      <% end %>
+      <span><button class="bg-gray-500 font-poppins hover:bg-gray-600 text-white rounded-lg px-4 py-2"><%= live_redirect "Back", to: Routes.workout_template_index_path(@socket, :index) %></button></span>
+   </div>
+   <%= if @workout_template.workout_items == [] do %>
+   <div class="flex justify-center items-center px-6 pr-8">
    <%= if assigns[:user] do %>
    <span><button class="bg-blue-500 font-poppins hover:bg-blue-600 text-white rounded-lg px-4 py-2 mr-2"><%= live_patch "ADD EXERCISE", to: Routes.workout_template_show_path(@socket, :edit, @workout_template) %></button></span>
    <% end %>
 </div>
 <% end %>
 
+   <%= if @live_action in [:edit] do %>
+   <.modal return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}>
+      <.live_component
+      module={FitnessWeb.WorkoutTemplateLive.WorkoutItemForm}
+      id={@workout_template.id}
+      title={@page_title}
+      action={@live_action}
+      workout_template={@workout_template}
+      return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}
+      />
+   </.modal>
+   <% end %>
    
-<div class="bg-white  p-8">
-<%= if @live_action in [:edit] do %>
-<.modal return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}>
-   <.live_component
-   module={FitnessWeb.WorkoutTemplateLive.WorkoutItemForm}
-   id={@workout_template.id}
-   title={@page_title}
-   action={@live_action}
-   workout_template={@workout_template}
-   return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}
-   />
-</.modal>
-<% end %>
+   <%= if @workout_template.workout_items != [] do %>
 
-<%= if @workout_template.workout_items != [] do %>
-<div class="bg-green-100 rounded-lg shadow-lg p-6 mb-8">
-
-   
-   <div class="rounded-lg p-8 mb-10">
-      <% list_of_same_exercise = Enum.group_by(@workout_template.workout_items, fn each -> each.exercise_id end) |> Map.values() %>
       
-      <%= for each_list <- list_of_same_exercise do %>
-      <% [workout_item_map | _] = each_list %>
+      
+      <div class="rounded-lg p-8 mb-10">
+         <% list_of_same_exercise = Enum.group_by(@workout_template.workout_items, fn each -> each.exercise_id end) |> Map.values() %>
+         
+         <%= for each_list <- list_of_same_exercise do %>
+         <% [workout_item_map | _] = each_list %>
          <div class="bg-gray-100 rounded-lg shadow-md p-4 mb-4 transform hover:scale-105 transition duration-300">
             <div class="flex justify-between items-center mb-4">
                <a href={"/exercises/#{workout_item_map.exercise_id}"}>
-                  <h2 class="text-lg font-poppins text-gray-800"><%= Fitness.Exercises.get_exercise!(workout_item_map.exercise_id).name %></h2>
+                  <h2 class="text-lg font-poppins text-gray-800"><%= Fitness.Exercises.get_exercise!(workout_item_map.exercise_id).name %> (<%= Fitness.Exercises.get_exercise!(workout_item_map.exercise_id).body_part %>)</h2>
                </a>
-               <span class="bg-yellow-400 font-poppins text-white px-2 py-1 rounded-full text-sm font-semibold"><%= length(each_list) %> sets</span>
+               <span class="bg-yellow-400 hover:bg-yellow-600 font-poppins text-white px-2 py-1 rounded-full text-sm font-semibold"><%= length(each_list) %> sets</span>
             </div>
-            <.form
-            let={f}
-            for={@changeset}
-            id="created-workout-item"
-            phx-change="workout-item"
-            phx-submit="add-set">
             <table class="w-full">
-            <thead class="border-b border-gray-300">
-               <tr class="text-gray-600 font-poppins">
-                  <th class="text-left py-2">Sets</th>
-                  <th class="text-left py-2">Reps</th>
-                  <th class="text-left py-2">Weight</th>
-               </tr>
-            </thead>
-            <tbody>
+               <thead class="border-b border-gray-300">
+                  <tr class="text-gray-600 font-poppins">
+                     <th class="text-left py-2">Sets</th>
+                     <th class="text-left py-2">Reps</th>
+                     <th class="text-left py-2">Weight</th>
+                  </tr>
+               </thead>
+               <% last_workout_item = Enum.at(each_list, -1) %>
                <%= for workout_item <- each_list do%>
-               <tr class=" border-gray-300 font-poppins">
-                  <td class="text-gray-800 py-2">
-                     <%= hidden_input f, :sets, disabled: false, value: workout_item.sets %>
-                     <%= hidden_input f, :workout_template_id, disabled: false, value: workout_item.workout_template_id %>
-                     <%= workout_item.sets %>
-                  </td>
-                  <td class="text-gray-800 py-2">
-                  <%= hidden_input f, :exercise_id, disabled: false, value: workout_item.exercise_id %>
-                  <%= number_input f, :reps, disabled: false, value: workout_item.reps, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
-                  <%= error_tag f, :reps %>
-               </td>
-               <td class="text-gray-800 py-2">
-                  <%= number_input f, :weight,  step: "any", value: workout_item.weight, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
-                  <%= error_tag f, :weight %>
-               </td>
-               <td class="text-gray-800 py-2">
-                  <%= hidden_input f, :weight_unit, disabled: false, value: workout_item.weight_unit %>
-                  <%= workout_item.weight_unit %>
-               </td>
+               <.form
+               let={f}
+               for={@changeset}
+               id={"created-workout-item-#{workout_item.id}"}
+               phx-change="workout-item"
+               phx-submit="update">
+               <tbody>
+                  <tr class=" border-gray-300 font-poppins">
+                     <td class="text-gray-800 py-2">
+                        <%= hidden_input f, :sets, disabled: false, value: workout_item.sets %>
+                        <%= hidden_input f, :workout_template_id, disabled: false, value: workout_item.workout_template_id %>
+                        <%= workout_item.sets %>
+                     </td>
+                     <td class="text-gray-800 py-2">
+                        <%= hidden_input f, :exercise_id, disabled: false, value: workout_item.exercise_id %>
+                        <%= number_input f, :reps, disabled: false, value: workout_item.reps, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
+                        <%= error_tag f, :reps %>
+                     </td>
+                     <td class="text-gray-800 py-2">
+                        <%= hidden_input f, :id, value: workout_item.id %>
+                        <%= number_input f, :weight,  step: "any", value: workout_item.weight, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
+                        <%= error_tag f, :weight %>
+                     </td>
+                     <td class="text-gray-800 py-2">
+                        <%= hidden_input f, :weight_unit, disabled: false, value: workout_item.weight_unit %>
+                        <%= workout_item.weight_unit %>
+                     </td>
                <td>
-                  <%= if @update_param == %{} do %>
                   <button>
                      <%= link to: "#", phx_click: "delete", phx_value_id: workout_item.id do %>
                      <svg class="w-6 h-6 fill-current text-red-500 hover:text-red-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414L13.414 12l3.293 3.293a1 1 0 1 1-1.414 1.414L12 13.414l-3.293 3.293a1 1 0 1 1-1.414-1.414L10.586 12 7.293 8.707a1 1 0 0 1 1.414-1.414L12 10.586z"/></svg>
                      <% end %>
                   </button>
-                  <% else %>
-                  <button>
-                     <%= link to: "#", phx_click: "update", phx_value_id: workout_item.id, phx_value_reps: workout_item.reps, phx_value_wight: workout_item.weight  do %>
-                     🟢
+                  
+                  <%!-- <button>
+                     <%= submit do %>
+                     <svg class="w-4 h-4 fill-current text-green-400 hover:text-green-500" fill="#000000" version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 420.827 420.827" xml:space="preserve"><g stroke-width="100"></g><g stroke-linecap="round" stroke-linejoin="round"></g><g> <g> <g> <path d="M210.29,0C156,0,104.43,20.693,65.077,58.269C25.859,95.715,2.794,146.022,0.134,199.921 c-0.135,2.734,0.857,5.404,2.744,7.388c1.889,1.983,4.507,3.105,7.244,3.105h45.211c5.275,0,9.644-4.098,9.979-9.362 c4.871-76.214,68.553-135.914,144.979-135.914c80.105,0,145.275,65.171,145.275,145.276c0,80.105-65.17,145.276-145.275,145.276 c-18.109,0-35.772-3.287-52.501-9.771l17.366-15.425c2.686-2.354,3.912-5.964,3.217-9.468c-0.696-3.506-3.209-6.371-6.592-7.521 l-113-32.552c-3.387-1.149-7.122-0.407-9.81,1.948c-2.686,2.354-3.913,5.963-3.218,9.467L69.71,403.157 c0.696,3.505,3.209,6.372,6.591,7.521c3.383,1.147,7.122,0.408,9.81-1.946l18.599-16.298 c31.946,18.574,68.456,28.394,105.581,28.394c116.021,0,210.414-94.392,210.414-210.414C420.705,94.391,326.312,0,210.29,0z"></path> <path d="M195.112,237.9h118.5c2.757,0,5-2.242,5-5v-30c0-2.757-2.243-5-5-5h-83.5v-91c0-2.757-2.243-5-5-5h-30 c-2.757,0-5,2.243-5,5v126C190.112,235.658,192.355,237.9,195.112,237.9z"></path> </g> </g> </g></svg>
                      <% end %>
-                  </button>
-                  <% end %>
+                  </button> --%>
                </td>
             </tr>
-               <% end %>
-            </tbody>
-         </table>
-         <div class="flex justify-center items-center px-6 pr-8 mt-6">
-            <%= submit "ADD SET", phx_disable_with: "Updating...", class: "bg-blue-500 hover:bg-blue-700 text-white font-poppins py-2 px-4 rounded" %>
-         </div>
+         </tbody>
       </.form>
+      <% end %>
+   </table>
+   <div class="flex justify-center pt-4">
+      <button class="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-poppins py-2 px-4 rounded"><%= link "ADD SET", to: "#", phx_click: "add-set", phx_value_exercise_id: last_workout_item.exercise_id, phx_value_reps: last_workout_item.reps, phx_value_sets: last_workout_item.sets, phx_value_weight: last_workout_item.weight, phx_value_weight_unit: last_workout_item.weight_unit, phx_value_workout_template_id: last_workout_item.workout_template_id  %></button>
    </div>
-   <% end %>
 </div>
+<% end %>
 </div>
 <% end %>
    
@@ -114,6 +118,7 @@
 </div>
 <% end %>
 </div>
+
 
 
 

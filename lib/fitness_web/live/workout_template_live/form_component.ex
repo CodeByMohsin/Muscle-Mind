@@ -49,7 +49,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.FormComponent do
         {:noreply,
         socket
         |> put_flash(:info, "Workout template created successfully")
-        |> push_redirect(to: "/workout_templates")}
+        |> push_redirect(to: "/workout_templates/#{workout_template.id}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
      {:noreply, assign(socket, changeset: changeset)}

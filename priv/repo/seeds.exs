@@ -20,4 +20,4 @@ File.read!("priv/repo/list_of_exercises.txt")
 |> Enum.each(fn workout -> Exercises.create_exercise(workout) end)
 
 
-Accounts.register_user(%{email: "test@test.com", password: "test@test.com", is_admin: true })
+Accounts.register_user(%{email: "test@test.com", password: "test@test.com", is_admin: true, username: "Admin001", name: "Admin" })

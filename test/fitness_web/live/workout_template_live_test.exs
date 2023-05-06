@@ -20,7 +20,9 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
   describe "Index" do
     setup [:create_workout_template]
 
-    test "lists all workout_templates", %{conn: conn, workout_template: workout_template} do
+    test "lists all workout_templates", %{conn: conn, workout_template: workout_template, user: user} do
+      conn = conn |> log_in_user(user)
+
       {:ok, _index_live, html} = live(conn, Routes.workout_template_index_path(conn, :index))
 
       assert html =~ "Listing Workout templates"
@@ -41,13 +43,13 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
       |> form("#workout_template-form", workout_template: @invalid_attrs)
       |> render_change() =~ "can&#39;t be blank"
 
-      {:ok, _, html} =
+      {:error, {:live_redirect, %{to: location}}} =
         index_live
         |> form("#workout_template-form", workout_template: @create_attrs)
         |> render_submit()
-        |> follow_redirect(conn, Routes.workout_template_index_path(conn, :index))
 
-      assert html =~ "Workout template created successfully"
+        {:ok, _, html} = live(conn, location)
+
       assert html =~ "SOME NAME"
     end
 
