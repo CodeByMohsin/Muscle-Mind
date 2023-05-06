@@ -64,7 +64,7 @@ defmodule Fitness.Accounts.User do
     changeset
     |> validate_required([:name])
     |> validate_format(:name, ~r/\A[a-zA-Z ]+\z/, message: "A name must be made up of only letters and should not include any symbols or numbers.")
-    |> validate_length(:name, max: 20)
+    |> validate_length(:name, min: 3, max: 20)
   end
 
   defp validate_password(changeset, opts) do
