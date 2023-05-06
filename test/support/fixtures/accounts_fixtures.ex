@@ -5,12 +5,15 @@ defmodule Fitness.AccountsFixtures do
   """
 
   def unique_user_email, do: "user#{System.unique_integer()}@example.com"
+  def unique_username, do: "username#{Enum.random(100..1000)}"
   def valid_user_password, do: "hello world!"
 
   def valid_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       email: unique_user_email(),
       password: valid_user_password(),
+      username: unique_username(),
+      name: "admin",
       is_admin: true
     })
   end
