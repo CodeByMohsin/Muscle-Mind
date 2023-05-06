@@ -5,8 +5,6 @@ defmodule FitnessWeb.ExerciseLiveTest do
   import Fitness.ExercisesFixtures
   import Fitness.AccountsFixtures
 
-  alias FitnessWeb.UserAuth
-  alias Fitness.Accounts
   alias Fitness.Exercises
 
   @create_attrs %{

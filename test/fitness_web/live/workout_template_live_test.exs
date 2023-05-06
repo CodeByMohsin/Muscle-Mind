@@ -5,8 +5,6 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
   import Fitness.WorkoutTemplatesFixtures
   import Fitness.AccountsFixtures
 
-  alias Fitness.Accounts
-
   @create_attrs %{name: "SOME NAME"}
   @update_attrs %{name: "SOME UPDATED NAME"}
   @invalid_attrs %{name: nil}

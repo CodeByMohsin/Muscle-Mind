@@ -40,7 +40,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.Index do
     |> assign(:workout_template, %WorkoutTemplate{})
   end
 
-  defp apply_action(socket, :index, params) do
+  defp apply_action(socket, :index, _params) do
 
     preload_workout_template =
 
