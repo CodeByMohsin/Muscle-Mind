@@ -54,8 +54,24 @@ defmodule FitnessWeb.ExerciseLive.Index do
     {:noreply, assign(socket, :exercises, list_exercises())}
   end
 
+  # search by search box
+
   @impl true
   def handle_event("search", %{"search" => %{"text" => search_query}}, socket) do
+    exercises = Exercises.list_exercises(search_query)
+
+    socket =
+      socket
+      |> assign(search: search_query)
+      |> assign(exercises: exercises)
+
+    {:noreply, socket}
+  end
+
+  # search by tags
+
+  @impl true
+  def handle_event("search", %{"search" => search_query}, socket) do
     exercises = Exercises.list_exercises(search_query)
 
     socket =
