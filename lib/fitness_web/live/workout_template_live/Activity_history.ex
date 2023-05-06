@@ -30,13 +30,11 @@ defmodule FitnessWeb.WorkoutTemplateLive.ActivityHistory do
 <div class="bg-blue-100 shadow-lg p-6 mb-8">
   <h1 class="flex justify-center pt-0 items-center text-4xl mb-4 font-poppins">History</h1>
 
-
-  <%= if assigns[:user] do %>
         <%= if length(@workout_templates) >= 1 do %>
-      <% user_template_owner = Enum.at(@workout_templates,-1) %>
+      <% user_template_owner = Enum.filter(@workout_templates, fn each -> each.user_id == assigns[:user].id end) %>
 
-      <%= if assigns[:user].id == user_template_owner.user_id do %>
-      <% workout_template_are_finished = Enum.filter(@workout_templates, fn each -> each.is_finished == true end) %>
+      <%= if true do %>
+      <% workout_template_are_finished = Enum.filter(user_template_owner, fn each -> each.is_finished == true end) %>
       <div class="flex justify-end mb-4">
       <p class="bg-yellow-500 hover:bg-yellow-700 font-poppins hover:text-2xl text-white px-2 py-1 text-xl rounded-full text-sm"><%= length(workout_template_are_finished) %> Workouts</p>
       </div>
@@ -64,7 +62,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.ActivityHistory do
         </div>
         <% end %>
       <% end %>
-    <% end %>
   </div>
 
 """

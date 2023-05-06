@@ -33,19 +33,37 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
       </div>
       <% end %>
 
-      <div class="flex justify-between items-center px-6 pr-8">
+      <div class="flex justify-between px-6 pr-8">
       <%= if @workout_template.workout_items != [] do %>
             <%= if @timer_status != :running do %>
-              <button class="bg-indigo-400 font-poppins hover:bg-pink-400 text-white text-lg rounded-lg px-6 py-4", phx-click="start_workout">Start Workout</button>
+              <button class="bg-purple-400 font-poppins hover:bg-pink-400 text-white text-lg rounded-lg px-6 py-4", phx-click="start_workout" , data="Have you finished? Please check all the sets as they may be incomplete due to the loss of your bonus points.">Start Workout</button>
             <% else %>
+            <div class=" group relative">
               <p class="bg-white font-poppins hover:bg-yellow-200 text-white text-4xl rounded-lg px-6 py-4">💪</p>
+              <span class="tooltip-text font-poppins hidden group-hover:block bg-yellow-600 text-white p-1 rounded-lg absolute text-xs text-center bottom-full -translate-y-3.5 ">
+                You will receive 20 points per set and if you complete all sets, you will get 50 points bonus. So, try your best.
+              </span>
+              </div>
             <% end %>
         <% else %>
         <button></button>
       <% end %>
 
       <%= if @timer_status != :running do %>
+        <div class=" group relative">
+         <span>
+        </span>
         <span class="bg-gray-500 font-poppins hover:bg-gray-600 text-white rounded-lg px-4 py-2"> <%= live_redirect "Edit", to: Routes.workout_template_show_path(@socket, :show, @workout_template) %></span>
+        </div>
+        <% else %>
+        <div class=" group relative">
+        <span class="tooltip-text font-poppins hidden group-hover:block bg-red-400 text-white p-1 rounded-lg absolute text-xs text-center bottom-full -translate-x-16 -translate-y-1 ">
+          The timer is lost by you
+        </span>
+        <button class="bg-gray-500 font-poppins hover:bg-gray-600 text-white rounded-lg px-4 py-2">
+          <%= live_redirect "Back", to: Routes.workout_template_show_path(@socket, :show, @workout_template) %>
+        </button>
+        </div>
       <% end %>
       </div>
 
@@ -53,14 +71,21 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
         <.live_component module={CheckBoxesLiveComponent} id={"check-boxes"} timer_status={@timer_status} workout_start={@workout_start} changeset={@changeset} workout_template={@workout_template} />
       </div>
 
-      <div class="flex justify-center items-center px-6 pb-8 pr-8">
       <%= if @timer_status == :running do %>
-      <span class="bg-purple-500 font-poppins hover:bg-purple-600 text-white rounded-lg px-6 py-4 mr-4"><%= link "Finish Workout", to: "#", phx_click: "finish", phx_value_id: @workout_template.id, data: [confirm: "Have you finished? Please check all the sets as they may be incomplete due to the loss of your bonus points."] %></span>
-      <% end %>
+      <div class="flex justify-center items-center px-6 py-8 pr-8 group relative">
+        <span class="tooltip-text font-poppins hidden group-hover:block bg-gray-800 text-white p-4 rounded-lg absolute text-sm text-left bottom-full -translate-y-0">
+          Have you finished? Please check all the sets as they may be incomplete due to the loss of your bonus points
+        </span>
+        <button class="bg-purple-500 font-poppins hover:bg-purple-600 text-white rounded-lg px-6 py-4 mr-4">
+          <%= link "Finish Workout", to: "#", phx_click: "finish", phx_value_id: @workout_template.id %>
+        </button>
       </div>
+      <% end %>
 
-    """
-  end
+
+
+      """
+      end
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
@@ -144,7 +169,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
         socket
         |> put_flash(
           :error,
-          "Congratulations #{String.upcase(user.name)} for completing your workout! However, you lost 50 points because you missed some sets. Try your best next time."
+          "Congratulations #{String.upcase(user.name)} for completing your workout! However, you lost 50 bonus points because you missed some sets. Try your best next time."
         )
         |> push_redirect(to: "/activity_history")
 

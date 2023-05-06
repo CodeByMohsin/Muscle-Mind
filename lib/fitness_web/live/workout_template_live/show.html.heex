@@ -1,45 +1,45 @@
-<h1 class="flex justify-center pt-3 items-center text-4xl mb-4 font-poppins font-light "><%= String.upcase(@workout_template.name) %></h1>
+<div class="bg-blue-100 rounded-lg shadow-lg p-6 mb-8">
 
-<div class="flex justify-between items-center px-6 pr-8">
-   <%= if length(@workout_template.workout_items) >= 6 do %>
-       <a href={"#{@workout_template.id}/show/workout_zone"}><button class="bg-yellow-500 font-poppins hover:bg-yellow-600 text-white text-lg rounded-lg px-6 py-4">Start Workout</button></a>
-       <% else %>
-       <button></button>    
-   <% end %>
-   <span><button class="bg-gray-500 font-poppins hover:bg-gray-600 text-white rounded-lg px-4 py-2"><%= live_redirect "Back", to: Routes.workout_template_index_path(@socket, :index) %></button></span>
-</div>
-<%= if @workout_template.workout_items == [] do %>
-<div class="flex justify-center items-center px-6 pr-8">
+   <h1 class="flex justify-center pt-3 items-center text-4xl mb-4 font-poppins font-light "><%= String.upcase(@workout_template.name) %></h1>
+   
+   <div class="flex justify-between items-center px-6 pr-8">
+      <%= if length(@workout_template.workout_items) >= 6 do %>
+      <a href={"#{@workout_template.id}/show/workout_zone"}><button class="bg-purple-400 font-poppins hover:bg-purple-500 text-white text-lg rounded-lg px-6 py-4">Start Workout</button></a>
+      <% else %>
+      <button></button>    
+      <% end %>
+      <span><button class="bg-gray-500 font-poppins hover:bg-gray-600 text-white rounded-lg px-4 py-2"><%= live_redirect "Back", to: Routes.workout_template_index_path(@socket, :index) %></button></span>
+   </div>
+   <%= if @workout_template.workout_items == [] do %>
+   <div class="flex justify-center items-center px-6 pr-8">
    <%= if assigns[:user] do %>
    <span><button class="bg-blue-500 font-poppins hover:bg-blue-600 text-white rounded-lg px-4 py-2 mr-2"><%= live_patch "ADD EXERCISE", to: Routes.workout_template_show_path(@socket, :edit, @workout_template) %></button></span>
    <% end %>
 </div>
 <% end %>
 
+   <%= if @live_action in [:edit] do %>
+   <.modal return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}>
+      <.live_component
+      module={FitnessWeb.WorkoutTemplateLive.WorkoutItemForm}
+      id={@workout_template.id}
+      title={@page_title}
+      action={@live_action}
+      workout_template={@workout_template}
+      return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}
+      />
+   </.modal>
+   <% end %>
    
-<div class="bg-white  p-8">
-<%= if @live_action in [:edit] do %>
-<.modal return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}>
-   <.live_component
-   module={FitnessWeb.WorkoutTemplateLive.WorkoutItemForm}
-   id={@workout_template.id}
-   title={@page_title}
-   action={@live_action}
-   workout_template={@workout_template}
-   return_to={Routes.workout_template_show_path(@socket, :show, @workout_template)}
-   />
-</.modal>
-<% end %>
+   <%= if @workout_template.workout_items != [] do %>
 
-<%= if @workout_template.workout_items != [] do %>
-<div class="bg-green-100 rounded-lg shadow-lg p-6 mb-8">
-
-   
-   <div class="rounded-lg p-8 mb-10">
-      <% list_of_same_exercise = Enum.group_by(@workout_template.workout_items, fn each -> each.exercise_id end) |> Map.values() %>
       
-      <%= for each_list <- list_of_same_exercise do %>
-      <% [workout_item_map | _] = each_list %>
+      
+      <div class="rounded-lg p-8 mb-10">
+         <% list_of_same_exercise = Enum.group_by(@workout_template.workout_items, fn each -> each.exercise_id end) |> Map.values() %>
+         
+         <%= for each_list <- list_of_same_exercise do %>
+         <% [workout_item_map | _] = each_list %>
          <div class="bg-gray-100 rounded-lg shadow-md p-4 mb-4 transform hover:scale-105 transition duration-300">
             <div class="flex justify-between items-center mb-4">
                <a href={"/exercises/#{workout_item_map.exercise_id}"}>
@@ -48,42 +48,42 @@
                <span class="bg-yellow-400 hover:bg-yellow-600 font-poppins text-white px-2 py-1 rounded-full text-sm font-semibold"><%= length(each_list) %> sets</span>
             </div>
             <table class="w-full">
-            <thead class="border-b border-gray-300">
-               <tr class="text-gray-600 font-poppins">
-                  <th class="text-left py-2">Sets</th>
-                  <th class="text-left py-2">Reps</th>
-                  <th class="text-left py-2">Weight</th>
-               </tr>
-            </thead>
-            <% last_workout_item = Enum.at(each_list, -1) %>
-            <%= for workout_item <- each_list do%>
-            <.form
-            let={f}
-            for={@changeset}
-            id={"created-workout-item-#{workout_item.id}"}
-            phx-change="workout-item"
-            phx-submit="update">
-            <tbody>
-               <tr class=" border-gray-300 font-poppins">
-                  <td class="text-gray-800 py-2">
-                     <%= hidden_input f, :sets, disabled: false, value: workout_item.sets %>
-                     <%= hidden_input f, :workout_template_id, disabled: false, value: workout_item.workout_template_id %>
-                     <%= workout_item.sets %>
-                  </td>
-                  <td class="text-gray-800 py-2">
-                  <%= hidden_input f, :exercise_id, disabled: false, value: workout_item.exercise_id %>
-                  <%= number_input f, :reps, disabled: false, value: workout_item.reps, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
-                  <%= error_tag f, :reps %>
-               </td>
-               <td class="text-gray-800 py-2">
-                  <%= hidden_input f, :id, value: workout_item.id %>
-                  <%= number_input f, :weight,  step: "any", value: workout_item.weight, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
-                  <%= error_tag f, :weight %>
-               </td>
-               <td class="text-gray-800 py-2">
-                  <%= hidden_input f, :weight_unit, disabled: false, value: workout_item.weight_unit %>
-                  <%= workout_item.weight_unit %>
-               </td>
+               <thead class="border-b border-gray-300">
+                  <tr class="text-gray-600 font-poppins">
+                     <th class="text-left py-2">Sets</th>
+                     <th class="text-left py-2">Reps</th>
+                     <th class="text-left py-2">Weight</th>
+                  </tr>
+               </thead>
+               <% last_workout_item = Enum.at(each_list, -1) %>
+               <%= for workout_item <- each_list do%>
+               <.form
+               let={f}
+               for={@changeset}
+               id={"created-workout-item-#{workout_item.id}"}
+               phx-change="workout-item"
+               phx-submit="update">
+               <tbody>
+                  <tr class=" border-gray-300 font-poppins">
+                     <td class="text-gray-800 py-2">
+                        <%= hidden_input f, :sets, disabled: false, value: workout_item.sets %>
+                        <%= hidden_input f, :workout_template_id, disabled: false, value: workout_item.workout_template_id %>
+                        <%= workout_item.sets %>
+                     </td>
+                     <td class="text-gray-800 py-2">
+                        <%= hidden_input f, :exercise_id, disabled: false, value: workout_item.exercise_id %>
+                        <%= number_input f, :reps, disabled: false, value: workout_item.reps, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
+                        <%= error_tag f, :reps %>
+                     </td>
+                     <td class="text-gray-800 py-2">
+                        <%= hidden_input f, :id, value: workout_item.id %>
+                        <%= number_input f, :weight,  step: "any", value: workout_item.weight, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
+                        <%= error_tag f, :weight %>
+                     </td>
+                     <td class="text-gray-800 py-2">
+                        <%= hidden_input f, :weight_unit, disabled: false, value: workout_item.weight_unit %>
+                        <%= workout_item.weight_unit %>
+                     </td>
                <td>
                   <button>
                      <%= link to: "#", phx_click: "delete", phx_value_id: workout_item.id do %>
@@ -106,8 +106,7 @@
       <button class="flex justify-center bg-blue-500 hover:bg-blue-700 text-white font-poppins py-2 px-4 rounded"><%= link "ADD SET", to: "#", phx_click: "add-set", phx_value_exercise_id: last_workout_item.exercise_id, phx_value_reps: last_workout_item.reps, phx_value_sets: last_workout_item.sets, phx_value_weight: last_workout_item.weight, phx_value_weight_unit: last_workout_item.weight_unit, phx_value_workout_template_id: last_workout_item.workout_template_id  %></button>
    </div>
 </div>
-   <% end %>
-</div>
+<% end %>
 </div>
 <% end %>
    
