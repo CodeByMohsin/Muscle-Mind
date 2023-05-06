@@ -20,7 +20,7 @@
               <a href={Routes.workout_template_activity_history_path(@conn, :history)} class="text-white hover:bg-gray-600 py-2 px-3 rounded-lg font-poppins font-bold transition-all duration-300 header">ACTIVITY HISTORY</a>
               <a href={Routes.workout_template_index_path(@conn, :index)} class="text-white hover:bg-gray-600 py-2 px-3 rounded-lg font-poppins transition-all duration-300 header">WORKOUT TEMPLATES</a>
               <a href={Routes.exercise_index_path(@conn, :index)} class="text-white hover:bg-gray-600 py-2 px-3 rounded-lg font-poppins transition-all duration-300 header">EXERCISES</a>
-              <a href={"#"} class="text-white hover:bg-gray-600 py-2 px-3 rounded-lg font-poppins transition-all duration-300 header">SCORE BOARD</a>
+              <a href={Routes.score_board_path(@conn, :score_board)} class="text-white hover:bg-gray-600 py-2 px-3 rounded-lg font-poppins transition-all duration-300 header">SCORE BOARD</a>
             </div>
             <%= render "_user_menu.html", assigns %>
           </nav>

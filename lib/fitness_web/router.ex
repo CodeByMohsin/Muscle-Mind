@@ -29,12 +29,15 @@ defmodule FitnessWeb.Router do
       live "/exercises/:id/show/edit", ExerciseLive.Show, :edit
 
       live "/activity_history", WorkoutTemplateLive.ActivityHistory, :history
+
       live "/workout_templates", WorkoutTemplateLive.Index, :index
       live "/workout_templates/new", WorkoutTemplateLive.Index, :new
       live "/workout_templates/:id", WorkoutTemplateLive.Show, :show
       live "/workout_templates/:id/edit", WorkoutTemplateLive.Index, :edit
       live "/workout_templates/:id/show/workout_zone", WorkoutTemplateLive.WorkoutZone, :workout_zone
       live "/workout_templates/:id/show/edit", WorkoutTemplateLive.Show, :edit
+
+      live "/score_board", ScoreBoardLive, :score_board
     end
   end
 

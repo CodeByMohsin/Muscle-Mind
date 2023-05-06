@@ -92,7 +92,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.ActivityHistory do
     end
 
     socket
-    |> assign(:page_title, "Listing Workout templates")
+    |> assign(:page_title, "Listing Activity History")
     |> assign(:workout_templates, preload_workout_template)
   end
 
