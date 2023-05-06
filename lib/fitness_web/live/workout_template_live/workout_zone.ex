@@ -5,18 +5,19 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
   alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.Exercises
   alias FitnessWeb.WorkoutTemplateLive.CheckBoxesLiveComponent
+  alias Fitness.Accounts
 
   @impl true
   def mount(params, session, socket) do
     changeset = WorkoutTemplates.change_workout_item(%WorkoutItem{})
 
     {:ok,
-    socket
-    |> assign(:changeset, changeset)
-    |> assign(:update_param, %{})
-    |> assign(:time, ~T[00:00:00])
-    |> assign(:timer_status, :stopped)
-    |> assign(:workout_start, :not_begin)}
+     socket
+     |> assign(:changeset, changeset)
+     |> assign(:update_param, %{})
+     |> assign(:time, ~T[00:00:00])
+     |> assign(:timer_status, :stopped)
+     |> assign(:workout_start, :not_begin)}
   end
 
   def render(assigns) do
@@ -35,18 +36,27 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
       <div class="flex justify-between items-center px-6 pr-8">
       <%= if @workout_template.workout_items != [] do %>
             <%= if @timer_status != :running do %>
-              <button class="bg-yellow-500 font-poppins hover:bg-green-400 text-white text-lg rounded-lg px-6 py-4", phx-click="start_workout">Start Workout</button>
+              <button class="bg-indigo-400 font-poppins hover:bg-pink-400 text-white text-lg rounded-lg px-6 py-4", phx-click="start_workout">Start Workout</button>
             <% else %>
               <p class="bg-white font-poppins hover:bg-yellow-200 text-white text-4xl rounded-lg px-6 py-4">💪</p>
             <% end %>
         <% else %>
         <button></button>
       <% end %>
+
+      <%= if @timer_status != :running do %>
         <span class="bg-gray-500 font-poppins hover:bg-gray-600 text-white rounded-lg px-4 py-2"> <%= live_redirect "Edit", to: Routes.workout_template_show_path(@socket, :show, @workout_template) %></span>
+      <% end %>
       </div>
 
       <div>
         <.live_component module={CheckBoxesLiveComponent} id={"check-boxes"} timer_status={@timer_status} workout_start={@workout_start} changeset={@changeset} workout_template={@workout_template} />
+      </div>
+
+      <div class="flex justify-center items-center px-6 pb-8 pr-8">
+      <%= if @timer_status == :running do %>
+      <span class="bg-purple-500 font-poppins hover:bg-purple-600 text-white rounded-lg px-6 py-4 mr-4"><%= link "Finish Workout", to: "#", phx_click: "finish", phx_value_id: @workout_template.id, data: [confirm: "Have you finished? Please check all the sets as they may be incomplete due to the loss of your bonus points."] %></span>
+      <% end %>
       </div>
 
     """
@@ -57,8 +67,8 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
     changeset = WorkoutTemplates.change_workout_item(%WorkoutItem{})
 
     {:noreply,
-    socket
-    |> assign(:workout_template, WorkoutTemplates.get_workout_template!(id))}
+     socket
+     |> assign(:workout_template, WorkoutTemplates.get_workout_template!(id))}
   end
 
   # update my checkboxes
@@ -84,8 +94,65 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
     {:noreply, socket}
   end
 
+  # finish workout
 
- # timer logic
+  @impl true
+  def handle_event("finish", %{"id" => id}, socket) do
+    id = String.to_integer(id)
+
+    workout_template = WorkoutTemplates.get_workout_template!(id)
+
+    user_id = workout_template.user_id
+    user = Accounts.get_user!(user_id)
+
+    player_score = user.player_score
+    workout_template_score = workout_template.workout_template_score
+
+    list_of_complete_workout_items =
+      Enum.filter(workout_template.workout_items, fn each ->
+        each.check_box == true
+      end)
+
+    if length(list_of_complete_workout_items) == length(workout_template.workout_items) do
+      total_score = Enum.reduce(list_of_complete_workout_items, 0, fn _each, acc -> acc + 20 end)
+
+      workout_template_score_update =
+        WorkoutTemplates.update_workout_template(workout_template, %{
+          "workout_template_score" => "#{total_score + 50}",
+          "is_finished" => "true"
+        })
+
+      socket =
+        socket
+        |> put_flash(
+          :info,
+          "Well done #{String.upcase(user.name)} for finishing your workout! You earned 50 bonus points for completing all of your sets. Keep up the great work!"
+        )
+        |> push_redirect(to: "/activity_history")
+
+      {:noreply, assign(socket, :timer_status, :stopped)}
+    else
+      total_score = Enum.reduce(list_of_complete_workout_items, 0, fn _each, acc -> acc + 20 end)
+
+      workout_template_score_update =
+        WorkoutTemplates.update_workout_template(workout_template, %{
+          "workout_template_score" => "#{total_score}",
+          "is_finished" => "true"
+        })
+
+      socket =
+        socket
+        |> put_flash(
+          :error,
+          "Congratulations #{String.upcase(user.name)} for completing your workout! However, you lost 50 points because you missed some sets. Try your best next time."
+        )
+        |> push_redirect(to: "/activity_history")
+
+      {:noreply, assign(socket, :timer_status, :stopped)}
+    end
+  end
+
+  # timer logic
 
   @impl true
   def handle_event("start_workout", _value, socket) do
@@ -103,7 +170,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
   def handle_event("stop", _value, socket) do
     {:noreply, assign(socket, :timer_status, :stopped)}
   end
-
 
   @impl true
   def handle_info(:tick, socket) do
