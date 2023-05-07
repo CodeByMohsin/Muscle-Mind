@@ -124,10 +124,9 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
   @impl true
   def handle_event("finish", %{"id" => id}, socket) do
     id = String.to_integer(id)
-
     workout_template = WorkoutTemplates.get_workout_template!(id)
 
-    user_id = workout_template.user_id
+    user_id = socket.assigns.current_user.id
     user = Accounts.get_user!(user_id)
 
     player_score = user.player_score

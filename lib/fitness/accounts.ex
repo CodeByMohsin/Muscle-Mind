@@ -12,6 +12,10 @@ defmodule Fitness.Accounts do
   def is_admin?(user) do
     user.is_admin
   end
+
+  def list_of_users do
+    Repo.all(User)
+  end
   ## Database getters
 
   @doc """
