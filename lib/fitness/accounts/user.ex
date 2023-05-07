@@ -54,8 +54,8 @@ defmodule Fitness.Accounts.User do
   defp validate_username(changeset) do
     changeset
     |> validate_required([:username])
-    |> validate_format(:username, ~r/^[a-zA-Z0-9]+$/, message: "A username should consist of both letters and numbers, and should not contain any spaces or symbols")
-    |> validate_length(:username, min: 8, max: 20)
+    |> validate_format(:username, ~r/^[a-zA-Z0-9!#$_:+-?]+$/, message: "A username should consist of both letters and numbers, and should not contain any spaces or symbols")
+    |> validate_length(:username, min: 5, max: 40)
     |> unsafe_validate_unique(:username, Fitness.Repo)
     |> unique_constraint(:username)
   end
