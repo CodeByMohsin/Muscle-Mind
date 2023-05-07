@@ -1,34 +1,50 @@
-<h1>Register</h1>
+<div class="flex justify-center items-center h-screen bg-gray-100">
+<div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+<h1 class="font-bold text-2xl mb-6 font-poppins">Register</h1>
 
-<.form let={f} for={@changeset} action={Routes.user_registration_path(@conn, :create)}>
+
+<.form let={f} for={@changeset} action={Routes.user_registration_path(@conn, :create)} class="max-w-md mx-auto">
   <%= if @changeset.action do %>
-    <div class="alert alert-danger">
+    <div class="bg-red-100 border font-poppins border-red-400 text-red-700 px-4 py-3 rounded mb-8">
       <p>Oops, something went wrong! Please check the errors below.</p>
     </div>
   <% end %>
-  
-  <%= label f, :name %>
-  <%= text_input f, :name, required: true %>
-  <%= error_tag f, :name %>
 
-  <%= label f, :username %>
-  <%= text_input f, :username, required: true %>
-  <%= error_tag f, :username %>
 
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
-  <%= error_tag f, :email %>
-
-  <%= label f, :password %>
-  <%= password_input f, :password, required: true %>
-  <%= error_tag f, :password %>
-
-  <div>
-    <%= submit "Register" %>
+  <div class="mb-4">
+    <%= label f, :email, class: "block font-poppins font-medium text-sm text-gray-700" %>
+    <%= email_input f, :email, required: true, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
+    <%= error_tag f, :email %>
   </div>
-</.form>
 
-<p>
-  <%= link "Log in", to: Routes.user_session_path(@conn, :new) %> |
-  <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new) %>
+  <div class="mb-4">
+    <%= label f, :full_name, class: "block font-poppins font-medium text-sm text-gray-700" %>
+    <%= text_input f, :full_name, required: true, class: "mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
+    <%= error_tag f, :full_name %>
+  </div>
+
+  <div class="mb-4">
+    <%= label f, :username, class: "block font-poppins font-medium text-sm text-gray-700" %>
+    <%= text_input f, :username, required: true, class: "mt-1 font-poppins block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
+    <%= error_tag f, :username %>
+  </div>
+
+  <div class="mb-4">
+    <%= label f, :password, class: "block font-poppins font-medium text-sm text-gray-700" %>
+    <%= password_input f, :password, required: true, class: "mt-1 font-poppins block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
+    <%= error_tag f, :password %>
+  </div>
+
+  <button class="w-full px-4 font-poppins py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-400 to-pink-600 hover:from-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" type="submit">
+    Sign up
+  </button>
+</.form>
+<div class="flex justify-center mt-6">
+<p class="mt-2 font-poppins text-sm">
+  Already have an account?
+  <%= link "Log in", to: Routes.user_session_path(@conn, :new), class: "font-bold text-blue-500 hover:text-blue-700" %> <br>
 </p>
+</div>
+</div>
+</div>
+

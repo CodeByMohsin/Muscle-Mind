@@ -1,27 +1,38 @@
-<h1>Log in</h1>
 
-<.form let={f} for={@conn} action={Routes.user_session_path(@conn, :create)} as={:user}>
-  <%= if @error_message do %>
-    <div class="alert alert-danger">
-      <p><%= @error_message %></p>
+<div class="flex justify-center items-center h-screen bg-gray-100">
+  <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <h1 class="font-bold font-poppins text-2xl mb-6">Log in</h1>
+    <.form let={f} for={@conn} action={Routes.user_session_path(@conn, :create)} as={:user} class="space-y-4">
+      <%= if @error_message do %>
+        <div class="bg-red-100 font-poppins text-red-700 px-3 py-2 rounded-md">
+          <p><%= @error_message %></p>
+        </div>
+      <% end %>
+      <div>
+        <%= label f, :email, class: "block font-poppins font-medium text-sm text-gray-700" %>
+        <%= email_input f, :email, required: true, class: "mt-1 font-poppins block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
+      </div>
+      <div>
+        <%= label f, :password, class: "block font-poppins font-medium text-sm text-gray-700" %>
+        <%= password_input f, :password, required: true, class: "mt-1 font-poppins block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" %>
+      </div>
+      <div class="flex items-center">
+        <%= checkbox f, :remember_me, class: "rounded font-poppins border-gray-300 text-indigo-600 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 h-4 w-4 mr-2" %>
+        <%= label f, :remember_me, "Remember me", class: "font-medium font-poppins text-sm text-gray-700" %>
+      </div>
+      <div>
+        <%= submit "Log in", class: "w-full font-poppins px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-400 to-pink-600 hover:from-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      </div>
+    </.form>
+    <div class="flex justify-center mt-6">
+      <p class="mt-1 font-poppins text-base">
+        Don't have an account? <%= link "Sign up", to: Routes.user_registration_path(@conn, :new), class: "font-medium font-poppins text-blue-500 hover:text-blue-600" %> 
+      </p>
     </div>
-  <% end %>
 
-  <%= label f, :email %>
-  <%= email_input f, :email, required: true %>
-
-  <%= label f, :password %>
-  <%= password_input f, :password, required: true %>
-
-  <%= label f, :remember_me, "Keep me logged in for 60 days" %>
-  <%= checkbox f, :remember_me %>
-
-  <div>
-    <%= submit "Log in" %>
+      <p class="text-center font-poppins mt-2 text-sm">
+        Forgot your password? <%= link "Reset it", to: Routes.user_reset_password_path(@conn, :new), class: "font-medium font-poppins text-blue-500 hover:text-blue-600" %>
+      </p>
   </div>
-</.form>
+</div>
 
-<p>
-  <%= link "Register", to: Routes.user_registration_path(@conn, :new) %> |
-  <%= link "Forgot your password?", to: Routes.user_reset_password_path(@conn, :new) %>
-</p>
