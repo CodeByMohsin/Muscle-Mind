@@ -22,7 +22,14 @@
               <a href={Routes.exercise_index_path(@conn, :index)} class="text-white hover:bg-gray-600 py-2 px-3 rounded-lg font-poppins transition-all duration-300 header">EXERCISES</a>
               <a href={Routes.score_board_path(@conn, :score_board)} class="text-white hover:bg-gray-600 py-2 px-3 rounded-lg font-poppins transition-all duration-300 header">SCORE BOARD</a>
             </div>
-            <%= render "_user_menu.html", assigns %>
+            <div class="flex float-right">
+              <%= if @current_user do %>
+              <p class="text-white hover:bg-gray-600 py-2 px-3 rounded-lg font-poppins transition-all duration-300 header"><%= link "LOG OUT", to: Routes.user_session_path(@conn, :delete), method: :delete %></p>
+              <% else %>
+              <p class="text-white hover:bg-gray-600 py-2 px-3 rounded-lg font-poppins transition-all duration-300 header"><%= link "LOG IN", to: Routes.user_session_path(@conn, :new) %></p>
+              <% end %>
+            </div>
+              <%= render "_user_menu.html", assigns %>
           </nav>
       </section>
     </header>
