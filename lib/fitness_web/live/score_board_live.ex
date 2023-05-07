@@ -52,7 +52,7 @@ defmodule FitnessWeb.ScoreBoardLive do
             </div>
             <div class="flex justify-between ">
             <p class="text-orange-500 pt-2 pb-2 pl-4 text-base"><%= Calendar.strftime(user.updated_at, "%B %-d, %Y") %></p>
-            <% user_workout_template = Enum.filter(@workout_templates, fn each -> each.user_id == user.id end) %>
+            <% user_workout_template = Enum.filter(@workout_templates, fn each -> each.user_id == user.id and each.is_finished == true end) %>
               <span class=" text-gray-500 pr-2 pb-2"><%= length(user_workout_template) %> ✕ workout complete</span>
             </div>
             <div class="user-score bg-gray-700 text-white px-4 py-2 rounded-b-lg flex justify-between">
