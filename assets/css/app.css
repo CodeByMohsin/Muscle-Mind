@@ -4,6 +4,84 @@
 @import url('https://fonts.googleapis.com/css?family=Pacifico');
 @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,400&display=swap');
 
+
+.scoreboard {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f2f2f2;
+  padding: 2rem;
+}
+
+.scoreboard h1 {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.users {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.user {
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 1rem;
+  overflow: hidden;
+  transition: transform 0.2s ease-out;
+}
+
+.user:hover {
+  transform: translateY(-5px);
+}
+
+.user-info {
+  padding: 1rem;
+}
+
+.user-info .date {
+  font-size: 1.2rem;
+  color: #ffaa00;
+}
+
+.user-info .name {
+  display: block;
+  font-size: 1.5rem;
+  color: #333;
+  text-decoration: none;
+  margin-top: 1rem;
+}
+
+.user-info .name:hover {
+  color: #ffaa00;
+}
+
+.user-info .username {
+  font-size: 1rem;
+  color: #aaa;
+  margin-left: 0.5rem;
+}
+
+.user-score {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.user-score .score-label {
+  font-size: 1.2rem;
+  color: #fffcfc;
+}
+
+.user-score .score {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #ffaa00;
+}
+
+
+
 @keyframes blinkH1 {
   0%   {
       color: #fff;
