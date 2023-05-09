@@ -195,13 +195,13 @@ defmodule Fitness.Accounts do
     User.password_changeset(user, attrs, hash_password: false)
   end
 
-  def update_user_name(%User{} = user, attrs) do
+  def update_user_name(%User{} = user, attrs \\ %{}) do
     user
     |> User.name_changeset(attrs)
     |> Repo.update()
   end
 
-  def update_user_player_score(%User{} = user, attrs) do
+  def update_user_player_score(%User{} = user, attrs \\ %{}) do
     user
     |> User.player_score_changeset(attrs)
     |> Repo.update()
