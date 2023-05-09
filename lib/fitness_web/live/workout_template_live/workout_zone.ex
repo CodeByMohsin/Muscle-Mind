@@ -149,8 +149,8 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
       socket =
         socket
         |> put_flash(
-          :info,
-          "Well done #{String.upcase(user.name)} for finishing your workout! You earned 50 bonus points for completing all of your sets. Keep up the great work!"
+          :bonus,
+          "Well done #{String.upcase(user.name)} for finishing your workout! 🥳 You earned ✨50✨ bonus 🎉 points for completing all of your sets. Keep up the great work! 👍"
         )
         |> push_redirect(to: "/activity_history")
 
@@ -167,8 +167,8 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
       socket =
         socket
         |> put_flash(
-          :error,
-          "Congratulations #{String.upcase(user.name)} for completing your workout! However, you lost 50 bonus points because you missed some sets. Try your best next time."
+          :loss,
+          "Congratulations #{String.upcase(user.name)} for completing your workout! However, 😞 you lost 50 bonus points because you missed some sets. Try your best next time 👍"
         )
         |> push_redirect(to: "/activity_history")
 

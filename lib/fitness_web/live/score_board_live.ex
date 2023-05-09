@@ -47,7 +47,7 @@ defmodule FitnessWeb.ScoreBoardLive do
             <div class="user-info flex justify-between items-center px-6 py-4 border-gray-400">
               <a href="#" class="font-poppins text-2xl text-gray-600 mb-2 hover:text-lime-500">
                 <%= String.upcase(user.name) %>
-               <div class="absolute top-0 right-0 px-4 py-2 pt-2 bg-gray-600 text-white text-xs hover:text-xl font-bold rounded-bl-lg rounded-tr-lg"><%= user.username %></div>
+               <div class="absolute top-0 right-0 px-4 py-2 pt-2 bg-gray-600 text-white text-xs hover:text-xl font-bold rounded-bl-lg rounded-tr-lg">@<%= user.username %></div>
               </a>
             </div>
             <div class="flex justify-between ">

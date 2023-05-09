@@ -27,6 +27,8 @@ config :fitness, FitnessWeb.Endpoint,
     cd: Path.expand("../assets", __DIR__)
   ]
 
+  config :chartkick, json_serializer: Jason
+
 # Configures the mailer
 #
 # By default it uses the "Local" adapter which stores the emails
