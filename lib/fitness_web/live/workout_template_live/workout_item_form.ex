@@ -28,7 +28,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutItemForm do
     ~H"""
 
 
-    <div class="bg-white shadow-lg rounded-lg p-8">
+    <div class="bg-white rounded-lg p-8">
     <h2 class="flex justify-center pt-0 items-center text-3xl mb-4 font-poppins">Add New Exercises</h2>
 
       <.form

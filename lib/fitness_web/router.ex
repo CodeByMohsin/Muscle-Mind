@@ -30,6 +30,8 @@ defmodule FitnessWeb.Router do
 
       live "/activity_history", WorkoutTemplateLive.ActivityHistory, :history
 
+      live "/profile", UserProfileLive, :profile
+
       live "/workout_templates", WorkoutTemplateLive.Index, :index
       live "/workout_templates/new", WorkoutTemplateLive.Index, :new
       live "/workout_templates/:id", WorkoutTemplateLive.Show, :show
@@ -46,7 +48,7 @@ defmodule FitnessWeb.Router do
     get "/", PageController, :index
 
     live "/score_board", ScoreBoardLive, :score_board
-    
+
     live "/exercises", ExerciseLive.Index, :index
     live "/exercises/:id", ExerciseLive.Show, :show
   end

@@ -1,11 +1,19 @@
 <main class="container">
-  <p class="alert alert-info" role="alert"
+  <p class="alert alert-info text-center font-poppins text-2xl rounded-full" role="alert"
     phx-click="lv:clear-flash"
     phx-value-key="info"><%= live_flash(@flash, :info) %></p>
 
-  <p class="alert alert-danger" role="alert"
+  <p class="alert alert-danger text-center font-poppins text-2xl rounded-full" role="alert"
     phx-click="lv:clear-flash"
     phx-value-key="error"><%= live_flash(@flash, :error) %></p>
+
+  <p class="bg-yellow-200 text-yellow-500 border-yellow-700 text-center font-poppins text-4xl" role="alert"
+    phx-click="lv:clear-flash"
+    phx-value-key="info"><%= live_flash(@flash, :bonus) %></p>
+
+  <p class="bg-gray-400 text-white text-center font-poppins text-2xl" role="alert"
+    phx-click="lv:clear-flash"
+    phx-value-key="error"><%= live_flash(@flash, :loss) %></p>
 
   <%= @inner_content %>
 </main>
