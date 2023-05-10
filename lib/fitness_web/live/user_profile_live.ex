@@ -47,7 +47,7 @@ defmodule FitnessWeb.UserProfileLive do
       </div>
 
       <div class="flex justify-center bg-white rounded-lg shadow-lg relative">
-        <span class="text-2xl text-gray-600 font-poppins font-semibold pr-80"> All Workout </span>
+        <span class="text-2xl text-gray-600 font-poppins font-semibold pr-80"> Training Volume </span>
         <span class="text-2xl text-gray-600 font-poppins font-semibold pl-80"> Current Weight </span>
       </div>
 

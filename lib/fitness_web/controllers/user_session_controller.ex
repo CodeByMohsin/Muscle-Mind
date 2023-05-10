@@ -14,7 +14,6 @@ defmodule FitnessWeb.UserSessionController do
     if user = Accounts.get_user_by_email_and_password(email, password) do
 
       conn
-      |> put_flash(:info, "Login successfully.")
       |> UserAuth.log_in_user(user, user_params)
     else
       # In order to prevent user enumeration attacks, don't disclose whether the email is registered.
@@ -24,7 +23,6 @@ defmodule FitnessWeb.UserSessionController do
 
   def delete(conn, _params) do
     conn
-    |> put_flash(:info, "Logged out successfully.")
     |> UserAuth.log_out_user()
   end
 end
