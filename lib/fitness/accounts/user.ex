@@ -4,6 +4,7 @@ defmodule Fitness.Accounts.User do
 
   schema "users" do
     field :username, :string
+    field :image, :string, default: "/images/user-profile.svg"
     field :name, :string
     field :player_score, :integer, default: 0
     field :email, :string
@@ -35,7 +36,7 @@ defmodule Fitness.Accounts.User do
   """
   def registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :is_admin, :username, :name, :player_score])
+    |> cast(attrs, [:email, :password, :is_admin, :username, :name, :player_score, :image])
     |> validate_email()
     |> validate_username()
     |> validate_name()
@@ -116,6 +117,16 @@ defmodule Fitness.Accounts.User do
       %{changes: %{name: _}} = changeset -> changeset
       %{} = changeset -> add_error(changeset, :name, "did not change")
     end
+  end
+
+  def image_changeset(user, attrs) do
+    user
+    |> cast(attrs, [:image])
+    |> case do
+      %{changes: %{image: _}} = changeset -> changeset
+      %{} = changeset -> add_error(changeset, :image, "did not change")
+    end
+
   end
 
   def player_score_changeset(user, attrs) do

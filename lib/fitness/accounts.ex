@@ -201,6 +201,12 @@ defmodule Fitness.Accounts do
     |> Repo.update()
   end
 
+  def update_user_image(%User{} = user, attrs \\ %{}) do
+    user
+    |> User.image_changeset(attrs)
+    |> Repo.update()
+  end
+
   def update_user_player_score(%User{} = user, attrs \\ %{}) do
     user
     |> User.player_score_changeset(attrs)

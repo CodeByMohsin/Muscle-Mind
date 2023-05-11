@@ -7,6 +7,7 @@ defmodule Fitness.Repo.Migrations.AddAdminFieldInUsersAuthSchema do
       add :name, :string
       add :player_score, :integer, default: 0
       add :username, :citext, null: false
+      add :image, :string, default: "/images/user-profile.svg"
     end
 
     create unique_index(:users, [:username])

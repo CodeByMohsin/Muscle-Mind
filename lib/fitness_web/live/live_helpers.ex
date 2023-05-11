@@ -43,7 +43,7 @@ defmodule FitnessWeb.LiveHelpers do
             phx_click: hide_modal()
           %>
         <% else %>
-          <a id="close" href="#" class="phx-modal-close" phx-click={hide_modal()}>✖</a>
+          <a id="close" href="#" class="phx-modal-close" phx-click={hide_modal()}>x</a>
         <% end %>
 
         <%= render_slot(@inner_block) %>
