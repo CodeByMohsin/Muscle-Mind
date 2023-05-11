@@ -14,6 +14,7 @@ defmodule Fitness.AccountsFixtures do
       password: valid_user_password(),
       username: unique_username(),
       name: "admin",
+      image: "/images/user-profile.svg",
       is_admin: true
     })
   end

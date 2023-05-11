@@ -65,7 +65,7 @@ defmodule Fitness.AccountsTest do
                email: ["must have the @ sign and no spaces"],
                password: ["should be at least 6 character(s)"],
                name: ["A name must be made up of only letters and should not include any symbols or numbers."],
-               username: ["A username should consist of both letters and numbers, and should not contain any spaces or symbols"]
+               username: ["A username should consist of both letters and numbers, and should not contain any spaces"]
              } = errors_on(changeset)
     end
 
