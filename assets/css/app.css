@@ -593,9 +593,10 @@
 }
 
 .button::before {
+  font-family: 'Poppins', sans-serif;
   position: absolute;
   top: -20px;
-  content: "Delete";
+  content: "REMOVE";
   color: white;
   transition-duration: .3s;
   font-size: 2px;
