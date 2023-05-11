@@ -22,7 +22,11 @@ defmodule FitnessWeb.WorkoutTemplateLive.ActivityHistory do
 
       <% workout_template_are_finished = Enum.filter(user_template_owner, fn each -> each.is_finished == true end) %>
       <div class="flex justify-end mb-4">
-      <p class="bg-yellow-500 hover:bg-yellow-700 font-poppins hover:text-2xl text-white px-2 py-1 text-xl rounded-full text-sm"><%= length(workout_template_are_finished) %> Workouts</p>
+      <p class="relative px-6 py-4 font-poppins text-white rounded-lg hover:text-xl group">
+      <span class="absolute inset-0 w-full h-full transition duration-300 transform -translate-x-1 -translate-y-1 bg-purple-800 ease opacity-80 group-hover:translate-x-0 group-hover:translate-y-0"></span>
+      <span class="absolute inset-0 w-full h-full transition duration-300 transform translate-x-1 translate-y-1 bg-pink-800 ease opacity-80 group-hover:translate-x-0 group-hover:translate-y-0 mix-blend-screen"></span>
+      <span class="relative"><%= length(workout_template_are_finished) %> Workouts</span>
+      </p>
       </div>
       <div class="grid gap-4 grid-cols-2">
       <%= for workout_template <- Enum.reverse(workout_template_are_finished) do %>
@@ -32,8 +36,10 @@ defmodule FitnessWeb.WorkoutTemplateLive.ActivityHistory do
 
           <p class="text-orange-500 text-base"><%= Calendar.strftime(workout_template.updated_at, "%B %-d, %Y") %></p>
             <a href={"/workout_templates/#{workout_template.id}"} class="font-poppins text-xl text-gray-700 mb-2"><%= String.upcase(workout_template.name) %> </a>
-            <span class="bg-gray-600 hover:bg-gray-700 font-poppins  text-white px-2 py-1 text-xl rounded-full text-sm">Score: <%= workout_template.workout_template_score %></span>
-
+            <p class="relative inline-flex font-poppins text-xl items-center justify-start px-6 py-3 overflow-hidden font-medium transition-all bg-white rounded hover:bg-white group">
+            <span class="w-48 h-48 rounded rotate-[-40deg] bg-purple-600 absolute bottom-0 left-0 -translate-x-full ease-out duration-500 transition-all translate-y-full mb-9 ml-9 group-hover:ml-0 group-hover:mb-32 group-hover:translate-x-0"></span>
+            <span class="relative w-full text-left text-black transition-colors duration-300 ease-in-out group-hover:text-white">Score: <%= workout_template.workout_template_score %></span>
+            </p>
           </div>
           <% list_of_same_exercise = Enum.group_by(workout_template.workout_items, fn each -> each.exercise_id end) |> Map.values() %>
           <%= for each_list <- list_of_same_exercise do %>
