@@ -30,4 +30,4 @@ Accounts.register_user(%{email: "test@test6.com", password: "mak12345", is_admin
 Accounts.register_user(%{email: "test@test7.com", password: "mak12345", is_admin: false, username: "The-Wizard", name: "brook", player_score: "5000"})
 Accounts.register_user(%{email: "test@test8.com", password: "mak12345", is_admin: false, username: "Albert-Einstein", name: "steve", player_score: "600"})
 Accounts.register_user(%{email: "test@test9.com", password: "mak12345", is_admin: false, username: "The-Bird-Man", name: "marko", player_score: "500"})
-Accounts.register_user(%{email: "test@test10.com", password: "mak12345", is_admin: false, username: "The-Iron-Man", name: "mohsin",player_score: "2000"})
+Accounts.register_user(%{email: "test@test10.com", password: "mak12345", is_admin: false, username: "Elixir-Newbie", name: "mohsin",player_score: "2000"})
