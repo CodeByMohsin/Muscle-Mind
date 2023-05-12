@@ -4,7 +4,7 @@ defmodule FitnessWeb.UserProfileLive do
   alias Fitness.WorkoutTemplates
 
   @impl true
-  def mount(params, session, socket) do
+  def mount(_params, _session, socket) do
 
       socket =
         socket
@@ -68,7 +68,7 @@ defmodule FitnessWeb.UserProfileLive do
         <% bar_data = Jason.encode!([["Total Sets", @chart_data.total_sets],["Total Reps", @chart_data.total_reps],["Total Weight", @chart_data.total_weight] ]) %>
         <%= raw Chartkick.bar_chart bar_data, stacked: true, colors: ["#FF5733"] %>
 
-        <% datetime_data = Jason.encode!(%{"2013-03-10 00:00:00 -0800": 45, "2013-06-10 00:00:00 -0800": 56, "2013-04-10 00:00:00 -0800": 54, "2013-03-10 00:00:00 -0800": 64, "2013-06-10 00:00:00 -0800": 84, "2013-07-10 00:00:00 -0800": 74, "2013-09-10 00:00:00 -0800": 64}) %>
+        <% datetime_data = Jason.encode!(%{"2023-03-10 00:00:00 -0800": 45, "2023-06-10 00:00:00 -0800": 56, "2023-04-10 00:00:00 -0800": 54, "2023-09-10 00:00:00 -0200": 64, "2023-01-10 00:00:00 -0800": 84, "2023-07-10 00:00:00 -0800": 74, "2023-02-10 00:00:00 -0800": 64}) %>
         <%= raw Chartkick.area_chart datetime_data, colors: ["#58D68D"] %>
       </div>
 

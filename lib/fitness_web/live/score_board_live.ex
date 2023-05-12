@@ -4,7 +4,8 @@ defmodule FitnessWeb.ScoreBoardLive do
   alias Fitness.Accounts
   alias Fitness.WorkoutTemplates
 
-  def mount(params, session, socket) do
+  @impl true
+  def mount(_params, _session, socket) do
     Phoenix.PubSub.subscribe(Fitness.PubSub, "score_board")
 
     socket =
@@ -19,6 +20,7 @@ defmodule FitnessWeb.ScoreBoardLive do
     {:ok, socket}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
 

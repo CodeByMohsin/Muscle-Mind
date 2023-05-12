@@ -5,7 +5,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.ActivityHistory do
   alias Fitness.Accounts
 
   @impl true
-  def mount(_params, session, socket) do
+  def mount(_params, _session, socket) do
   {:ok, assign(socket, workout_templates: list_workout_templates())}
   end
 
@@ -64,12 +64,10 @@ defmodule FitnessWeb.WorkoutTemplateLive.ActivityHistory do
     {:noreply, apply_action(socket, socket.assigns.live_action, params)}
   end
 
-  defp apply_action(socket, :history, params) do
+  defp apply_action(socket, :history, _params) do
 
     # update player_score in database
     user = socket.assigns.current_user
-
-    player_score = user.player_score
 
     list_of_workout_template_is_finish = Enum.filter(socket.assigns.workout_templates, fn each -> each.is_finished == true end)
     list_of_workout_templates_is_belong_to_user = Enum.filter(list_of_workout_template_is_finish, fn each -> each.user_id == user.id end)
