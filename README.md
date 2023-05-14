@@ -56,6 +56,7 @@ mix phx.server
 7. **Accessing the Application** : Open your web browser and visit http://localhost:4000 to access the Muscle Mind application.
     
 ## Credits
+The website [freepik](https://www.freepik.com/free-photos-vectors/gym-background) deserves credit for generously providing its impressive background images.
 
 Credit is due to the website [uiverse.io](https://uiverse.io/) for providing us with their amazing UI elements, which we are free to use in our application.
 
