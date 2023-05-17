@@ -3,6 +3,8 @@
 
 Muscle Mind is a fitness application built on Phoenix LiveView, designed to help you track your workouts, visualize your progress, access an exercise library, and compete on a real-time scoreboard. Additionally, the app provides a workout history page to keep track of your previous sessions.
 
+## Demo
+https://github.com/0xmohsinpathan/Muscle-Mind/assets/99378575/5b73bba3-8ad9-4391-a1b2-028856ad64dc
 
 ## Lessons Learned
 
