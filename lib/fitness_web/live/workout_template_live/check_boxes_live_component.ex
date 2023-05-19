@@ -73,7 +73,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.CheckBoxesLiveComponent do
                 <%= if @workout_start != :not_begin do %>
                 <label class="checkbox-btn">
                     <label for="checkbox"></label>
-                    <%= checkbox f, :check_box, value: workout_item.check_box, id: "checkbox",  class: "form-checkbox h-5 w-5 rounded-full text-purple-500 transition duration-150 ease-in-out", phx_click: "update_checkbox", phx_value_id: workout_item.id %>
+                    <%= checkbox f, :check_box, value: workout_item.check_box,  class: "form-checkbox h-5 w-5 rounded-full text-purple-500 transition duration-150 ease-in-out", phx_click: "update_checkbox", phx_value_id: workout_item.id %>
                     <span class="checkmark rounded-lg"></span>
                 </label>
                   <% else %>
