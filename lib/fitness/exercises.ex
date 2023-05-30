@@ -7,6 +7,7 @@ defmodule Fitness.Exercises do
   alias Fitness.Repo
 
   alias Fitness.Exercises.Exercise
+  alias Fitness.Exercises.Finder.SearchTerm
 
   @doc """
   Returns the list of exercises.
@@ -19,7 +20,7 @@ defmodule Fitness.Exercises do
   """
   def list_exercises(search_query) do
   exercises = Repo.all(Exercise)
-  filter_by_search(exercises, search_query)
+  SearchTerm.filter_by_search_term(exercises, search_query)
   end
 
   def list_exercises do
@@ -105,37 +106,5 @@ defmodule Fitness.Exercises do
   """
   def change_exercise(%Exercise{} = exercise, attrs \\ %{}) do
     Exercise.changeset(exercise, attrs)
-  end
-
-  defp filter_by_search(exercises, search_query) do
-
-
-    found_search_query =
-      case search_query do
-        "" ->
-          exercises
-
-        search_query ->
-          words = search_query |> String.downcase() |> String.split()
-
-          exercises
-          |> Enum.filter(fn exercise ->
-            texts =
-              [
-                exercise.name |> String.downcase(),
-                exercise.level |> String.downcase(),
-                exercise.type |> String.downcase(),
-                exercise.body_part |> String.downcase(),
-                exercise.equipment |> String.downcase()
-              ]
-              |> Enum.join()
-
-            Enum.all?(words, fn word ->
-              String.contains?(texts, word)
-            end)
-          end)
-      end
-
-    found_search_query
   end
 end

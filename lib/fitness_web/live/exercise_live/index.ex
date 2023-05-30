@@ -7,19 +7,27 @@ defmodule FitnessWeb.ExerciseLive.Index do
 
   @impl true
   def mount(_params, session, socket) do
-    if session["user_token"] do
-      cond do
-        Accounts.get_user_by_session_token(session["user_token"]) == nil ->
-          {:ok, assign(socket, exercises: list_exercises(), search: "")}
+    current_user = Accounts.get_user_by_session_token(session["user_token"])
 
-        Accounts.get_user_by_session_token(session["user_token"]) ->
-          user = Accounts.get_user_by_session_token(session["user_token"])
+    if session["user_token"] do
+      case current_user do
+        nil ->
+          {:ok, assign(socket, exercises: Exercises.list_exercises(), search: "")}
+
+        _ ->
+          user = current_user
           is_admin = Accounts.is_admin?(user)
 
-          {:ok, assign(socket, exercises: list_exercises(), search: "", is_admin: is_admin, user: user)}
+          {:ok,
+           assign(socket,
+             exercises: Exercises.list_exercises(),
+             search: "",
+             is_admin: is_admin,
+             user: user
+           )}
       end
     else
-      {:ok, assign(socket, exercises: list_exercises(), search: "")}
+      {:ok, assign(socket, exercises: Exercises.list_exercises(), search: "")}
     end
   end
 
@@ -51,10 +59,10 @@ defmodule FitnessWeb.ExerciseLive.Index do
     exercise = Exercises.get_exercise!(id)
     {:ok, _} = Exercises.delete_exercise(exercise)
 
-    {:noreply, assign(socket, :exercises, list_exercises())}
+    {:noreply, assign(socket, :exercises, Exercises.list_exercises())}
   end
 
-  # search by search box
+  # search by search terms
 
   @impl true
   def handle_event("search", %{"search" => %{"text" => search_query}}, socket) do
@@ -80,9 +88,5 @@ defmodule FitnessWeb.ExerciseLive.Index do
       |> assign(exercises: exercises)
 
     {:noreply, socket}
-  end
-
-  defp list_exercises do
-    Exercises.list_exercises()
   end
 end

@@ -1,4 +1,4 @@
-<div class="bg-blue-100 rounded-lg shadow-lg p-6 mb-8">
+<div class="p-6 mb-8 bg-blue-100 rounded-lg shadow-lg">
 
 <%= if @live_action in [:new, :edit] do %>
     <.modal return_to={Routes.exercise_index_path(@socket, :index)}>
@@ -13,10 +13,10 @@
     </.modal>         
 <% end %>
 
-<form class="relative flex items-center border border-gray-200 rounded-md p-2" action="#" phx-submit="search" phx-change="search">
+<form class="relative flex items-center p-2 border border-gray-200 rounded-md" action="#" phx-submit="search" phx-change="search">
   <%= text_input :search, :text, autocomplete: "off", placeholder: "Search Exercises", value: @search, class: "flex-grow outline-none pl-10 font-poppins rounded" %>
-  <div class="absolute inset-y-0 left-0 pl-4 flex items-center">
-    <svg class="h-8 w-6 text-blue-400" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+  <div class="absolute inset-y-0 left-0 flex items-center pl-4">
+    <svg class="w-6 h-8 text-blue-400" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
       <path d="M15.5 15.5L20 20" />
       <path d="M10 6C7.23858 6 5 8.23858 5 11C5 13.7614 7.23858 16 10 16C12.7614 16 15 13.7614 15 11C15 8.23858 12.7614 6 10 6Z" />
     </svg>
@@ -25,24 +25,24 @@
 </form>
 
 <%= if assigns[:user] do %>
-  <div class="flex justify-end pr-2 pt-3 ">
+  <div class="flex justify-end pt-3 pr-2 ">
     <%= live_patch "New Exercise", to: Routes.exercise_index_path(@socket, :new), class: "bg-blue-500 hover:bg-blue-700 text-white font-poppins py-2  px-4 rounded" %>
   </div>
 <% end %>
 
 <div  class="grid grid-cols-3 gap-6 mt-8">
   <%= for exercise <- @exercises do %>
-    <div id={"exercise-#{exercise.id}"}, class="bg-white shadow-lg rounded-md overflow-hidden">   
+    <div id={"exercise-#{exercise.id}"}, class="overflow-hidden bg-white rounded-md shadow-lg">   
       <div class="flex justify-center h-56 bg-white">
-            <img class="w-100 h-60 mr-0 py-0 px-12 rounded overflow-hidden" src={exercise.gif_url}>
-          <span class="text-gray-500 text-base pt-4 mr-2"><%= link "#{exercise.level}", to: "#", phx_click: "search", phx_value_search: exercise.level %></span>
+            <img class="px-12 py-0 mr-0 overflow-hidden rounded w-100 h-60" src={exercise.gif_url}>
+          <span class="pt-4 mr-2 text-base text-gray-500"><%= link "#{exercise.level}", to: "#", phx_click: "search", phx_value_search: exercise.level %></span>
         </div>
       <div class="px-4 py-3">
-        <h2 class="font-poppins text-lg mb-2"><%= exercise.name %></h2>
+        <h2 class="mb-2 text-lg font-poppins"><%= exercise.name %></h2>
         <div class="flex flex-wrap mb-2">
-          <span class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 font-poppins rounded-full text-sm font-semibold mr-2 mb-2"><%= link "#{exercise.body_part}", to: "#", phx_click: "search", phx_value_search: exercise.body_part %></span>
-          <span class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 font-poppins rounded-full text-sm font-semibold mr-2 mb-2"><%= link "#{exercise.equipment}", to: "#", phx_click: "search", phx_value_search: exercise.equipment %></span>
-          <span class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 font-poppins rounded-full text-sm font-semibold mr-2 mb-2"><%= link "#{exercise.type}", to: "#", phx_click: "search", phx_value_search: exercise.type %></span>
+          <span class="px-2 py-1 mb-2 mr-2 text-sm font-semibold text-white bg-blue-500 rounded-full hover:bg-blue-600 font-poppins"><%= link "#{exercise.body_part}", to: "#", phx_click: "search", phx_value_search: exercise.body_part %></span>
+          <span class="px-2 py-1 mb-2 mr-2 text-sm font-semibold text-white bg-blue-500 rounded-full hover:bg-blue-600 font-poppins"><%= link "#{exercise.equipment}", to: "#", phx_click: "search", phx_value_search: exercise.equipment %></span>
+          <span class="px-2 py-1 mb-2 mr-2 text-sm font-semibold text-white bg-blue-500 rounded-full hover:bg-blue-600 font-poppins"><%= link "#{exercise.type}", to: "#", phx_click: "search", phx_value_search: exercise.type %></span>
         </div>
         <div class="flex justify-end">
           <span class="mr-4"><%= live_redirect "Show", to: Routes.exercise_show_path(@socket, :show, exercise), class: "text-blue-500 font-poppins hover:underline" %></span>
