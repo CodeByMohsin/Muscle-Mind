@@ -15,8 +15,8 @@ defmodule FitnessWeb.ProfileLive.UpdateUserProfileForm do
   @impl true
   def render(assigns) do
     ~H"""
-    <div class="bg-white rounded-lg p-8">
-      <h2 class="flex justify-center pt-0 items-center text-3xl mb-4 font-poppins">Edit Profile</h2>
+    <div class="p-8 bg-white rounded-lg">
+      <h2 class="flex items-center justify-center pt-0 mb-4 text-3xl font-poppins">Edit Profile</h2>
 
          <.form
           let={f}
@@ -24,14 +24,10 @@ defmodule FitnessWeb.ProfileLive.UpdateUserProfileForm do
           phx-target={@myself}
           id="update_profile"
           phx-change="update"
-          phx-submit="update_name">
+          phx-submit="update_new_changes">
 
-
-          <%!-- <div phx-drop-target={@uploads.user_image.ref} class="flex justify-end">
-          <%= live_file_input @uploads.user_image %>
-          </div> --%>
           <%= for entry <- @uploads.user_image.entries do %>
-          <div class="flex justify-center mt-6 pt-6">
+          <div class="flex justify-center pt-6 mt-6">
           <%= live_img_preview entry, class: "w-48 h-48 pb-4 rounded" %>
           </div>
           <% end %>
@@ -39,8 +35,8 @@ defmodule FitnessWeb.ProfileLive.UpdateUserProfileForm do
             <%= label f, :name, class: "block text-gray-700 font-bold mb-2" %>
             <%= text_input f, :name, class: "w-full font-poppins border rounded py-2 px-3 leading-tight focus:outline-none focus:shadow-outline", placeholder: "Edit name" %>
           </div>
-          <div phx-drop-target={@uploads.user_image.ref} class="flex justify-center bg-gray-200 rounded-lg p-6 border-dashed border-4 border-gray-600 shadow">
-          <label class="flex justify-center text-2xl m-2 font-poppins px-4 py-4 cursor-pointer">
+          <div phx-drop-target={@uploads.user_image.ref} class="flex justify-center p-6 bg-gray-200 border-4 border-gray-600 border-dashed rounded-lg shadow">
+          <label class="flex justify-center px-4 py-4 m-2 text-2xl cursor-pointer font-poppins">
                 Click or drag and drop to upload image
                 <%= live_file_input @uploads.user_image, style: "display: none;" %>
           </label>
@@ -60,18 +56,18 @@ defmodule FitnessWeb.ProfileLive.UpdateUserProfileForm do
   end
 
   @impl true
-  def handle_event("update", params, socket) do
+  def handle_event("update", _params, socket) do
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("remove", params, socket) do
+  def handle_event("remove", _params, socket) do
     Accounts.update_user_image(socket.assigns.current_user, %{"image" => "/images/user-profile.svg"})
     {:noreply, socket}
   end
 
   @impl true
-  def handle_event("update_name", %{"profile" => %{"name" => updated_name}}, socket) do
+  def handle_event("update_new_changes", %{"profile" => %{"name" => updated_name}}, socket) do
     uploaded_file =
       consume_uploaded_entries(socket, :user_image, fn %{path: path}, _entry ->
         file_name = Path.basename(path)
