@@ -12,29 +12,29 @@
   </.modal>
 <% end %>
 <div class="flex flex-col items-center justify-center h-screen bg-green-100">
-  <div class="w-full max-w-4xl bg-white shadow-md rounded-md overflow-hidden">
-    <div class="bg-white overflow-hidden">   
-      <div class="flex justify-between pl-3 pr-3 pt-3">
-        <span class="text-gray-500 text-2xl pt-0 mr-2"><%= @exercise.level %></span>
+  <div class="w-full max-w-4xl overflow-hidden bg-white rounded-md shadow-md">
+    <div class="overflow-hidden bg-white">   
+      <div class="flex justify-between pt-3 pl-3 pr-3">
+        <span class="pt-0 mr-2 text-2xl text-gray-500"><%= @exercise.level %></span>
         <%= if assigns[:is_admin] do %>
         <span>
         <%= live_patch "Edit", to: Routes.exercise_show_path(@socket, :edit, @exercise), class: "text-blue-500 font-poppins hover:underline" %>
         </span>
         <% end %>
-        <span class="text-gray-500 text-l pt-0 mr-2"><%= live_redirect "Back to List", to: Routes.exercise_index_path(@socket, :index), class: "text-blue-500 font-poppins hover:underline" %></span>
+        <span class="pt-0 mr-2 text-gray-500 text-l"><%= live_redirect "Back to List", to: Routes.exercise_index_path(@socket, :index), class: "text-blue-500 font-poppins hover:underline" %></span>
       </div>
-      <div class="flex justify-center h-100 bg-white">
-            <img class="max-h-80 h-80 mr-0 py-0 px-12 rounded overflow-hidden" src={@exercise.gif_url}>
+      <div class="flex justify-center bg-white h-100">
+            <img class="px-12 py-0 mr-0 overflow-hidden rounded max-h-80 h-80" src={@exercise.gif_url}>
         </div>
         </div>
     <div class="p-6">
-      <h2 class="text-3xl font-poppins font-bold mb-2"><%= @exercise.name %></h2>
+      <h2 class="mb-2 text-3xl font-bold font-poppins"><%= @exercise.name %></h2>
       <div class="flex flex-wrap mb-4">
-        <span class="bg-blue-500 text-white px-2 py-1 font-poppins rounded-full text-sm font-semibold mr-2 mb-2"><%= @exercise.body_part %></span>
-        <span class="bg-blue-500 text-white px-2 py-1 font-poppins rounded-full text-sm font-semibold mr-2 mb-2"><%= @exercise.equipment %></span>
-        <span class="bg-blue-500 text-white px-2 py-1 font-poppins rounded-full text-sm font-semibold mr-2 mb-2"><%= @exercise.type %></span>
+        <span class="px-2 py-1 mb-2 mr-2 text-sm font-semibold text-white bg-blue-500 rounded-full font-poppins"><%= @exercise.body_part %></span>
+        <span class="px-2 py-1 mb-2 mr-2 text-sm font-semibold text-white bg-blue-500 rounded-full font-poppins"><%= @exercise.equipment %></span>
+        <span class="px-2 py-1 mb-2 mr-2 text-sm font-semibold text-white bg-blue-500 rounded-full font-poppins"><%= @exercise.type %></span>
       </div>
-      <p class="text-gray-600 font-poppins mb-6"><%= @exercise.description %></p>
+      <p class="mb-6 text-gray-600 font-poppins"><%= @exercise.description %></p>
       
     </div>
   </div>
