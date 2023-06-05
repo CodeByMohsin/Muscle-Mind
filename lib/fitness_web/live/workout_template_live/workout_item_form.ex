@@ -4,6 +4,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutItemForm do
   alias Fitness.WorkoutTemplates
   alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.Exercises
+  alias Fitness.WorkoutTemplates.Services.WorkoutItemLogic
 
   @impl true
   def update(assigns, socket) do
@@ -17,8 +18,8 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutItemForm do
       |> assign(:sets_number, 1)
       |> assign(:current_weight, 0)
       |> assign(:exercise_id, 0)
+      |> assign(:current_reps, 12)
       |> assign(:changeset, changeset)
-
 
     {:ok, socket}
   end
@@ -28,41 +29,40 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutItemForm do
     ~H"""
 
 
-    <div class="bg-white rounded-lg p-8">
-    <h2 class="flex justify-center pt-0 items-center text-3xl mb-4 font-poppins">Add New Exercises</h2>
+    <div class="p-8 bg-white rounded-lg">
+    <h2 class="flex items-center justify-center pt-0 mb-4 text-3xl font-poppins">Add New Exercises</h2>
 
       <.form
         let={f}
         for={@changeset}
         id="new-workout-item"
         phx-target={@myself}
-        phx-change="workout-item"
-        phx-submit="add">
-
+        phx-change="updated_workout-item"
+        phx-submit="add_new_exercise">
 
 
         <div class="grid grid-cols-1 gap-2">
           <div>
-            <label for="exercise_id" class="block text-sm font-poppins font-medium text-gray-700 mb-2">Choose an exercise:</label>
+            <label for="exercise_id" class="block mb-2 text-sm font-medium text-gray-700 font-poppins">Choose an exercise:</label>
             <%= select f, :exercise_id, Enum.map(@exercises, fn exercise -> {exercise.name, exercise.id} end), value: @exercise_id, prompt: "Select an exercise", class: "form-select font-poppins block w-full rounded-md shadow-sm py-2 px-3 text-gray-700 bg-white focus:outline-none focus:ring focus:ring-blue-200 focus:border-blue-500 sm:text-sm" %>
             <%= error_tag f, :exercise_id %>
           </div>
 
           <div class="grid grid-cols-3 gap-2">
           <div>
-            <label for="sets" class="block text-sm font-medium font-poppins text-gray-700 mb-2">Number of sets:</label>
+            <label for="sets" class="block mb-2 text-sm font-medium text-gray-700 font-poppins">Number of sets:</label>
             <%= number_input f, :sets, value: @sets_number, disabled: true, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
             <%= error_tag f, :sets %>
           </div>
 
           <div>
-            <label for="reps" class="block text-sm font-medium font-poppins text-gray-700 mb-2">Number of reps:</label>
-            <%= number_input f, :reps, value: 12, disabled: false, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
+            <label for="reps" class="block mb-2 text-sm font-medium text-gray-700 font-poppins">Number of reps:</label>
+            <%= number_input f, :reps, value: @current_reps, disabled: false, class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
             <%= error_tag f, :reps %>
           </div>
 
           <div>
-            <label for="weight" class="block text-sm font-medium font-poppins text-gray-700 mb-2">Weight:</label>
+            <label for="weight" class="block mb-2 text-sm font-medium text-gray-700 font-poppins">Weight:</label>
             <div class="flex">
               <%= number_input f, :weight, value: @current_weight,  step: "any", class: "form-input font-poppins rounded-md shadow-sm mt-1 block w-full" %>
               <%= error_tag f, :weight %>
@@ -81,34 +81,24 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutItemForm do
   end
 
   @impl true
-  def handle_event("workout-item", %{"workout_item" => param}, socket) do
+  def handle_event("updated_workout-item", %{"workout_item" => param}, socket) do
+    current_exercise_id = param["exercise_id"]
+    workout_items_list = socket.assigns.workout_template.workout_items
 
-    list_of_filter_same_exercise =
-      Enum.filter(socket.assigns.workout_template.workout_items, fn each ->
-        "#{each.exercise_id}" == param["exercise_id"]
-      end)
-
-    list_of_same_exercise =
-      Enum.group_by(list_of_filter_same_exercise, fn each -> each.exercise_id end)
-      |> Map.values()
-
-    [current| _tail] =
-      if list_of_same_exercise == [] do
-        [%{sets_number: 1, current_weight: 0, exercise_id: 0}]
-      else
-        Enum.map(list_of_same_exercise, fn each_list ->
-          workout_item = Enum.at(each_list, -1)
-
-            %{sets_number: workout_item.sets + 1, current_weight: workout_item.weight, exercise_id: workout_item.exercise_id}
-        end)
-      end
-
-
-    {:noreply, assign(socket, sets_number: current.sets_number, current_weight: current.current_weight, exercise_id: current.exercise_id)}
+    [current | _tail] =
+      WorkoutItemLogic.updated_workout_items_list(current_exercise_id, workout_items_list)
+      
+    {:noreply,
+     assign(socket,
+       sets_number: current.sets_number,
+       current_reps: current.updated_reps,
+       current_weight: current.updated_weight,
+       exercise_id: current.exercise_id
+     )}
   end
 
   @impl true
-  def handle_event("add", %{"workout_item" => param}, socket) do
+  def handle_event("add_new_exercise", %{"workout_item" => param}, socket) do
     workout_template_id = socket.assigns.workout_template.id
 
     case WorkoutTemplates.create_workout_item(
@@ -116,12 +106,11 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutItemForm do
            |> Map.put("sets", socket.assigns.sets_number)
          ) do
       {:ok, workout_item} ->
-
         socket =
           socket
           |> push_redirect(to: "/workout_templates/#{workout_item.workout_template_id}")
 
-         {:noreply, socket}
+        {:noreply, socket}
 
       {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
