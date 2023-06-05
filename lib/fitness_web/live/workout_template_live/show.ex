@@ -5,23 +5,11 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
   alias Fitness.Accounts
   alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.Exercises
+  alias Fitness.WorkoutTemplates.ComplexQuery
 
   @impl true
-  def mount(_params, session, socket) do
-    if session["user_token"] do
-      cond do
-        Accounts.get_user_by_session_token(session["user_token"]) == nil ->
-          {:ok, socket}
-
-        Accounts.get_user_by_session_token(session["user_token"]) ->
-          user = Accounts.get_user_by_session_token(session["user_token"])
-          is_admin = Accounts.is_admin?(user)
-
-          {:ok, assign(socket, is_admin: is_admin, user: user)}
-      end
-    else
-      {:ok, socket}
-    end
+  def mount(_params, _session, socket) do
+    {:ok, socket}
   end
 
   @impl true
@@ -41,9 +29,12 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
 
   @impl true
   def handle_event("workout-update", %{"workout_item" => param}, socket) do
-
     workout_item = WorkoutTemplates.get_workout_item!(param["id"])
-    WorkoutTemplates.update_workout_item(workout_item, %{"reps" => "#{param["reps"]}", "weight" => "#{param["weight"]}"})
+
+    WorkoutTemplates.update_workout_item(workout_item, %{
+      "reps" => "#{param["reps"]}",
+      "weight" => "#{param["weight"]}"
+    })
 
     {:noreply, socket}
   end
@@ -52,18 +43,8 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
 
   @impl true
   def handle_event("add-set", param, socket) do
-    exercise_id = param["exercise-id"]
+    ComplexQuery.adding_sets(param)
     workout_template_id = param["workout-template-id"]
-    weight_unit = param["weight-unit"]
-
-    WorkoutTemplates.create_workout_item(
-      Map.put(%{}, "sets", "#{String.to_integer(param["sets"]) + 1}")
-      |> Map.put("exercise_id", exercise_id)
-      |> Map.put("workout_template_id", workout_template_id)
-      |> Map.put("weight_unit", weight_unit)
-      |> Map.put("reps", param["reps"])
-      |> Map.put("weight", param["weight"])
-    )
 
     socket =
       socket
@@ -76,35 +57,12 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
 
   @impl true
   def handle_event("delete", %{"id" => id}, socket) do
-    workout_item = WorkoutTemplates.get_workout_item!(id)
-
-    {:ok, list_of_workout_items_after_delete} = WorkoutTemplates.delete_workout_item(workout_item)
-
-    list_of_filter_same_exercise =
-      Enum.filter(socket.assigns.workout_template.workout_items, fn each ->
-        each.exercise_id == list_of_workout_items_after_delete.exercise_id
-      end)
-
-    list_of_same_exercise =
-      Enum.group_by(list_of_filter_same_exercise, fn each -> each.exercise_id end)
-      |> Map.values()
-
-    Enum.map(list_of_same_exercise, fn each ->
-      order_change_list =
-        Enum.filter(each, fn workout_item ->
-          workout_item.sets > list_of_workout_items_after_delete.sets
-        end)
-
-      if order_change_list != [] do
-        Enum.each(order_change_list, fn each ->
-          WorkoutTemplates.update_workout_item(each, %{"sets" => "#{each.sets - 1}"})
-        end)
-      end
-    end)
+    workout_item_list = socket.assigns.workout_template.workout_items
+    ComplexQuery.reorder_workout_items_after_delete(id, workout_item_list)
 
     socket =
       socket
-      |> push_patch(to: "/workout_templates/#{workout_item.workout_template_id}")
+      |> push_patch(to: "/workout_templates/#{socket.assigns.workout_template.id}")
 
     {:noreply, socket}
   end

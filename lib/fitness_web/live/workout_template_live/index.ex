@@ -6,21 +6,8 @@ defmodule FitnessWeb.WorkoutTemplateLive.Index do
   alias Fitness.Accounts
 
   @impl true
-  def mount(_params, session, socket) do
-    if session["user_token"] do
-      cond do
-        Accounts.get_user_by_session_token(session["user_token"]) == nil ->
-          {:ok, assign(socket, workout_templates: list_workout_templates())}
-
-        Accounts.get_user_by_session_token(session["user_token"]) ->
-          user = Accounts.get_user_by_session_token(session["user_token"])
-          is_admin = Accounts.is_admin?(user)
-
-          {:ok, assign(socket, workout_templates: list_workout_templates(), is_admin: is_admin, user: user)}
-      end
-    else
-      {:ok, assign(socket, workout_templates: list_workout_templates())}
-    end
+  def mount(_params, _session, socket) do
+    {:ok, assign(socket, workout_templates: WorkoutTemplates.list_workout_templates())}
   end
 
   @impl true
@@ -41,18 +28,14 @@ defmodule FitnessWeb.WorkoutTemplateLive.Index do
   end
 
   defp apply_action(socket, :index, _params) do
-
     preload_workout_template =
-
-    for each_workout_template<- socket.assigns.workout_templates do
-      WorkoutTemplates.get_workout_template!(each_workout_template.id)
-    end
+      for each_workout_template <- socket.assigns.workout_templates do
+        WorkoutTemplates.get_workout_template!(each_workout_template.id)
+      end
 
     socket
     |> assign(:page_title, "Listing Workout templates")
     |> assign(:workout_templates, preload_workout_template)
-
-
   end
 
   @impl true
@@ -60,10 +43,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.Index do
     workout_template = WorkoutTemplates.get_workout_template!(id)
     {:ok, _} = WorkoutTemplates.delete_workout_template(workout_template)
 
-    {:noreply, assign(socket, :workout_templates, list_workout_templates())}
-  end
-
-  defp list_workout_templates do
-    WorkoutTemplates.list_workout_templates()
+    {:noreply, assign(socket, :workout_templates, WorkoutTemplates.list_workout_templates())}
   end
 end
