@@ -2,6 +2,8 @@ defmodule Fitness.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @user_types ~w(regular_user admin instructor)a
+
   schema "users" do
     field :username, :string
     field :image, :string, default: "/images/user-profile.svg"
@@ -11,7 +13,8 @@ defmodule Fitness.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
-    field :is_admin, :boolean, default: false
+    field :account_type, Ecto.Enum, values: @user_types, default: :regular_user
+
     has_many :workout_templates, Fitness.WorkoutTemplates.WorkoutTemplate
 
     timestamps()
@@ -34,9 +37,10 @@ defmodule Fitness.Accounts.User do
       validations on a LiveView form), this option can be set to `false`.
       Defaults to `true`.
   """
-  def registration_changeset(user, attrs, opts \\ []) do
+
+  def regular_user_registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :is_admin, :username, :name, :player_score, :image])
+    |> cast(attrs, [:email, :password, :username, :name, :account_type, :player_score, :image])
     |> validate_email()
     |> validate_username()
     |> validate_name()

@@ -6,6 +6,26 @@ defmodule Fitness.AccountsTest do
   import Fitness.AccountsFixtures
   alias Fitness.Accounts.{User, UserToken}
 
+  describe "types_of_users/1" do
+    test "create a new account for an account type :regular_user" do
+      attrs = valid_regular_user_attributes()
+      assert {:ok, %User{}} =  Accounts.register_regular_user(attrs)
+    end
+
+    test "create a new account for an account type :admin" do
+      attrs = valid_regular_user_attributes(%{account_type: :admin})
+      assert {:ok, %User{} = user} =  Accounts.register_regular_user(attrs)
+      assert  user.account_type == :admin
+    end
+
+    test "create a new account for an account type :instructor" do
+      attrs = valid_regular_user_attributes(%{account_type: :instructor})
+      assert {:ok, %User{} = user} =  Accounts.register_regular_user(attrs)
+      assert  user.account_type == :instructor
+    end
+
+  end
+
   describe "get_user_by_email/1" do
     test "does not return the user if the email does not exist" do
       refute Accounts.get_user_by_email("unknown@example.com")
@@ -48,9 +68,9 @@ defmodule Fitness.AccountsTest do
     end
   end
 
-  describe "register_user/1" do
+  describe "register_regular_user/1" do
     test "requires email and password to be set" do
-      {:error, changeset} = Accounts.register_user(%{})
+      {:error, changeset} = Accounts.register_regular_user(%{})
 
       assert %{
                password: ["can't be blank"],
@@ -59,7 +79,7 @@ defmodule Fitness.AccountsTest do
     end
 
     test "validates email and password when given" do
-      {:error, changeset} = Accounts.register_user(%{email: "not valid", password: "1", name: "not valid123", username: "not valid"})
+      {:error, changeset} = Accounts.register_regular_user(%{email: "not valid", password: "1", name: "not valid123", username: "not valid"})
 
       assert %{
                email: ["must have the @ sign and no spaces"],
@@ -71,24 +91,24 @@ defmodule Fitness.AccountsTest do
 
     test "validates maximum values for email and password for security" do
       too_long = String.duplicate("db", 100)
-      {:error, changeset} = Accounts.register_user(%{email: too_long, password: too_long})
+      {:error, changeset} = Accounts.register_regular_user(%{email: too_long, password: too_long})
       assert "should be at most 160 character(s)" in errors_on(changeset).email
       assert "should be at most 72 character(s)" in errors_on(changeset).password
     end
 
     test "validates email uniqueness" do
       %{email: email} = user_fixture()
-      {:error, changeset} = Accounts.register_user(%{email: email})
+      {:error, changeset} = Accounts.register_regular_user(%{email: email})
       assert "has already been taken" in errors_on(changeset).email
 
       # Now try with the upper cased email too, to check that email case is ignored.
-      {:error, changeset} = Accounts.register_user(%{email: String.upcase(email)})
+      {:error, changeset} = Accounts.register_regular_user(%{email: String.upcase(email)})
       assert "has already been taken" in errors_on(changeset).email
     end
 
     test "registers users with a hashed password" do
       email = unique_user_email()
-      {:ok, user} = Accounts.register_user(valid_user_attributes(email: email))
+      {:ok, user} = Accounts.register_regular_user(valid_regular_user_attributes(email: email))
       assert user.email == email
       assert is_binary(user.hashed_password)
       assert is_nil(user.confirmed_at)
@@ -109,7 +129,7 @@ defmodule Fitness.AccountsTest do
       changeset =
         Accounts.change_user_registration(
           %User{},
-          valid_user_attributes(email: email, password: password)
+          valid_regular_user_attributes(email: email, password: password)
         )
 
       assert changeset.valid?

@@ -10,7 +10,7 @@ defmodule Fitness.Accounts do
 
 
   def is_admin?(user) do
-    user.is_admin
+    user.account_type
   end
 
   def list_of_users do
@@ -75,17 +75,18 @@ defmodule Fitness.Accounts do
 
   ## Examples
 
-      iex> register_user(%{field: value})
+      iex> register_regular_user(%{field: value})
       {:ok, %User{}}
 
-      iex> register_user(%{field: bad_value})
+      iex> register_regular_user(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
-  def register_user(attrs) do
+
+  def register_regular_user(attrs) do
     %User{}
-    |> User.registration_changeset(attrs)
-    |> Repo.insert()
+     |> User.regular_user_registration_changeset(attrs)
+     |> Repo.insert()
   end
 
   @doc """
@@ -98,7 +99,7 @@ defmodule Fitness.Accounts do
 
   """
   def change_user_registration(%User{} = user, attrs \\ %{}) do
-    User.registration_changeset(user, attrs, hash_password: false)
+    User.regular_user_registration_changeset(user, attrs, hash_password: false)
   end
 
   ## Settings

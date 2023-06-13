@@ -34,7 +34,7 @@ defmodule FitnessWeb.ExerciseLiveTest do
       |> init_test_session(%{})
 
     exercise = exercise_fixture()
-    attrs = %{is_admin: true}
+    attrs = %{account_type: :admin}
     user = user_fixture(attrs)
 
     %{conn: conn, user: user, exercise: exercise}

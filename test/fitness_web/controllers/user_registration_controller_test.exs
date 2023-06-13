@@ -25,7 +25,7 @@ defmodule FitnessWeb.UserRegistrationControllerTest do
 
       conn =
         post(conn, Routes.user_registration_path(conn, :create), %{
-          "user" => valid_user_attributes(email: email)
+          "user" => valid_regular_user_attributes(email: email)
         })
 
       assert get_session(conn, :user_token)

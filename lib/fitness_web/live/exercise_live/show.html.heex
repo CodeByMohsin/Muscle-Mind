@@ -16,7 +16,7 @@
     <div class="overflow-hidden bg-white">   
       <div class="flex justify-between pt-3 pl-3 pr-3">
         <span class="pt-0 mr-2 text-2xl text-gray-500"><%= @exercise.level %></span>
-        <%= if assigns[:is_admin] do %>
+        <%= if assigns[:is_admin] == :admin do %>
         <span>
         <%= live_patch "Edit", to: Routes.exercise_show_path(@socket, :edit, @exercise), class: "text-blue-500 font-poppins hover:underline" %>
         </span>

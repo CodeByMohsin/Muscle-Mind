@@ -46,7 +46,7 @@
         </div>
         <div class="flex justify-end">
           <span class="mr-4"><%= live_redirect "Show", to: Routes.exercise_show_path(@socket, :show, exercise), class: "text-blue-500 font-poppins hover:underline" %></span>
-          <%= if assigns[:is_admin] do %>
+          <%= if assigns[:is_admin] == :admin do %>
             <span class="mr-4"><%= live_patch "Edit", to: Routes.exercise_index_path(@socket, :edit, exercise), class: "text-blue-500 font-poppins hover:underline" %></span>
             <span class="mr-4"><%= link "Delete", to: "#", phx_click: "delete", phx_value_id: exercise.id, data: [confirm: "Are you sure?"], class: "text-blue-500 font-poppins hover:underline" %></span>
           <% end %>

@@ -8,22 +8,31 @@ defmodule Fitness.AccountsFixtures do
   def unique_username, do: "username#{Enum.random(100..1000)}"
   def valid_user_password, do: "hello world!"
 
-  def valid_user_attributes(attrs \\ %{}) do
+  def valid_regular_user_attributes(attrs \\ %{}) do
     Enum.into(attrs, %{
       email: unique_user_email(),
       password: valid_user_password(),
       username: unique_username(),
-      name: "admin",
+      name: "users",
       image: "/images/user-profile.svg",
-      is_admin: true
+      account_type: :regular_user
     })
   end
+
+ def regular_user_fixture(attrs \\ %{}) do
+  {:ok, user} =
+    attrs
+    |> valid_regular_user_attributes()
+    |> Fitness.Accounts.register_regular_user()
+
+  user
+ end
 
   def user_fixture(attrs \\ %{}) do
     {:ok, user} =
       attrs
-      |> valid_user_attributes()
-      |> Fitness.Accounts.register_user()
+      |> valid_regular_user_attributes()
+      |> Fitness.Accounts.register_regular_user()
 
     user
   end
