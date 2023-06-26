@@ -3,8 +3,11 @@
         "phoenix-heex"
     ],
     "cSpell.words": [
+        "esbuild",
+        "floki",
         "ilike",
         "noreply",
+        "seqfuzz",
         "tbody",
         "thead"
     ]

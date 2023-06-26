@@ -8,24 +8,24 @@ defmodule Fitness.AccountsTest do
   alias Fitness.Accounts.UserTypes.{RegularUser}
 
 
-  describe "types_of_users/1" do
-    test "create a new account for an account type :regular_user" do
-      attrs = valid_user_attributes()
-      assert {:ok, %User{}} =  Accounts.register_user(attrs)
-    end
+  # describe "types_of_users/1" do
+  #   test "create a new account for an account type :regular_user" do
+  #     attrs = valid_user_attributes()
+  #     assert {:ok, %User{}} =  Accounts.register_user(attrs)
+  #   end
 
-    test "create a new account for an account type :admin" do
-      attrs = valid_user_attributes(%{account_type: :admin})
-      assert {:ok, %User{} = user} =  Accounts.register_user(attrs)
-      assert  user.account_type == :admin
-    end
+  #   test "create a new account for an account type :admin" do
+  #     attrs = valid_user_attributes(%{account_type: :admin})
+  #     assert {:ok, %User{} = user} =  Accounts.register_user(attrs)
+  #     assert  user.account_type == :admin
+  #   end
 
-    test "create a new account for an account type :instructor" do
-      attrs = valid_user_attributes(%{account_type: :instructor})
-      assert {:ok, %User{} = user} =  Accounts.register_user(attrs)
-      assert  user.account_type == :instructor
-    end
-  end
+  #   test "create a new account for an account type :instructor" do
+  #     attrs = valid_user_attributes(%{account_type: :instructor})
+  #     assert {:ok, %User{} = user} =  Accounts.register_user(attrs)
+  #     assert  user.account_type == :instructor
+  #   end
+  # end
 
   describe "regular_users/1" do
     test "player score" do

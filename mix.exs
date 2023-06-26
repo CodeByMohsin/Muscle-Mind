@@ -52,7 +52,8 @@ defmodule Fitness.MixProject do
       {:plug_cowboy, "~> 2.5"},
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
       {:seqfuzz, "~> 0.2.0"},
-      {:chartkick, "~> 1.0"}
+      {:chartkick, "~> 1.0"},
+      {:polymorphic_embed, "~> 3.0.5"}
     ]
   end
 

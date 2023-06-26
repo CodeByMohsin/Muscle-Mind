@@ -1,9 +1,12 @@
 defmodule Fitness.Accounts.User do
   use Ecto.Schema
-  import Ecto.Changeset
-  alias Fitness.Accounts.UserTypes.RegularUser
 
-  @user_types ~w(regular_user admin instructor)a
+  import Ecto.Changeset
+  import PolymorphicEmbed
+
+  alias Fitness.Accounts.UserTypes.RegularUser
+  alias Fitness.Accounts.UserTypes.Instructor
+  alias Fitness.Accounts.UserTypes.Admin
 
   schema "users" do
     field :username, :string
@@ -14,9 +17,16 @@ defmodule Fitness.Accounts.User do
     field :password, :string, virtual: true, redact: true
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
-    field :account_type, Ecto.Enum, values: @user_types, default: :regular_user
 
-    embeds_one :regular_user, RegularUser
+    polymorphic_embeds_one(:account_type,
+      types: [
+        regular_user: RegularUser,
+        instructor: Instructor,
+        admin: Admin
+      ],
+      on_type_not_found: :raise,
+      on_replace: :update
+    )
 
     has_many :workout_templates, Fitness.WorkoutTemplates.WorkoutTemplate
 
@@ -43,20 +53,19 @@ defmodule Fitness.Accounts.User do
 
   def user_registration_changeset(user, attrs, opts \\ []) do
     user
-    |> cast(attrs, [:email, :password, :username, :name, :account_type, :player_score, :image])
+    |> cast(attrs, [:email, :password, :username, :name, :player_score, :image])
     |> validate_email()
     |> validate_username()
     |> validate_name()
     |> validate_password(opts)
-    |> cast_embed(:regular_user, required: true, with: &RegularUser.changeset/2)
+    |> cast_polymorphic_embed(:account_type,
+      with: [
+        regular_user: &RegularUser.changeset/2,
+        instructor: &Instructor.changeset/2,
+        admin: &Admin.changeset/2
+      ]
+    )
   end
-
-  def changeset(regular_users, attrs \\ %{}) do
-    regular_users
-    |> cast(attrs, [:player_score, :user_image])
-    |> validate_required([:player_score, :user_image])
-  end
-
 
   defp validate_email(changeset) do
     changeset
@@ -70,7 +79,10 @@ defmodule Fitness.Accounts.User do
   defp validate_username(changeset) do
     changeset
     |> validate_required([:username])
-    |> validate_format(:username, ~r/^[a-zA-Z0-9!#$_:+-?]+$/, message: "A username should consist of both letters and numbers, and should not contain any spaces")
+    |> validate_format(:username, ~r/^[a-zA-Z0-9!#$_:+-?]+$/,
+      message:
+        "A username should consist of both letters and numbers, and should not contain any spaces"
+    )
     |> validate_length(:username, min: 5, max: 40)
     |> unsafe_validate_unique(:username, Fitness.Repo)
     |> unique_constraint(:username)
@@ -79,7 +91,10 @@ defmodule Fitness.Accounts.User do
   defp validate_name(changeset) do
     changeset
     |> validate_required([:name])
-    |> validate_format(:name, ~r/\A[a-zA-Z ]+\z/, message: "A name must be made up of only letters and should not include any symbols or numbers.")
+    |> validate_format(:name, ~r/\A[a-zA-Z ]+\z/,
+      message:
+        "A name must be made up of only letters and should not include any symbols or numbers."
+    )
     |> validate_length(:name, max: 40)
   end
 
@@ -124,7 +139,6 @@ defmodule Fitness.Accounts.User do
   end
 
   def name_changeset(user, attrs) do
-
     user
     |> cast(attrs, [:name])
     |> validate_name()
@@ -141,11 +155,9 @@ defmodule Fitness.Accounts.User do
       %{changes: %{image: _}} = changeset -> changeset
       %{} = changeset -> add_error(changeset, :image, "did not change")
     end
-
   end
 
   def player_score_changeset(user, attrs) do
-
     user
     |> cast(attrs, [:player_score])
     |> case do
