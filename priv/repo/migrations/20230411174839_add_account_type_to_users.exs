@@ -8,6 +8,7 @@ defmodule Fitness.Repo.Migrations.AddAccountTypeToUsers do
       add :username, :citext, null: false
       add :image, :string, default: "/images/user-profile.svg", null: false
       add :account_type, :string, null: false
+      add :regular_user, :map
     end
 
     create unique_index(:users, [:username])

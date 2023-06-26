@@ -75,17 +75,17 @@ defmodule Fitness.Accounts do
 
   ## Examples
 
-      iex> register_regular_user(%{field: value})
+      iex> register_user(%{field: value})
       {:ok, %User{}}
 
-      iex> register_regular_user(%{field: bad_value})
+      iex> register_user(%{field: bad_value})
       {:error, %Ecto.Changeset{}}
 
   """
 
-  def register_regular_user(attrs) do
+  def register_user(attrs) do
     %User{}
-     |> User.regular_user_registration_changeset(attrs)
+     |> User.user_registration_changeset(attrs)
      |> Repo.insert()
   end
 
@@ -99,7 +99,7 @@ defmodule Fitness.Accounts do
 
   """
   def change_user_registration(%User{} = user, attrs \\ %{}) do
-    User.regular_user_registration_changeset(user, attrs, hash_password: false)
+    User.user_registration_changeset(user, attrs, hash_password: false)
   end
 
   ## Settings

@@ -1,6 +1,7 @@
 defmodule Fitness.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
+  alias Fitness.Accounts.UserTypes.RegularUser
 
   @user_types ~w(regular_user admin instructor)a
 
@@ -14,6 +15,8 @@ defmodule Fitness.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
     field :account_type, Ecto.Enum, values: @user_types, default: :regular_user
+
+    embeds_one :regular_user, RegularUser
 
     has_many :workout_templates, Fitness.WorkoutTemplates.WorkoutTemplate
 
@@ -38,14 +41,22 @@ defmodule Fitness.Accounts.User do
       Defaults to `true`.
   """
 
-  def regular_user_registration_changeset(user, attrs, opts \\ []) do
+  def user_registration_changeset(user, attrs, opts \\ []) do
     user
     |> cast(attrs, [:email, :password, :username, :name, :account_type, :player_score, :image])
     |> validate_email()
     |> validate_username()
     |> validate_name()
     |> validate_password(opts)
+    |> cast_embed(:regular_user, required: true, with: &RegularUser.changeset/2)
   end
+
+  def changeset(regular_users, attrs \\ %{}) do
+    regular_users
+    |> cast(attrs, [:player_score, :user_image])
+    |> validate_required([:player_score, :user_image])
+  end
+
 
   defp validate_email(changeset) do
     changeset
