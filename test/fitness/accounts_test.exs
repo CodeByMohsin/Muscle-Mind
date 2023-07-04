@@ -8,11 +8,11 @@ defmodule Fitness.AccountsTest do
   alias Fitness.Accounts.UserTypes.{RegularUser}
 
 
-  # describe "types_of_users/1" do
-  #   test "create a new account for an account type :regular_user" do
-  #     attrs = valid_user_attributes()
-  #     assert {:ok, %User{}} =  Accounts.register_user(attrs)
-  #   end
+  describe "types_of_users/1" do
+    test "create a new account for an account type :regular_user" do
+      attrs = valid_user_attributes(%{account_type: :regular_user})
+      assert {:ok, %User{}} =  Accounts.register_user(attrs) |> IO.inspect(label: "#{__MODULE__}:#{__ENV__.line} #{DateTime.utc_now}", limit: :infinity)
+    end
 
   #   test "create a new account for an account type :admin" do
   #     attrs = valid_user_attributes(%{account_type: :admin})
@@ -25,7 +25,7 @@ defmodule Fitness.AccountsTest do
   #     assert {:ok, %User{} = user} =  Accounts.register_user(attrs)
   #     assert  user.account_type == :instructor
   #   end
-  # end
+  end
 
   describe "regular_users/1" do
     test "player score" do

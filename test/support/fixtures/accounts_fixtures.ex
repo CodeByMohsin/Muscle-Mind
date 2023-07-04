@@ -14,7 +14,6 @@ defmodule Fitness.AccountsFixtures do
       password: valid_user_password(),
       username: unique_username(),
       name: "users",
-      regular_user: %{},
       account_type: %{}
     })
   end
