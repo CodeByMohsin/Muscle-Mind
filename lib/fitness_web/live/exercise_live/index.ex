@@ -7,10 +7,10 @@ defmodule FitnessWeb.ExerciseLive.Index do
 
   @impl true
   def mount(_params, session, socket) do
-
+    # TODO refactor this
     if session["user_token"] do
       current_user = Accounts.get_user_by_session_token(session["user_token"])
-      
+
       case current_user do
         nil ->
           {:ok, assign(socket, exercises: Exercises.list_exercises(), search: "")}

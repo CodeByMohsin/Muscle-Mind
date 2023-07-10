@@ -6,11 +6,18 @@ defmodule FitnessWeb.NavLive.MainMenu do
 
   @impl true
   def mount(_params, session, socket) do
-    current_user = Accounts.get_user_by_session_token(session["user_token"])
+    IO.inspect(socket)
 
-    socket
-    |> assign(:current_user, current_user)
-    |> then(&{:ok, &1})
+    socket =
+      if !is_nil(session["user_token"]) do
+        current_user = Accounts.get_user_by_session_token(session["user_token"])
+        socket = socket |> assign(current_user: current_user)
+      else
+        socket = socket |> assign(current_user: nil)
+      end
+
+    IO.inspect(socket)
+    {:ok, socket}
   end
 
   def hide_modal(js \\ %JS{}) do
@@ -19,8 +26,15 @@ defmodule FitnessWeb.NavLive.MainMenu do
   end
 
   @impl true
+  def handle_event("new-workout", params, socket) do
+    new_workout_path = Routes.workout_template_index_path(socket, :new)
+    {:noreply, push_redirect(socket, to: new_workout_path)}
+  end
+
+  @impl true
   def render(assigns) do
     ~H"""
+      <%= if (@current_user) do %>
       <nav class="bg-gray-800">
         <div class="max-w-full px-4 mx-auto sm:px-6 lg:px-8">
           <div class="flex justify-between h-16">
@@ -63,14 +77,12 @@ defmodule FitnessWeb.NavLive.MainMenu do
             </div>
             <div class="flex items-center">
               <div class="flex-shrink-0">
-                  <%= live_redirect to: Routes.workout_template_index_path(@socket, :new), replace: false do %>
-                <button type="button" class="relative font-poppins inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
+                <button phx-click="new-workout" type="button" class="relative font-poppins inline-flex items-center gap-x-1.5 rounded-md bg-indigo-500 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                   <svg class="-ml-0.5 h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                     <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                   </svg>
                   NEW WORKOUT
                 </button>
-                  <% end %>
               </div>
               <div class="hidden md:ml-4 md:flex md:flex-shrink-0 md:items-center">
                 <button type="button" class="p-1 text-gray-400 bg-gray-800 rounded-full hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
@@ -148,6 +160,9 @@ defmodule FitnessWeb.NavLive.MainMenu do
           </div>
         </div>
      </nav>
+     <% else %>
+            Hello world
+     <% end%>
     """
   end
 end
