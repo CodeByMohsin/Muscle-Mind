@@ -13,12 +13,7 @@
       return_to={Routes.workout_template_index_path(@socket, :index)}
     />
   </.modal>
-<% end %>
-
- 
-  <div class="flex justify-end mb-4">
-    <%= live_patch "New Workout", to: Routes.workout_template_index_path(@socket, :new), class: "bg-blue-500 font-poppins hover:bg-blue-600 text-white rounded-lg px-3 py-2" %>
-  </div>  
+<% end %>  
       
       <%= if length(@workout_templates) >= 1 do %>
       <% user_template_owner = Enum.filter(@workout_templates, fn each -> each.user_id == assigns[:current_user].id end) %>

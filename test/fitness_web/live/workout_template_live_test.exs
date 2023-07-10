@@ -32,7 +32,7 @@ defmodule FitnessWeb.WorkoutTemplateLiveTest do
 
       {:ok, index_live, _html} = live(conn, Routes.workout_template_index_path(conn, :index))
 
-      assert index_live |> element("a", "New Workout") |> render_click() =~
+      assert index_live |> element("button", "NEW WORKOUT") |> render_click() |> follow_redirect(conn) =~
       "New Workout template"
 
       assert_patch(index_live, Routes.workout_template_index_path(conn, :new))

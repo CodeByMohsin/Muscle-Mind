@@ -2,7 +2,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.Show do
   use FitnessWeb, :live_view
 
   alias Fitness.WorkoutTemplates
-  alias Fitness.Accounts
   alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.Exercises
   alias Fitness.WorkoutTemplates.ComplexQuery

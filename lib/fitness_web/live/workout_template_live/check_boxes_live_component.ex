@@ -1,8 +1,6 @@
 defmodule FitnessWeb.WorkoutTemplateLive.CheckBoxesLiveComponent do
   use FitnessWeb, :live_component
 
-  alias Fitness.WorkoutTemplates
-  alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.Exercises
 
   @impl true
@@ -18,6 +16,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.CheckBoxesLiveComponent do
     |> assign(:workout_start, assigns.workout_start)}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="p-8 bg-white">
@@ -34,7 +33,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.CheckBoxesLiveComponent do
       <div class="p-4 mb-4 transition duration-200 transform bg-gray-100 rounded-lg shadow-md hover:scale-105">
           <div class="flex items-center justify-between mb-4">
             <a href={"/exercises/#{workout_item_map.exercise_id}"}>
-                <h2 class="text-lg text-gray-800 font-poppins"><%= Fitness.Exercises.get_exercise!(workout_item_map.exercise_id).name %> (<%= Fitness.Exercises.get_exercise!(workout_item_map.exercise_id).body_part %>)</h2>
+                <h2 class="text-lg text-gray-800 font-poppins"><%= Exercises.get_exercise!(workout_item_map.exercise_id).name %> (<%= Exercises.get_exercise!(workout_item_map.exercise_id).body_part %>)</h2>
             </a>
             <span class="px-2 py-1 text-sm font-semibold text-white bg-yellow-400 rounded-full hover:bg-yellow-600 font-poppins"><%= length(each_list) %> sets</span>
           </div>
