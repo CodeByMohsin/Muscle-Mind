@@ -24,7 +24,9 @@ defmodule FitnessWeb.Router do
 
     live_session :user, on_mount: {UserAuthLive, :user} do
 
+      live "/exercises", ExerciseLive.Index, :index
       live "/exercises/new", ExerciseLive.Index, :new
+      live "/exercises/:id", ExerciseLive.Show, :show
       live "/exercises/:id/edit", ExerciseLive.Index, :edit
       live "/exercises/:id/show/edit", ExerciseLive.Show, :edit
 
@@ -39,6 +41,7 @@ defmodule FitnessWeb.Router do
       live "/workout_templates/:id/show/workout_zone", WorkoutTemplateLive.WorkoutZone, :workout_zone
       live "/workout_templates/:id/show/edit", WorkoutTemplateLive.Show, :edit
 
+      live "/score_board", ScoreBoardLive, :score_board
     end
   end
 
@@ -46,14 +49,7 @@ defmodule FitnessWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-
-    live "/score_board", ScoreBoardLive, :score_board
-
-    live "/exercises", ExerciseLive.Index, :index
-    live "/exercises/:id", ExerciseLive.Show, :show
   end
-
-
 
   # Other scopes may use custom stacks.
   # scope "/api", FitnessWeb do

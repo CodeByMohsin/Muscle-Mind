@@ -41,7 +41,8 @@ defmodule FitnessWeb.ExerciseLiveTest do
   end
 
   describe "Index" do
-    test "lists all exercises", %{conn: conn, exercise: exercise} do
+    test "lists all exercises", %{conn: conn, exercise: exercise, user: user} do
+      conn = conn |> log_in_user(user)
       {:ok, _index_live, html} = live(conn, Routes.exercise_index_path(conn, :index))
       assert html =~ "Search Exercises"
       assert html =~ exercise.name

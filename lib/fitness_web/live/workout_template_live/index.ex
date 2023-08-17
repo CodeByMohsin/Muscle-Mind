@@ -38,6 +38,15 @@ defmodule FitnessWeb.WorkoutTemplateLive.Index do
   end
 
   @impl true
+  def handle_event("new-workout", _unsigned_params, socket) do
+    socket
+    |> assign(:page_title, "New Workout template")
+    |> assign(:workout_template, %WorkoutTemplate{})
+
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("delete", %{"id" => id}, socket) do
     workout_template = WorkoutTemplates.get_workout_template!(id)
     {:ok, _} = WorkoutTemplates.delete_workout_template(workout_template)

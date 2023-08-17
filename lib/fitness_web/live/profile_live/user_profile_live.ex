@@ -50,7 +50,7 @@ defmodule FitnessWeb.UserProfileLive do
         <div class="box">A</div>
         <div class="box">L</div>
        </div>
-       <div class="flex justify-center text-5xl pt-4 font-poppins font-semibold text-yellow-500 font-outline-2 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+       <div class="flex justify-center text-5xl pt-4 font-poppins font-semibold text-yellow-500 font-outline-2">
        <%= assigns[:current_user].player_score %>
        </div>
        </a>
