@@ -3,14 +3,14 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
 
   alias Fitness.WorkoutTemplates
   alias Fitness.WorkoutTemplates.WorkoutItem
-  alias Fitness.Exercises
+
   alias FitnessWeb.WorkoutTemplateLive.CheckBoxesLiveComponent
-  alias Fitness.Accounts
+
   alias Fitness.WorkoutTemplates.Services.WorkoutItemLogic
   alias Fitness.Accounts.Services.PlayerScores
 
   @impl true
-  def mount(params, session, socket) do
+  def mount(params, _session, socket) do
     changeset = WorkoutTemplates.change_workout_item(%WorkoutItem{})
     workout_template = WorkoutTemplates.get_workout_template!(params["id"])
 
@@ -27,6 +27,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
      |> assign(:check_complete_checkbox_list, check_complete_checkbox_list)}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
 
@@ -67,7 +68,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
             <div class="relative group">
              <span>
             </span>
-            <span class="px-4 py-2 text-white bg-gray-500 rounded-lg font-poppins hover:bg-gray-600"> <%= live_redirect "Edit", to: Routes.workout_template_show_path(@socket, :show, @workout_template) %></span>
+            <span class="px-4 py-2 text-white bg-gray-500 rounded-lg font-poppins hover:bg-gray-600">  <.link navigate={Routes.workout_template_show_path(@socket, :show, @workout_template)}>Edit</.link></span>
             </div>
             <% else %>
             <div class="relative group">
@@ -75,7 +76,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
               The timer is lost by you
             </span>
             <button class="px-4 py-2 text-white bg-gray-500 rounded-lg font-poppins hover:bg-gray-600">
-              <%= live_redirect "Back", to: Routes.workout_template_show_path(@socket, :show, @workout_template) %>
+              <.link navigate={Routes.workout_template_show_path(@socket, :show, @workout_template) }>Back</.link>
             </button>
             </div>
           <% end %>
@@ -103,8 +104,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    changeset = WorkoutTemplates.change_workout_item(%WorkoutItem{})
-
     {:noreply,
      socket
      |> assign(:workout_template, WorkoutTemplates.get_workout_template!(id))}
@@ -113,7 +112,11 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
   # update my checkboxes
 
   @impl true
-  def handle_event("workout_complete", %{"id" => id, "value" => check_box_value} = params, socket) do
+  def handle_event(
+        "workout_complete",
+        %{"id" => id, "value" => check_box_value} = _params,
+        socket
+      ) do
     id = String.to_integer(id)
     check_box_value = String.to_atom(check_box_value)
 
@@ -123,7 +126,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
   end
 
   @impl true
-  def handle_event("workout_complete", %{"id" => id} = params, socket) do
+  def handle_event("workout_complete", %{"id" => id} = _params, socket) do
     id = String.to_integer(id)
     check_box_value = false
 
@@ -142,29 +145,31 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
     current_user = socket.assigns.current_user
 
     WorkoutItemLogic.duplicate_workout_template(workout_template)
-    PlayerScores.update_new_player_score_and_broadcast_score_board(current_user, workout_templates)
+
+    PlayerScores.update_new_player_score_and_broadcast_score_board(
+      current_user,
+      workout_templates
+    )
 
     redirect_value = WorkoutItemLogic.update_workout_template_score(workout_template)
 
     socket =
       case redirect_value do
         true ->
-
           socket
           |> put_flash(
             :bonus,
             "Well done #{String.upcase(current_user.name)} for finishing your workout! 🥳 You earned ✨50✨ bonus 🎉 points for completing all of your sets. Keep up the great work! 👍"
           )
-          |> push_redirect(to: "/activity_history")
+          |> push_navigate(to: "/activity_history")
 
         false ->
-
           socket
           |> put_flash(
             :loss,
             "Congratulations #{String.upcase(current_user.name)} for completing your workout! However, 😞 you lost 50 bonus points because you missed some sets. Try your best next time 👍"
           )
-          |> push_redirect(to: "/activity_history")
+          |> push_navigate(to: "/activity_history")
       end
 
     {:noreply, assign(socket, :timer_status, :stopped)}

@@ -13,15 +13,19 @@
 <% end %>
 <div class="flex flex-col items-center justify-center h-screen bg-green-100">
   <div class="w-full max-w-4xl overflow-hidden bg-white rounded-md shadow-md">
-    <div class="overflow-hidden bg-white">   
+    <div class="overflow-hidden bg-white">
       <div class="flex justify-between pt-3 pl-3 pr-3">
         <span class="pt-0 mr-2 text-2xl text-gray-500"><%= @exercise.level %></span>
         <%= if assigns[:is_admin] do %>
         <span>
-        <%= live_patch "Edit", to: Routes.exercise_show_path(@socket, :edit, @exercise), class: "text-blue-500 font-poppins hover:underline" %>
+          <.link patch={Routes.exercise_show_path(@socket, :edit, @exercise)} class="text-blue-500 font-poppins hover:underline">Edit</.link>
         </span>
         <% end %>
-        <span class="pt-0 mr-2 text-gray-500 text-l"><%= live_redirect "Back to List", to: Routes.exercise_index_path(@socket, :index), class: "text-blue-500 font-poppins hover:underline" %></span>
+        <span class="pt-0 mr-2 text-gray-500 text-l">
+        <.link navigate={Routes.exercise_index_path(@socket, :index)} class="text-blue-500 font-poppins hover:underline">Back to List</.link>
+        </span>
+
+
       </div>
       <div class="flex justify-center bg-white h-100">
             <img class="px-12 py-0 mr-0 overflow-hidden rounded max-h-80 h-80" src={@exercise.gif_url}>
@@ -35,8 +39,7 @@
         <span class="px-2 py-1 mb-2 mr-2 text-sm font-semibold text-white bg-blue-500 rounded-full font-poppins"><%= @exercise.type %></span>
       </div>
       <p class="mb-6 text-gray-600 font-poppins"><%= @exercise.description %></p>
-      
+
     </div>
   </div>
 </div>
-

@@ -1,7 +1,7 @@
 <div class="p-6 mb-8 bg-blue-100 rounded-lg shadow-lg">
 
    <h1 class="flex items-center justify-center pt-3 mb-4 text-4xl font-light font-poppins "><%= String.upcase(@workout_template.name) %></h1>
-   
+
    <div class="flex items-center justify-between px-6 pr-8">
       <%= if length(@workout_template.workout_items) >= 6 do %>
       <a href={"#{@workout_template.id}/show/workout_zone"} class="relative inline-flex items-center justify-center p-6 px-8 py-3 overflow-hidden font-medium text-indigo-600 transition duration-300 ease-out border-2 border-purple-500 rounded-full shadow-md group">
@@ -12,14 +12,14 @@
          <span class="relative invisible">Start Workout</span>
          </a>
       <% else %>
-      <button></button>    
+      <button></button>
       <% end %>
-      <span><button class="px-4 py-2 text-white bg-gray-500 rounded-lg font-poppins hover:bg-gray-600"><%= live_redirect "Back", to: Routes.workout_template_index_path(@socket, :index) %></button></span>
+      <span><button class="px-4 py-2 text-white bg-gray-500 rounded-lg font-poppins hover:bg-gray-600"><.link navigate={Routes.workout_template_index_path(@socket, :index)} class="px-4 py-2 text-white bg-gray-500 rounded-lg font-poppins hover:bg-gray-600">Back</.link></button></span>
    </div>
    <%= if @workout_template.workout_items == [] do %>
    <div class="flex items-center justify-center px-6 pr-8">
    <%= if assigns[:current_user] do %>
-   <span><button class="px-4 py-2 mr-2 text-white bg-blue-500 rounded-lg font-poppins hover:bg-blue-600"><%= live_patch "ADD EXERCISE", to: Routes.workout_template_show_path(@socket, :edit, @workout_template) %></button></span>
+   <span><button class="px-4 py-2 mr-2 text-white bg-blue-500 rounded-lg font-poppins hover:bg-blue-600"> <.link patch={Routes.workout_template_show_path(@socket, :edit, @workout_template)}>ADD EXERCISE</.link></button></span>
    <% end %>
 </div>
 <% end %>
@@ -36,14 +36,14 @@
       />
    </.modal>
    <% end %>
-   
+
    <%= if @workout_template.workout_items != [] do %>
 
-      
+
 
 <div class="p-8 mb-10 rounded-lg">
    <% list_of_same_exercise = Enum.group_by(@workout_template.workout_items, fn each -> each.exercise_id end) |> Map.values() %>
-   
+
    <%= for each_list <- list_of_same_exercise do %>
    <% [workout_item_map | _] = each_list %>
    <div class="p-4 mb-4 transition duration-300 transform bg-gray-100 rounded-lg shadow-md hover:scale-105">
@@ -64,7 +64,7 @@
          <% last_workout_item = Enum.at(each_list, -1) %>
          <%= for workout_item <- each_list do%>
          <.form
-         let={f}
+         :let={f}
          for={@changeset}
          id={"created-workout-item-#{workout_item.id}"}
          phx-change="workout-update">
@@ -108,11 +108,11 @@
    <% end %>
    </div>
    <% end %>
-   
+
 <%= if @workout_template.workout_items != [] do %>
 <div class="flex items-center justify-center px-6 pr-8">
    <%= if assigns[:current_user] do %>
-   <span><button class="px-6 py-4 mr-2 text-white bg-blue-500 rounded-lg font-poppins hover:bg-blue-600"><%= live_patch "ADD EXERCISE", to: Routes.workout_template_show_path(@socket, :edit, @workout_template) %></button></span>
+   <span><button class="px-6 py-4 mr-2 text-white bg-blue-500 rounded-lg font-poppins hover:bg-blue-600"><.link patch={Routes.workout_template_show_path(@socket, :edit, @workout_template)}>ADD EXERCISE</.link></button></span>
    <% end %>
 </div>
 <% end %>

@@ -19,8 +19,8 @@ defmodule Fitness.Exercises do
 
   """
   def list_exercises(search_query) do
-  exercises = Repo.all(Exercise)
-  SearchTerm.filter_by_search_term(exercises, search_query)
+    exercises = Repo.all(Exercise)
+    SearchTerm.filter_by_search_term(exercises, search_query)
   end
 
   def list_exercises do

@@ -1,6 +1,6 @@
 <div class="p-6 mb-8 bg-blue-100 rounded-lg shadow-lg">
   <h1 class="flex items-center justify-center pt-0 mb-4 text-3xl font-poppins">Listing Workout templates</h1>
- 
+
 <%= if @live_action in [:new, :edit] do %>
   <.modal return_to={Routes.workout_template_index_path(@socket, :index)}>
     <.live_component
@@ -15,19 +15,19 @@
   </.modal>
 <% end %>
 
- 
+
   <div class="flex justify-end mb-4">
-    <%= live_patch "New Workout", to: Routes.workout_template_index_path(@socket, :new), class: "bg-blue-500 font-poppins hover:bg-blue-600 text-white rounded-lg px-3 py-2" %>
-  </div>  
-      
+    <.link patch={Routes.workout_template_index_path(@socket, :new)} class="bg-blue-500 font-poppins hover:bg-blue-600 text-white rounded-lg px-3 py-2" >New Workout</.link>
+  </div>
+
       <%= if length(@workout_templates) >= 1 do %>
       <% user_template_owner = Enum.filter(@workout_templates, fn each -> each.user_id == assigns[:current_user].id end) %>
-      
+
       <div class="grid grid-cols-1 gap-4">
       <% workout_templates_list_is_finished_false = Enum.reject(user_template_owner, fn each -> each.is_finished == true end) %>
       <%= for workout_template <- Enum.reverse(workout_templates_list_is_finished_false) do %>
         <div id={"workout_template-#{workout_template.id}"}, class="relative bg-white rounded-lg shadow-lg">
-      
+
           <div class="px-6 py-4">
             <a href={"/workout_templates/#{workout_template.id}"} class="mb-2 text-xl font-poppins"><%= String.upcase(workout_template.name) %></a>
           </div>
@@ -45,14 +45,14 @@
                 <% end %>
               </div>
               <div class="flex justify-between px-6 py-6">
-                
-                <span><%= live_redirect "Show", to: Routes.workout_template_show_path(@socket, :show, workout_template), class: "bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-poppins px-4 py-2 mr-2 " %></span>
+
+                <span> <.link navigate={Routes.workout_template_show_path(@socket, :show, workout_template)} class="bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-poppins px-4 py-2 mr-2 ">Show</.link></span>
                 <%= if assigns[:current_user] do %>
-                <span><%= live_patch "Edit", to: Routes.workout_template_index_path(@socket, :edit, workout_template), class: "text-orange-400 font-poppins text-xl hover:underline" %></span>
+                <span><.link patch={Routes.workout_template_index_path(@socket, :edit, workout_template)} class="text-orange-400 font-poppins text-xl hover:underline">Edit</.link></span>
                 <% end %>
               </div>
             </div>
             <% end %>
-          </div> 
+          </div>
           <% end %>
     </div>

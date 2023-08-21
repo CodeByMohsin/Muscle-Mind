@@ -3,7 +3,7 @@
 <h1 class="font-bold text-2xl mb-6 font-poppins">Register</h1>
 
 
-<.form let={f} for={@changeset} action={Routes.user_registration_path(@conn, :create)} class="max-w-md mx-auto">
+<.form :let={f} for={@changeset} action={Routes.user_registration_path(@conn, :create)} class="max-w-md mx-auto">
   <%= if @changeset.action do %>
     <div class="bg-red-100 border font-poppins border-red-400 text-red-700 px-4 py-3 rounded mb-8">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -47,4 +47,3 @@
 </div>
 </div>
 </div>
-

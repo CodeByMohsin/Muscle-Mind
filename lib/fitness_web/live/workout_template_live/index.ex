@@ -3,7 +3,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.Index do
 
   alias Fitness.WorkoutTemplates
   alias Fitness.WorkoutTemplates.WorkoutTemplate
-  alias Fitness.Accounts
 
   @impl true
   def mount(_params, _session, socket) do

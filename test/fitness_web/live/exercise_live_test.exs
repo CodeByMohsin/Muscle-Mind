@@ -25,7 +25,15 @@ defmodule FitnessWeb.ExerciseLiveTest do
     equipment: "Others",
     body_part: "Others"
   }
-  @invalid_attrs %{description: nil, gif_url: nil, level: "Others", name: nil, type: "Others", equipment: "Others", body_part: "Others"}
+  @invalid_attrs %{
+    description: nil,
+    gif_url: nil,
+    level: "Others",
+    name: nil,
+    type: "Others",
+    equipment: "Others",
+    body_part: "Others"
+  }
 
   setup %{conn: conn} do
     conn =
@@ -104,7 +112,6 @@ defmodule FitnessWeb.ExerciseLiveTest do
     end
 
     test "deletes exercise in listing", %{conn: conn, exercise: exercise, user: user} do
-
       conn = conn |> log_in_user(user)
       {:ok, index_live, _html} = live(conn, Routes.exercise_index_path(conn, :index))
 
@@ -126,7 +133,6 @@ defmodule FitnessWeb.ExerciseLiveTest do
       conn = conn |> log_in_user(user)
 
       {:ok, show_live, _html} = live(conn, Routes.exercise_show_path(conn, :show, exercise))
-
 
       assert show_live |> element("a", "Edit") |> render_click() =~
                "Edit Exercise"

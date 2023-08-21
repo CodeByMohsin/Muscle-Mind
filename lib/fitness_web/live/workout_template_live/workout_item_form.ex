@@ -33,7 +33,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutItemForm do
     <h2 class="flex items-center justify-center pt-0 mb-4 text-3xl font-poppins">Add New Exercises</h2>
 
       <.form
-        let={f}
+        :let={f}
         for={@changeset}
         id="new-workout-item"
         phx-target={@myself}
@@ -87,7 +87,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutItemForm do
 
     [current | _tail] =
       WorkoutItemLogic.updated_workout_items_list(current_exercise_id, workout_items_list)
-      
+
     {:noreply,
      assign(socket,
        sets_number: current.sets_number,
@@ -108,7 +108,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutItemForm do
       {:ok, workout_item} ->
         socket =
           socket
-          |> push_redirect(to: "/workout_templates/#{workout_item.workout_template_id}")
+          |> push_navigate(to: "/workout_templates/#{workout_item.workout_template_id}")
 
         {:noreply, socket}
 
