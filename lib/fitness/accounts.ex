@@ -8,7 +8,6 @@ defmodule Fitness.Accounts do
 
   alias Fitness.Accounts.{User, UserToken, UserNotifier}
 
-
   def is_admin?(user) do
     user.is_admin
   end
@@ -16,6 +15,7 @@ defmodule Fitness.Accounts do
   def list_of_users do
     Repo.all(User)
   end
+
   ## Database getters
 
   @doc """

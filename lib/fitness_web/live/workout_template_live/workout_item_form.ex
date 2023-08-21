@@ -87,7 +87,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutItemForm do
 
     [current | _tail] =
       WorkoutItemLogic.updated_workout_items_list(current_exercise_id, workout_items_list)
-      
+
     {:noreply,
      assign(socket,
        sets_number: current.sets_number,

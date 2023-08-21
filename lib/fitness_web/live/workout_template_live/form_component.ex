@@ -2,7 +2,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.FormComponent do
   use FitnessWeb, :live_component
 
   alias Fitness.WorkoutTemplates
-  alias FitnessWeb.WorkoutTemplateLive.WorkoutItemForm
 
   @impl true
   def update(%{workout_template: workout_template} = assigns, socket) do
@@ -15,7 +14,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.FormComponent do
   end
 
   @impl true
-  def handle_event("validate", %{"workout_template" => workout_template_params} , socket) do
+  def handle_event("validate", %{"workout_template" => workout_template_params}, socket) do
     changeset =
       socket.assigns.workout_template
       |> WorkoutTemplates.change_workout_template(workout_template_params)
@@ -25,34 +24,37 @@ defmodule FitnessWeb.WorkoutTemplateLive.FormComponent do
   end
 
   def handle_event("save", %{"workout_template" => workout_template_params}, socket) do
-
     save_workout_template(socket, socket.assigns.action, workout_template_params)
   end
 
-
   defp save_workout_template(socket, :edit, workout_template_params) do
-    case WorkoutTemplates.update_workout_template(socket.assigns.workout_template, workout_template_params) do
+    case WorkoutTemplates.update_workout_template(
+           socket.assigns.workout_template,
+           workout_template_params
+         ) do
       {:ok, workout_template} ->
         {:noreply,
          socket
          |> put_flash(:info, "Workout template updated successfully")
          |> push_redirect(to: "/workout_templates/#{workout_template.id}")}
 
-         {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, %Ecto.Changeset{} = changeset} ->
         {:noreply, assign(socket, :changeset, changeset)}
-      end
     end
+  end
 
   defp save_workout_template(socket, :new, workout_template_params) do
-    case WorkoutTemplates.create_workout_template(Map.put(workout_template_params,"user_id", socket.assigns.user_id)) do
+    case WorkoutTemplates.create_workout_template(
+           Map.put(workout_template_params, "user_id", socket.assigns.user_id)
+         ) do
       {:ok, workout_template} ->
         {:noreply,
-        socket
-        |> put_flash(:info, "Workout template created successfully")
-        |> push_redirect(to: "/workout_templates/#{workout_template.id}")}
+         socket
+         |> put_flash(:info, "Workout template created successfully")
+         |> push_redirect(to: "/workout_templates/#{workout_template.id}")}
 
       {:error, %Ecto.Changeset{} = changeset} ->
-     {:noreply, assign(socket, changeset: changeset)}
+        {:noreply, assign(socket, changeset: changeset)}
     end
   end
 end

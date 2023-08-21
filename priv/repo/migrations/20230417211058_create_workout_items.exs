@@ -9,7 +9,9 @@ defmodule Fitness.Repo.Migrations.CreateWorkoutItems do
       add :reps, :integer
       add :check_box, :boolean, default: false, null: false
       add :exercise_id, references(:exercises, on_delete: :delete_all), null: false
-      add :workout_template_id, references(:workout_templates, on_delete: :delete_all), null: false
+
+      add :workout_template_id, references(:workout_templates, on_delete: :delete_all),
+        null: false
 
       timestamps()
     end

@@ -1,5 +1,4 @@
 defmodule Fitness.Accounts.Services.ChartData do
-
   alias Fitness.WorkoutTemplates
 
   def all_complete_workout_chart_data(current_user_id) do
