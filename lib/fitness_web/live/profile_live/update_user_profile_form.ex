@@ -28,7 +28,7 @@ defmodule FitnessWeb.ProfileLive.UpdateUserProfileForm do
 
           <%= for entry <- @uploads.user_image.entries do %>
           <div class="flex justify-center pt-6 mt-6">
-          <%= live_img_preview entry, class: "w-48 h-48 pb-4 rounded" %>
+          <.live_img_preview entry={entry} class="w-48 h-48 pb-4 rounded" />
           </div>
           <% end %>
           <div class="mb-4">
@@ -38,7 +38,7 @@ defmodule FitnessWeb.ProfileLive.UpdateUserProfileForm do
           <div phx-drop-target={@uploads.user_image.ref} class="flex justify-center p-6 bg-gray-200 border-4 border-gray-600 border-dashed rounded-lg shadow">
           <label class="flex justify-center px-4 py-4 m-2 text-2xl cursor-pointer font-poppins">
                 Click or drag and drop to upload image
-                <%= live_file_input @uploads.user_image, style: "display: none;" %>
+                <.live_file_input upload={@upload.user_image} style="display: none;" />
           </label>
           </div>
 
