@@ -2,24 +2,41 @@
   <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
     <h1 class="text-2xl font-poppins font-bold mb-6 text-center">Forgot your password?</h1>
 
-    <.form :let={f} for={%{}} as={:user} action={Routes.user_reset_password_path(@conn, :create)} class="bg-white font-poppins rounded px-8 pt-6 pb-8 mb-4">
+    <.form
+      :let={f}
+      for={%{}}
+      as={:user}
+      action={Routes.user_reset_password_path(@conn, :create)}
+      class="bg-white font-poppins rounded px-8 pt-6 pb-8 mb-4"
+    >
       <div class="flex flex-col space-y-2">
-        <%= label f, :email, class: "font-semibold font-poppins" %>
-        <%= email_input f, :email, required: true, class: "shadow font-poppins appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" %>
+        <%= label(f, :email, class: "font-semibold font-poppins") %>
+        <%= email_input(f, :email,
+          required: true,
+          class:
+            "shadow font-poppins appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        ) %>
       </div>
 
-
       <div class="flex items-center justify-center font-poppins pt-6">
-        <%= submit "Send instructions to reset password", class: "max-w-md  font-poppins px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-400 to-pink-600 hover:from-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+        <%= submit("Send instructions to reset password",
+          class:
+            "max-w-md  font-poppins px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-400 to-pink-600 hover:from-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        ) %>
       </div>
       <div class="flex justify-center mt-6">
         <p class="mt-1 font-poppins text-sm">
-          Already have an account?
-          <%= link "Log in", to: Routes.user_session_path(@conn, :new), class: "font-medium font-poppins font-poppins text-blue-500 hover:text-blue-600" %> <br>
+          Already have an account? <%= link("Log in",
+            to: Routes.user_session_path(@conn, :new),
+            class: "font-medium font-poppins font-poppins text-blue-500 hover:text-blue-600"
+          ) %> <br />
         </p>
       </div>
       <p class="text-center mt-2 font-poppins text-xs">
-        Don't have an account? <%= link "Sign up", to: Routes.user_registration_path(@conn, :new), class: "font-medium font-poppins font-poppins text-blue-500 hover:text-blue-600" %>
+        Don't have an account? <%= link("Sign up",
+          to: Routes.user_registration_path(@conn, :new),
+          class: "font-medium font-poppins font-poppins text-blue-500 hover:text-blue-600"
+        ) %>
       </p>
     </.form>
   </div>

@@ -1,72 +1,114 @@
+<div class="flex justify-center items-center h-screen bg-gray-100">
+  <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <h3 class="font-bold font-poppins text-xl  mt-6 mb-6"># Change email</h3>
 
-  <div class="flex justify-center items-center h-screen bg-gray-100">
-
-    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
-
-    <h3 class="font-bold font-poppins text-xl  mt-6 mb-6"> # Change email</h3>
-
-    <.form :let={f} for={@email_changeset} action={Routes.user_settings_path(@conn, :update)} id="update_email">
+    <.form
+      :let={f}
+      for={@email_changeset}
+      action={Routes.user_settings_path(@conn, :update)}
+      id="update_email"
+    >
       <%= if @email_changeset.action do %>
-      <div class="bg-red-100 border font-poppins border-red-400 text-red-700 px-4 py-3 rounded">
-        <p>Oops, something went wrong! Please check the errors below.</p>
-      </div>
+        <div class="bg-red-100 border font-poppins border-red-400 text-red-700 px-4 py-3 rounded">
+          <p>Oops, something went wrong! Please check the errors below.</p>
+        </div>
       <% end %>
 
-      <%= hidden_input f, :action, name: "action", value: "update_email" %>
+      <%= hidden_input(f, :action, name: "action", value: "update_email") %>
       <div class="mt-6 mb-6 ">
-        <%= label f, :email, class: "text-sm font-poppins font-medium" %>
-        <%= email_input f, :email, required: true, class: "form-input rounded-md  font-poppins shadow-sm block w-full" %>
-        <%= error_tag f, :email %>
+        <%= label(f, :email, class: "text-sm font-poppins font-medium") %>
+        <%= email_input(f, :email,
+          required: true,
+          class: "form-input rounded-md  font-poppins shadow-sm block w-full"
+        ) %>
+        <%= error_tag(f, :email) %>
       </div>
 
       <div class="mt-6 mb-6 ">
-        <%= label f, :current_password, for: "current_password_for_email", class: "text-sm font-poppins font-medium" %>
-        <%= password_input f, :current_password, required: true, name: "current_password", placeholder: "********", id: "current_password_for_email", class: "form-input font-poppins rounded-md shadow-sm block w-full" %>
-        <%= error_tag f, :current_password %>
+        <%= label(f, :current_password,
+          for: "current_password_for_email",
+          class: "text-sm font-poppins font-medium"
+        ) %>
+        <%= password_input(f, :current_password,
+          required: true,
+          name: "current_password",
+          placeholder: "********",
+          id: "current_password_for_email",
+          class: "form-input font-poppins rounded-md shadow-sm block w-full"
+        ) %>
+        <%= error_tag(f, :current_password) %>
       </div>
 
-    <div class="pt-6 mr-1 ml-1">
-      <%= submit "Change email", class: "w-full font-poppins px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-400 to-pink-600 hover:from-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-    </div>
-  </.form>
-</div>
+      <div class="pt-6 mr-1 ml-1">
+        <%= submit("Change email",
+          class:
+            "w-full font-poppins px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-400 to-pink-600 hover:from-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        ) %>
+      </div>
+    </.form>
+  </div>
 </div>
 
-  <div class="flex justify-center items-center h-screen bg-gray-100">
+<div class="flex justify-center items-center h-screen bg-gray-100">
   <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-lg">
+    <h3 class="font-bold font-poppins mt-6 text-xl mb-6"># Change password</h3>
 
+    <.form
+      :let={f}
+      for={@password_changeset}
+      action={Routes.user_settings_path(@conn, :update)}
+      id="update_password"
+    >
+      <%= if @password_changeset.action do %>
+        <div class="alert alert-danger">
+          <p>Oops, something went wrong! Please check the errors below.</p>
+        </div>
+      <% end %>
 
-  <h3 class="font-bold font-poppins mt-6 text-xl mb-6"># Change password</h3>
+      <%= hidden_input(f, :action, name: "action", value: "update_password") %>
+      <div class="mt-6 mb-6">
+        <%= label(f, :password, "New password", class: "text-sm font-poppins font-medium") %>
+        <%= password_input(f, :password,
+          required: true,
+          placeholder: "********",
+          class: "form-input font-poppins rounded-md shadow-sm block w-full"
+        ) %>
+        <%= error_tag(f, :password) %>
+      </div>
 
-  <.form :let={f} for={@password_changeset} action={Routes.user_settings_path(@conn, :update)} id="update_password">
-    <%= if @password_changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
-    </div>
-    <% end %>
+      <div class="mt-6 mb-6">
+        <%= label(f, :password_confirmation, "Confirm new password",
+          class: "text-sm font-poppins font-medium"
+        ) %>
+        <%= password_input(f, :password_confirmation,
+          required: true,
+          placeholder: "********",
+          class: "form-input font-poppins rounded-md shadow-sm block w-full"
+        ) %>
+        <%= error_tag(f, :password_confirmation) %>
+      </div>
 
-    <%= hidden_input f, :action, name: "action", value: "update_password" %>
-    <div class="mt-6 mb-6">
-      <%= label f, :password, "New password", class: "text-sm font-poppins font-medium" %>
-      <%= password_input f, :password, required: true, placeholder: "********", class: "form-input font-poppins rounded-md shadow-sm block w-full" %>
-      <%= error_tag f, :password %>
-    </div>
+      <div class="mt-6 mb-6">
+        <%= label(f, :current_password,
+          for: "current_password_for_password",
+          class: "text-sm font-poppins font-medium"
+        ) %>
+        <%= password_input(f, :current_password,
+          required: true,
+          placeholder: "********",
+          class: "form-input font-poppins font-poppins rounded-md shadow-sm block w-full",
+          name: "current_password",
+          id: "current_password_for_password"
+        ) %>
+        <%= error_tag(f, :current_password) %>
+      </div>
 
-    <div class="mt-6 mb-6">
-      <%= label f, :password_confirmation, "Confirm new password", class: "text-sm font-poppins font-medium" %>
-      <%= password_input f, :password_confirmation, required: true, placeholder: "********", class: "form-input font-poppins rounded-md shadow-sm block w-full" %>
-      <%= error_tag f, :password_confirmation %>
-    </div>
-
-    <div class="mt-6 mb-6">
-      <%= label f, :current_password, for: "current_password_for_password", class: "text-sm font-poppins font-medium" %>
-      <%= password_input f, :current_password, required: true, placeholder: "********", class: "form-input font-poppins font-poppins rounded-md shadow-sm block w-full", name: "current_password", id: "current_password_for_password" %>
-      <%= error_tag f, :current_password %>
-    </div>
-
-    <div class="pt-6 mr-1 ml-1">
-      <%= submit "Change password", class: "w-full font-poppins px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-400 to-pink-600 hover:from-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
-    </div>
-  </.form>
-</div>
+      <div class="pt-6 mr-1 ml-1">
+        <%= submit("Change password",
+          class:
+            "w-full font-poppins px-4 py-2 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gradient-to-r from-purple-400 to-pink-600 hover:from-purple-500 hover:to-pink-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        ) %>
+      </div>
+    </.form>
+  </div>
 </div>

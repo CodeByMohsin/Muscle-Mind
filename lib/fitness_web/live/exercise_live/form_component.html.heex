@@ -1,8 +1,7 @@
-
-
-
 <div class="max-w-2xl px-4 py-8 mx-auto space-y-4">
-  <h2 class="flex justify-center mb-4 text-4xl font-bold text-gray-700 pb-14 font-poppins"><%= @title %></h2>
+  <h2 class="flex justify-center mb-4 text-4xl font-bold text-gray-700 pb-14 font-poppins">
+    <%= @title %>
+  </h2>
 
   <.form
     :let={f}
@@ -10,54 +9,92 @@
     id="exercise-form"
     phx-target={@myself}
     phx-change="validate"
-    phx-submit="save">
-
+    phx-submit="save"
+  >
     <div class="grid grid-cols-1 gap-4">
       <div class="flex flex-col">
-        <%= label f, :name, class: "font-semibold mb-1 text-gray-700" %>
-        <%= text_input f, :name, class: "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-        <%= error_tag f, :name %>
+        <%= label(f, :name, class: "font-semibold mb-1 text-gray-700") %>
+        <%= text_input(f, :name,
+          class:
+            "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ) %>
+        <%= error_tag(f, :name) %>
       </div>
 
       <div class="flex flex-col">
-        <%= label f, :body_part, class: "font-semibold mb-1 text-gray-700" %>
-        <%= select f, :body_part, ["Others","chest","back", "legs", "arms","Abdominals", "Shoulders", "Glutes", "Triceps", "Hamstrings"], class: "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-        <%= error_tag f, :body_part %>
+        <%= label(f, :body_part, class: "font-semibold mb-1 text-gray-700") %>
+        <%= select(
+          f,
+          :body_part,
+          [
+            "Others",
+            "chest",
+            "back",
+            "legs",
+            "arms",
+            "Abdominals",
+            "Shoulders",
+            "Glutes",
+            "Triceps",
+            "Hamstrings"
+          ],
+          class:
+            "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ) %>
+        <%= error_tag(f, :body_part) %>
       </div>
 
       <div class="flex flex-col">
-        <%= label f, :equipment, class: "font-semibold mb-1 text-gray-700" %>
-        <%= select f, :equipment, ["Others", "Machine", "Barbell", "Dumbbell", "Body Only"], class: "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-        <%= error_tag f, :equipment %>
+        <%= label(f, :equipment, class: "font-semibold mb-1 text-gray-700") %>
+        <%= select(f, :equipment, ["Others", "Machine", "Barbell", "Dumbbell", "Body Only"],
+          class:
+            "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ) %>
+        <%= error_tag(f, :equipment) %>
       </div>
 
       <div class="flex flex-col">
-        <%= label f, :description, class: "font-semibold mb-1 text-gray-700" %>
-        <%= textarea f, :description, class: "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-        <%= error_tag f, :description %>
+        <%= label(f, :description, class: "font-semibold mb-1 text-gray-700") %>
+        <%= textarea(f, :description,
+          class:
+            "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ) %>
+        <%= error_tag(f, :description) %>
       </div>
 
       <div class="flex flex-col col-span-2">
-        <%= label f, :gif_url, class: "font-semibold mb-1 text-gray-700" %>
-        <%= text_input f, :gif_url, class: "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-        <%= error_tag f, :gif_url %>
+        <%= label(f, :gif_url, class: "font-semibold mb-1 text-gray-700") %>
+        <%= text_input(f, :gif_url,
+          class:
+            "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ) %>
+        <%= error_tag(f, :gif_url) %>
       </div>
 
       <div class="flex flex-col">
-        <%= label f, :level, class: "font-semibold mb-1 text-gray-700" %>
-        <%= select f, :level, ["Others", "Beginner", "Intermediate", "Expert"],class: "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-        <%= error_tag f, :level %>
+        <%= label(f, :level, class: "font-semibold mb-1 text-gray-700") %>
+        <%= select(f, :level, ["Others", "Beginner", "Intermediate", "Expert"],
+          class:
+            "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ) %>
+        <%= error_tag(f, :level) %>
       </div>
 
       <div class="flex flex-col">
-        <%= label f, :type, class: "font-semibold mb-1 text-gray-700" %>
-        <%= select f, :type, ["Others", "strength", "cardio", "power-lifting", "stretching"], class: "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400" %>
-        <%= error_tag f, :type %>
+        <%= label(f, :type, class: "font-semibold mb-1 text-gray-700") %>
+        <%= select(f, :type, ["Others", "strength", "cardio", "power-lifting", "stretching"],
+          class:
+            "rounded-lg border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ) %>
+        <%= error_tag(f, :type) %>
       </div>
     </div>
 
     <div class="flex justify-center pt-4">
-      <%= submit "Create Exercise", class: "bg-green-400 hover:bg-green-600 text-white font-poppins py-2 px-4 rounded", phx_disable_with: "Saving..." %>
+      <%= submit("Create Exercise",
+        class: "bg-green-400 hover:bg-green-600 text-white font-poppins py-2 px-4 rounded",
+        phx_disable_with: "Saving..."
+      ) %>
     </div>
   </.form>
 </div>

@@ -17,6 +17,8 @@ defmodule FitnessWeb do
   and import those modules here.
   """
 
+  def static_paths, do: ~w(assets fonts images videos favicon.ico robots.txt)
+
   def controller do
     quote do
       use Phoenix.Controller, namespace: FitnessWeb
@@ -24,6 +26,8 @@ defmodule FitnessWeb do
       import Plug.Conn
       import FitnessWeb.Gettext
       alias FitnessWeb.Router.Helpers, as: Routes
+
+      unquote(verified_routes())
     end
   end
 
@@ -100,6 +104,16 @@ defmodule FitnessWeb do
       import FitnessWeb.ErrorHelpers
       import FitnessWeb.Gettext
       alias FitnessWeb.Router.Helpers, as: Routes
+      unquote(verified_routes())
+    end
+  end
+
+  def verified_routes do
+    quote do
+      use Phoenix.VerifiedRoutes,
+        endpoint: FitnessWeb.Endpoint,
+        router: FitnessWeb.Router,
+        statics: FitnessWeb.static_paths()
     end
   end
 

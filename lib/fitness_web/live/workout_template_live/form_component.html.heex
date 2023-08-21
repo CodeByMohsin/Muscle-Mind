@@ -1,21 +1,29 @@
 <div class="p-6 bg-white rounded-lg">
-    <h2 class="flex items-center justify-center pt-0 mb-4 text-3xl font-poppins"><%= @title %></h2>
+  <h2 class="flex items-center justify-center pt-0 mb-4 text-3xl font-poppins"><%= @title %></h2>
 
-    <.form
-      :let={f}
-      for={@changeset}
-      id="workout_template-form"
-      phx-target={@myself}
-      phx-change="validate"
-      phx-submit="save">
-
-      <div class="flex justify-end">
-        <%= submit "Save", class: "bg-blue-500 hover:bg-blue-700 font-poppins text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline", phx_disable_with: "Saving..." %>
-      </div>
-      <div class="mb-4">
-        <%= label f, :name, class: "block text-gray-700 font-bold mb-2" %>
-        <%= text_input f, :name, class: "w-full font-poppins border rounded py-2 px-3 leading-tight focus:outline-none focus:shadow-outline", placeholder: "Enter workout name" %>
-        <%= error_tag f, :name %>
-      </div>
-    </.form>
-  </div>
+  <.form
+    :let={f}
+    for={@changeset}
+    id="workout_template-form"
+    phx-target={@myself}
+    phx-change="validate"
+    phx-submit="save"
+  >
+    <div class="flex justify-end">
+      <%= submit("Save",
+        class:
+          "bg-blue-500 hover:bg-blue-700 font-poppins text-white py-2 px-4 rounded focus:outline-none focus:shadow-outline",
+        phx_disable_with: "Saving..."
+      ) %>
+    </div>
+    <div class="mb-4">
+      <%= label(f, :name, class: "block text-gray-700 font-bold mb-2") %>
+      <%= text_input(f, :name,
+        class:
+          "w-full font-poppins border rounded py-2 px-3 leading-tight focus:outline-none focus:shadow-outline",
+        placeholder: "Enter workout name"
+      ) %>
+      <%= error_tag(f, :name) %>
+    </div>
+  </.form>
+</div>

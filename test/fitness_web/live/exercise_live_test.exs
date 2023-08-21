@@ -91,7 +91,6 @@ defmodule FitnessWeb.ExerciseLiveTest do
 
       {:ok, index_live, _html} = live(conn, Routes.exercise_index_path(conn, :index))
 
-
       assert index_live |> element("#exercise-#{exercise.id} a", "Edit") |> render_click() =~
                "Edit Exercise"
 

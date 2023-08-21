@@ -35,7 +35,9 @@ defmodule FitnessWeb.LiveHelpers do
         phx-key="escape"
       >
         <%= if @return_to do %>
-          <.link  id="close" patch={@return_to} class="phx-modal-close" phx_click={hide_modal()}>X</.link>
+          <.link id="close" patch={@return_to} class="phx-modal-close" phx_click={hide_modal()}>
+            X
+          </.link>
         <% else %>
           <a id="close" href="#" class="phx-modal-close" phx-click={hide_modal()}>x</a>
         <% end %>

@@ -1,37 +1,63 @@
 <h1 class="text-2xl font-poppins font-bold mb-6">Reset password</h1>
 
 <div class="w-96">
-  <.form class="bg-white font-poppins shadow-md rounded px-8 pt-6 pb-8 mb-4" :let={f} for={@changeset} action={Routes.user_reset_password_path(@conn, :update, @token)}>
+  <.form
+    :let={f}
+    class="bg-white font-poppins shadow-md rounded px-8 pt-6 pb-8 mb-4"
+    for={@changeset}
+    action={Routes.user_reset_password_path(@conn, :update, @token)}
+  >
     <%= if @changeset.action do %>
       <div class="mb-4">
-        <p class="text-red-500 text-xs font-poppins italic">Oops, something went wrong! Please check the errors below.</p>
+        <p class="text-red-500 text-xs font-poppins italic">
+          Oops, something went wrong! Please check the errors below.
+        </p>
       </div>
     <% end %>
 
     <div class="mb-4">
-      <%= label f, :password, class: "block font-poppins text-gray-700 font-bold mb-2" %>
-      <%= password_input f, :password, class: "shadow font-poppins appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", required: true %>
-      <%= error_tag f, :password %>
+      <%= label(f, :password, class: "block font-poppins text-gray-700 font-bold mb-2") %>
+      <%= password_input(f, :password,
+        class:
+          "shadow font-poppins appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",
+        required: true
+      ) %>
+      <%= error_tag(f, :password) %>
     </div>
 
     <div class="mb-6">
-      <%= label f, :password_confirmation, class: "block font-poppins text-gray-700 font-bold mb-2" %>
-      <%= password_input f, :password_confirmation, class: " font-poppins shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline", required: true %>
-      <%= error_tag f, :password_confirmation %>
+      <%= label(f, :password_confirmation,
+        class: "block font-poppins text-gray-700 font-bold mb-2"
+      ) %>
+      <%= password_input(f, :password_confirmation,
+        class:
+          " font-poppins shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline",
+        required: true
+      ) %>
+      <%= error_tag(f, :password_confirmation) %>
     </div>
 
     <div class="flex items-center justify-between">
-      <%= submit "Reset password", class: "bg-blue-500 font-poppins hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" %>
+      <%= submit("Reset password",
+        class:
+          "bg-blue-500 font-poppins hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+      ) %>
     </div>
   </.form>
 
   <div class="flex justify-center mt-6">
     <p class="mt-1 font-poppins text-base">
-      Don't have an account? <%= link "Sign up", to: Routes.user_registration_path(@conn, :new), class: "font-medium font-poppins text-blue-500 hover:text-blue-600" %>
+      Don't have an account? <%= link("Sign up",
+        to: Routes.user_registration_path(@conn, :new),
+        class: "font-medium font-poppins text-blue-500 hover:text-blue-600"
+      ) %>
     </p>
   </div>
 
-    <p class="text-center font-poppins mt-2 text-sm">
-      Forgot your password? <%= link "Reset it", to: Routes.user_reset_password_path(@conn, :new), class: "font-medium font-poppins text-blue-500 hover:text-blue-600" %>
-    </p>
+  <p class="text-center font-poppins mt-2 text-sm">
+    Forgot your password? <%= link("Reset it",
+      to: Routes.user_reset_password_path(@conn, :new),
+      class: "font-medium font-poppins text-blue-500 hover:text-blue-600"
+    ) %>
+  </p>
 </div>
