@@ -1,58 +1,90 @@
 <div class="p-6 mb-8 bg-blue-100 rounded-lg shadow-lg">
-  <h1 class="flex items-center justify-center pt-0 mb-4 text-3xl font-poppins">Listing Workout templates</h1>
- 
-<%= if @live_action in [:new, :edit] do %>
-  <.modal return_to={Routes.workout_template_index_path(@socket, :index)}>
-    <.live_component
-      module={FitnessWeb.WorkoutTemplateLive.FormComponent}
-      id={@workout_template.id || :new}
-      user_id={@current_user.id}
-      title={@page_title}
-      action={@live_action}
-      workout_template={@workout_template}
-      return_to={Routes.workout_template_index_path(@socket, :index)}
-    />
-  </.modal>
-<% end %>
+  <h1 class="flex items-center justify-center pt-0 mb-4 text-3xl font-poppins">
+    Listing Workout templates
+  </h1>
 
- 
+  <%= if @live_action in [:new, :edit] do %>
+    <.modal return_to={Routes.workout_template_index_path(@socket, :index)}>
+      <.live_component
+        module={FitnessWeb.WorkoutTemplateLive.FormComponent}
+        id={@workout_template.id || :new}
+        user_id={@current_user.id}
+        title={@page_title}
+        action={@live_action}
+        workout_template={@workout_template}
+        return_to={Routes.workout_template_index_path(@socket, :index)}
+      />
+    </.modal>
+  <% end %>
+
   <div class="flex justify-end mb-4">
-    <%= live_patch "New Workout", to: Routes.workout_template_index_path(@socket, :new), class: "bg-blue-500 font-poppins hover:bg-blue-600 text-white rounded-lg px-3 py-2" %>
-  </div>  
-      
-      <%= if length(@workout_templates) >= 1 do %>
-      <% user_template_owner = Enum.filter(@workout_templates, fn each -> each.user_id == assigns[:current_user].id end) %>
-      
-      <div class="grid grid-cols-1 gap-4">
-      <% workout_templates_list_is_finished_false = Enum.reject(user_template_owner, fn each -> each.is_finished == true end) %>
+    <.link
+      patch={Routes.workout_template_index_path(@socket, :new)}
+      class="bg-blue-500 font-poppins hover:bg-blue-600 text-white rounded-lg px-3 py-2"
+    >
+      New Workout
+    </.link>
+  </div>
+
+  <%= if length(@workout_templates) >= 1 do %>
+    <% user_template_owner =
+      Enum.filter(@workout_templates, fn each -> each.user_id == assigns[:current_user].id end) %>
+
+    <div class="grid grid-cols-1 gap-4">
+      <% workout_templates_list_is_finished_false =
+        Enum.reject(user_template_owner, fn each -> each.is_finished == true end) %>
       <%= for workout_template <- Enum.reverse(workout_templates_list_is_finished_false) do %>
-        <div id={"workout_template-#{workout_template.id}"}, class="relative bg-white rounded-lg shadow-lg">
-      
+        <div
+          id={"workout_template-#{workout_template.id}"}
+          ,
+          class="relative bg-white rounded-lg shadow-lg"
+        >
           <div class="px-6 py-4">
-            <a href={"/workout_templates/#{workout_template.id}"} class="mb-2 text-xl font-poppins"><%= String.upcase(workout_template.name) %></a>
+            <a
+              href={"/workout_templates/#{workout_template.id}"}
+              class="mb-2 text-xl font-poppins"
+            >
+              <%= String.upcase(workout_template.name) %>
+            </a>
           </div>
-            <span class="pt-4 pl-6 mr-2 text-base text-gray-500">No pain, no gain</span>
+          <span class="pt-4 pl-6 mr-2 text-base text-gray-500">No pain, no gain</span>
           <div class="absolute top-0 right-0 m-4">
             <%= if assigns[:current_user] do %>
-            <button class="button">
-              <%= link to: "#", phx_click: "delete", phx_value_id: workout_template.id do %>
-                <svg class="svgIcon" viewBox="0 0 448 512"><path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z"></path></svg>
-                <p class="hidden">
-                  Delete
-                </p>
-              <% end %>
-            </button>
+              <button class="button">
+                <%= link to: "#", phx_click: "delete", phx_value_id: workout_template.id do %>
+                  <svg class="svgIcon" viewBox="0 0 448 512">
+                    <path d="M135.2 17.7L128 32H32C14.3 32 0 46.3 0 64S14.3 96 32 96H416c17.7 0 32-14.3 32-32s-14.3-32-32-32H320l-7.2-14.3C307.4 6.8 296.3 0 284.2 0H163.8c-12.1 0-23.2 6.8-28.6 17.7zM416 128H32L53.2 467c1.6 25.3 22.6 45 47.9 45H346.9c25.3 0 46.3-19.7 47.9-45L416 128z">
+                    </path>
+                  </svg>
+                  <p class="hidden">
+                    Delete
+                  </p>
                 <% end %>
-              </div>
-              <div class="flex justify-between px-6 py-6">
-                
-                <span><%= live_redirect "Show", to: Routes.workout_template_show_path(@socket, :show, workout_template), class: "bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-poppins px-4 py-2 mr-2 " %></span>
-                <%= if assigns[:current_user] do %>
-                <span><%= live_patch "Edit", to: Routes.workout_template_index_path(@socket, :edit, workout_template), class: "text-orange-400 font-poppins text-xl hover:underline" %></span>
-                <% end %>
-              </div>
-            </div>
+              </button>
             <% end %>
-          </div> 
-          <% end %>
+          </div>
+          <div class="flex justify-between px-6 py-6">
+            <span>
+              <.link
+                navigate={Routes.workout_template_show_path(@socket, :show, workout_template)}
+                class="bg-blue-500 hover:bg-blue-600 text-white rounded-lg font-poppins px-4 py-2 mr-2 "
+              >
+                Show
+              </.link>
+            </span>
+            <%= if assigns[:current_user] do %>
+              <span>
+                <.link
+                  patch={Routes.workout_template_index_path(@socket, :edit, workout_template)}
+                  class="text-orange-400 font-poppins text-xl hover:underline"
+                >
+                  Edit
+                </.link>
+              </span>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
+  <% end %>
+</div>

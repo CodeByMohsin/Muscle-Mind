@@ -59,13 +59,23 @@ defmodule Fitness.AccountsTest do
     end
 
     test "validates email and password when given" do
-      {:error, changeset} = Accounts.register_user(%{email: "not valid", password: "1", name: "not valid123", username: "not valid"})
+      {:error, changeset} =
+        Accounts.register_user(%{
+          email: "not valid",
+          password: "1",
+          name: "not valid123",
+          username: "not valid"
+        })
 
       assert %{
                email: ["must have the @ sign and no spaces"],
                password: ["should be at least 6 character(s)"],
-               name: ["A name must be made up of only letters and should not include any symbols or numbers."],
-               username: ["A username should consist of both letters and numbers, and should not contain any spaces"]
+               name: [
+                 "A name must be made up of only letters and should not include any symbols or numbers."
+               ],
+               username: [
+                 "A username should consist of both letters and numbers, and should not contain any spaces"
+               ]
              } = errors_on(changeset)
     end
 

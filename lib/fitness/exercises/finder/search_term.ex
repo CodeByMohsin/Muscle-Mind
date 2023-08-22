@@ -1,8 +1,5 @@
 defmodule Fitness.Exercises.Finder.SearchTerm do
-
   def filter_by_search_term(exercises, search_query) do
-
-
     found_search_query =
       case search_query do
         "" ->
@@ -31,5 +28,4 @@ defmodule Fitness.Exercises.Finder.SearchTerm do
 
     found_search_query
   end
-
 end

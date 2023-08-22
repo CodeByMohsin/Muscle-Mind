@@ -1,5 +1,9 @@
-<main class="container">
-  <p class="alert alert-info text-center font-poppins text-xl rounded-2xl" role="alert"><%= get_flash(@conn, :info) %></p>
-  <p class="alert alert-danger text-center font-poppins text-xl rounded-2xl" role="alert"><%= get_flash(@conn, :error) %></p>
+<main class="">
+  <p class="alert alert-info text-center font-poppins text-xl rounded-2xl" role="alert">
+    <%= Phoenix.Flash.get(@conn.assigns.flash, :info) %>
+  </p>
+  <p class="alert alert-danger text-center font-poppins text-xl rounded-2xl" role="alert">
+    <%= Phoenix.Flash.get(@conn.assigns.flash, :error) %>
+  </p>
   <%= @inner_content %>
 </main>

@@ -55,7 +55,10 @@ defmodule Fitness.Accounts.User do
   defp validate_username(changeset) do
     changeset
     |> validate_required([:username])
-    |> validate_format(:username, ~r/^[a-zA-Z0-9!#$_:+-?]+$/, message: "A username should consist of both letters and numbers, and should not contain any spaces")
+    |> validate_format(:username, ~r/^[a-zA-Z0-9!#$_:+-?]+$/,
+      message:
+        "A username should consist of both letters and numbers, and should not contain any spaces"
+    )
     |> validate_length(:username, min: 5, max: 40)
     |> unsafe_validate_unique(:username, Fitness.Repo)
     |> unique_constraint(:username)
@@ -64,7 +67,10 @@ defmodule Fitness.Accounts.User do
   defp validate_name(changeset) do
     changeset
     |> validate_required([:name])
-    |> validate_format(:name, ~r/\A[a-zA-Z ]+\z/, message: "A name must be made up of only letters and should not include any symbols or numbers.")
+    |> validate_format(:name, ~r/\A[a-zA-Z ]+\z/,
+      message:
+        "A name must be made up of only letters and should not include any symbols or numbers."
+    )
     |> validate_length(:name, max: 40)
   end
 
@@ -109,7 +115,6 @@ defmodule Fitness.Accounts.User do
   end
 
   def name_changeset(user, attrs) do
-
     user
     |> cast(attrs, [:name])
     |> validate_name()
@@ -126,11 +131,9 @@ defmodule Fitness.Accounts.User do
       %{changes: %{image: _}} = changeset -> changeset
       %{} = changeset -> add_error(changeset, :image, "did not change")
     end
-
   end
 
   def player_score_changeset(user, attrs) do
-
     user
     |> cast(attrs, [:player_score])
     |> case do
