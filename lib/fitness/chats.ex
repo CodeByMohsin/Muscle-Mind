@@ -15,7 +15,7 @@ defmodule Fitness.Chats do
     from(m in Message,
       where: m.room_id == ^room_id,
       order_by: [asc: m.inserted_at],
-      preload: [:users]
+      preload: [:user]
     )
     |> Repo.all()
   end

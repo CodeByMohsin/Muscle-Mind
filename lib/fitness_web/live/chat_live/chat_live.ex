@@ -21,15 +21,15 @@ defmodule FitnessWeb.ChatLive do
       })
 
     default_room = Repo.get(Fitness.Chats.Schema.Room, "8c30bb29-1aa2-4af2-8091-70032c1a9ffa")
-    messages = Chats.list_message(default_room.id)
-    IO.inspect(messages)
+
+
 
     socket =
       socket
       |> assign(changeset: changeset)
       |> assign(room: default_room)
       |> assign(current_user: current_user)
-      |> assign(messages: messages)
+      |> assign(messages: Chats.list_message(default_room.id))
 
     {:ok, socket}
   end
@@ -42,9 +42,14 @@ defmodule FitnessWeb.ChatLive do
 
   @impl true
   def handle_event("create", %{"message" => params}, socket) do
+    params =
+      params
+      |> Map.put("user_id", socket.assigns.current_user.id)
+      |> Map.put("room_id", socket.assigns.room.id)
+
     case Chats.create_message(params) do
       {:ok, message} ->
-        {:noreply, socket}
+        {:noreply, assign(socket, messages: Chats.list_message(socket.assigns.room.id))}
 
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
@@ -56,13 +61,17 @@ defmodule FitnessWeb.ChatLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <div :for={message <- @messages} id="fitness_messages">
+    <h1>Room: <%= @room.name %></h1>
+
+    <div :for={message <- @messages} id="messages_card" phx-update="stream">
       <%= message.data %>
+      <%= message.inserted_at %>
+      <%= @current_user.username %>
     </div>
 
     <.form :let={f} for={@changeset} phx-change="validate" phx-submit="create">
-      <%= text_input(f, :data) %>
-      <button type="create">Save</button>
+      <%= text_input(f, :data, class: "w-max") %>
+      <button class="block" type="create">Save</button>
     </.form>
     """
   end
