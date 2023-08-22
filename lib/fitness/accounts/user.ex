@@ -13,7 +13,7 @@ defmodule Fitness.Accounts.User do
     field :confirmed_at, :naive_datetime
     field :is_admin, :boolean, default: false
     has_many :workout_templates, Fitness.WorkoutTemplates.WorkoutTemplate
-
+    has_many :messages, Fitness.Chats.Schema.Message
     timestamps()
   end
 

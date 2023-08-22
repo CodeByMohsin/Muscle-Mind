@@ -4,14 +4,18 @@
     role="alert"
     phx-click="lv:clear-flash"
     phx-value-key="info"
-  ><%= Phoenix.Flash.get(@flash, :info) %></p>
+  >
+    <%= Phoenix.Flash.get(@flash, :info) %>
+  </p>
 
   <p
     class="alert alert-danger text-center font-poppins text-2xl rounded-full"
     role="alert"
     phx-click="lv:clear-flash"
     phx-value-key="error"
-  ><%= Phoenix.Flash.get(@flash, :error) %></p>
+  >
+    <%= Phoenix.Flash.get(@flash, :error) %>
+  </p>
 
   <p
     class="bg-yellow-200 text-yellow-500 border-yellow-700 text-center font-poppins text-4xl"
