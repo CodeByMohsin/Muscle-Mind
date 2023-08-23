@@ -8,28 +8,28 @@ defmodule FitnessWeb.ChatLive do
   def mount(_params, _session, socket) do
     current_user = socket.assigns.current_user
 
+    room = hd(Chats.list_rooms())
+
     changeset =
       Chats.change_message(%{
-        room_id: "8c30bb29-1aa2-4af2-8091-70032c1a9ffa",
+        room_id: room.id,
         user_id: current_user.id,
         data: ""
       })
 
-    default_room = Repo.get(Fitness.Chats.Schema.Room, "8c30bb29-1aa2-4af2-8091-70032c1a9ffa")
-
     socket =
       socket
       |> assign(changeset: changeset)
-      |> assign(room: default_room)
+      |> assign(room: room)
       |> assign(current_user: current_user)
-      |> assign(messages: Chats.list_message(default_room.id))
+      |> assign(messages: Chats.list_message(room.id))
 
     {:ok, socket}
   end
 
   @impl true
   def handle_event("validate", %{"message" => params}, socket) do
-    IO.inspect(params)
+    # IO.inspect(params)
     {:noreply, socket}
   end
 
@@ -60,51 +60,71 @@ defmodule FitnessWeb.ChatLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <h1>Room: <%= @room.name %></h1>
+    <section class="flex w-full h-screen">
+      <div class="w-[20%] h-screen border-r-2 border-gray-800-500">
+        <h1 class="text-2xl font-[700] pt-8 pl-4 bg-yellow-300 rounded-r-sm text-gray-700 drop-shadow-md">
+          Channels :
+        </h1>
+      </div>
 
-    <div :for={message <- @messages} id={message.id}>
-      <%= message.data %>
-      <%= message.inserted_at %>
-      <%= message.user.username %>
-    </div>
+      <div class="w-[80%] relative">
+        <h1 class="w-[100%] bg-yellow-200 pl-7 text-4xl py-3 text-gray-700 drop-shadow-md border-b-2">
+          <%= @room.name %>
+        </h1>
 
-    <div class="mt-10">
-      <.form
-        :let={f}
-        for={@changeset}
-        phx-submit="create"
-        id="easy_text_editor_form"
-        phx-validate="validate"
-      >
-        <div class="relative">
-          <div id="rich-text-editor">
-            <%= textarea(f, :data,
-              id: "rich_text_input",
-              phx_hook: "easyMDE",
-              phx_update: "ignore",
-              class: "hidden"
-            ) %>
+        <div class="h-[100%] flex flex-col justify-evenly pl-8">
+          <div
+            :for={message <- @messages}
+            id="messages_card"
+            phx-update="stream"
+            class="card bg-yellow-100 w-[90%]"
+          >
+            <%= message.data %>
+            <%= message.inserted_at %>
+            <%= message.user.username %>
           </div>
+          <.form
+            :let={f}
+            for={@changeset}
+            phx-submit="create"
+            id="easy_text_editor_form"
+            phx-validate="validate"
+          >
+            <div class="relative">
+              <div id="rich-text-editor">
+                <%= textarea(f, :data,
+                  id: "rich_text_input",
+                  phx_hook: "easyMDE",
+                  phx_update: "ignore",
+                  class: "hidden"
+                ) %>
+              </div>
 
-          <button type="submit" id="easy_text_editor_submit" class="absolute right-1 bottom-10 z-2">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="red"
-              viewBox="0 0 24 24"
-              stroke-width="1.5"
-              stroke="currentColor"
-              class="w-6 h-6"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-              />
-            </svg>
-          </button>
+              <button
+                type="submit"
+                id="easy_text_editor_submit"
+                class="absolute right-1 bottom-10 z-2"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="red"
+                  viewBox="0 0 24 24"
+                  stroke-width="1.5"
+                  stroke="currentColor"
+                  class="w-6 h-6"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                  />
+                </svg>
+              </button>
+            </div>
+          </.form>
         </div>
-      </.form>
-    </div>
+      </div>
+    </section>
     """
   end
 end

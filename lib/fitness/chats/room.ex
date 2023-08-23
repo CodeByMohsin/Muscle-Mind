@@ -9,7 +9,7 @@ defmodule Fitness.Chats.Schema.Room do
 
   schema "rooms" do
     field :name, :string
-    field :visibilty, Ecto.Enum, values: [:public, :private], default: :public
+    field :visibility, Ecto.Enum, values: [:public, :private], default: :public
 
     has_many :messages, Message
 
@@ -18,7 +18,7 @@ defmodule Fitness.Chats.Schema.Room do
 
   def changeset(room, attrs \\ %{}) do
     room
-    |> cast(attrs, [:name, :visibilty])
-    |> validate_required([:name, :visibilty])
+    |> cast(attrs, [:name, :visibility])
+    |> validate_required([:name, :visibility])
   end
 end

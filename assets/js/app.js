@@ -25,14 +25,14 @@ import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
-import easyMDE from "easyMDE";
+import easyMDE from "easyMDE"
 
 let Hooks = {}
 
 
 Hooks.easyMDE = {
     mounted() {
-
+       console.log("hello")
         const editorInstance = new easyMDE({
             element: this.el,
             forceSync: true,
@@ -58,7 +58,12 @@ Hooks.easyMDE = {
     }
 }
 
+Hooks.helloWorld = {
+    mounted(){
+        console.log("executed")
+    }
 
+}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: { _csrf_token: csrfToken } })

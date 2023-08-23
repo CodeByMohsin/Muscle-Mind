@@ -11,6 +11,10 @@ defmodule Fitness.Chats do
     |> Repo.insert()
   end
 
+  def list_rooms do
+    Repo.all(Room)
+  end
+
   def list_message(room_id) do
     from(m in Message,
       where: m.room_id == ^room_id,

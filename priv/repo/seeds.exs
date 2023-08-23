@@ -12,32 +12,39 @@
 
 alias Fitness.Exercises
 alias Fitness.Accounts
+alias Fitness.Chats
+
+# pull all exercise data
 
 File.read!("priv/repo/list_of_exercises.txt")
 |> :erlang.binary_to_term()
 |> Enum.uniq()
 |> Enum.each(fn workout -> Exercises.create_exercise(workout) end)
 
-Accounts.register_user(%{
-  email: "test@test.com",
-  password: "test@test.com",
-  is_admin: true,
-  username: "Admin001",
-  name: "Admin"
-})
+# create fake user
 
-Accounts.register_user(%{
-  email: "test@test1.com",
-  password: "mak12345",
-  is_admin: false,
-  username: "puppies-lover",
-  name: "Andervrs",
-  player_score: "1001"
-})
+{:ok, user_1} =
+  Accounts.register_user(%{
+    email: "test@test.com",
+    password: "test@test.com",
+    is_admin: true,
+    username: "Admin001",
+    name: "Admin"
+  })
+
+{:ok, user_2} =
+  Accounts.register_user(%{
+    email: "test@test1.com",
+    password: "test@test1.com",
+    is_admin: false,
+    username: "puppies-lover",
+    name: "Andervrs",
+    player_score: "1001"
+  })
 
 Accounts.register_user(%{
   email: "test@test2.com",
-  password: "mak12345",
+  password: "test@test2.com",
   is_admin: false,
   username: "Full-stack-developer",
   name: "Alfred",
@@ -46,7 +53,7 @@ Accounts.register_user(%{
 
 Accounts.register_user(%{
   email: "test@test3.com",
-  password: "mak12345",
+  password: "test@test3.com",
   is_admin: false,
   username: "Captain-America",
   name: "john",
@@ -55,7 +62,7 @@ Accounts.register_user(%{
 
 Accounts.register_user(%{
   email: "test@test4.com",
-  password: "mak12345",
+  password: "test@test4.com",
   is_admin: false,
   username: "Rhythm-Rider",
   name: "Einer",
@@ -64,7 +71,7 @@ Accounts.register_user(%{
 
 Accounts.register_user(%{
   email: "test@test5.com",
-  password: "mak12345",
+  password: "test@test5.com",
   is_admin: false,
   username: "Richie-Rich",
   name: "yusef",
@@ -73,7 +80,7 @@ Accounts.register_user(%{
 
 Accounts.register_user(%{
   email: "test@test6.com",
-  password: "mak12345",
+  password: "test@test6.com",
   is_admin: false,
   username: "The-Label-Man",
   name: "eddie",
@@ -82,7 +89,7 @@ Accounts.register_user(%{
 
 Accounts.register_user(%{
   email: "test@test7.com",
-  password: "mak12345",
+  password: "test@test7.com",
   is_admin: false,
   username: "The-Wizard",
   name: "brook",
@@ -91,7 +98,7 @@ Accounts.register_user(%{
 
 Accounts.register_user(%{
   email: "test@test8.com",
-  password: "mak12345",
+  password: "test@test8.com",
   is_admin: false,
   username: "Albert-Einstein",
   name: "steve",
@@ -100,7 +107,7 @@ Accounts.register_user(%{
 
 Accounts.register_user(%{
   email: "test@test9.com",
-  password: "mak12345",
+  password: "test@test9.com",
   is_admin: false,
   username: "The-Bird-Man",
   name: "marko",
@@ -109,9 +116,28 @@ Accounts.register_user(%{
 
 Accounts.register_user(%{
   email: "test@test10.com",
-  password: "mak12345",
+  password: "test@test10.com",
   is_admin: false,
   username: "Elixir-Newbie",
   name: "mohsin",
   player_score: "2000"
+})
+
+# create fake msg date
+
+{:ok, room} = Chats.create_room(%{name: "fitness club"})
+Chats.create_message(%{data: "thanks for have me here", user_id: user_1.id, room_id: room.id})
+
+Chats.create_message(%{
+  data: "no problem dude, How are you?",
+  user_id: user_2.id,
+  room_id: room.id
+})
+
+Chats.create_message(%{data: "wonderful thanks", user_id: user_1.id, room_id: room.id})
+
+Chats.create_message(%{
+  data: "enjoy here we talk to later bye..",
+  user_id: user_2.id,
+  room_id: room.id
 })
