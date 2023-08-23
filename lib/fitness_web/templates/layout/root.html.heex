@@ -8,7 +8,10 @@
     <.live_title>
       <%= assigns[:page_title] || "Fitness" %>
     </.live_title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css" />
     <link phx-track-static rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")} />
+
     <script
       defer
       phx-track-static
