@@ -8,11 +8,6 @@ defmodule FitnessWeb.ChatLive do
   def mount(_params, _session, socket) do
     current_user = socket.assigns.current_user
 
-    # {:ok, default_room} =
-    #   Chats.create_room(%{
-    #     name: "general"
-    #   })
-
     changeset =
       Chats.change_message(%{
         room_id: "8c30bb29-1aa2-4af2-8091-70032c1a9ffa",
@@ -66,7 +61,7 @@ defmodule FitnessWeb.ChatLive do
     <div :for={message <- @messages} id="messages_card" phx-update="stream">
       <%= message.data %>
       <%= message.inserted_at %>
-      <%= @current_user.username %>
+      <%= message.user.username %>
     </div>
 
     <.form :let={f} for={@changeset} phx-change="validate" phx-submit="create">
