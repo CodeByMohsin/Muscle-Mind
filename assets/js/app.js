@@ -36,7 +36,8 @@ Hooks.easyMDE = {
         const editorInstance = new easyMDE({
             element: this.el,
             forceSync: true,
-            initialValue: "Hello world!"
+            initialValue: "Hello world!",
+            toolbar: ["bold", "italic", "heading", "|", "quote"]
         })
 
 
@@ -48,10 +49,6 @@ Hooks.easyMDE = {
                 { richtext_data: editorInstance.value() }
             )
         })
-        let button = document.getElementById("easy_text_editor_submit")
-
-        let container = document.getElementsByClassName("EasyMDEContainer")[0]
-        container.appendChild(button)
     },
     updated() {
 
