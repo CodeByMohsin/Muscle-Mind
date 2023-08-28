@@ -2,7 +2,6 @@ defmodule FitnessWeb.ChatLive do
   use FitnessWeb, :live_view
 
   alias Fitness.Chats
-  alias Fitness.Repo
 
   @impl true
   def mount(_params, _session, socket) do
@@ -28,7 +27,7 @@ defmodule FitnessWeb.ChatLive do
   end
 
   @impl true
-  def handle_event("validate", %{"message" => params}, socket) do
+  def handle_event("validate", %{"message" => _params}, socket) do
     # IO.inspect(params)
     {:noreply, socket}
   end
@@ -47,7 +46,7 @@ defmodule FitnessWeb.ChatLive do
       |> Map.put("room_id", socket.assigns.room.id)
 
     case Chats.create_message(params) do
-      {:ok, message} ->
+      {:ok, _message} ->
         {:noreply, assign(socket, messages: Chats.list_message(socket.assigns.room.id))}
 
       {:error, changeset} ->
@@ -60,19 +59,24 @@ defmodule FitnessWeb.ChatLive do
   @impl true
   def render(assigns) do
     ~H"""
-    <section class="flex w-full h-screen">
-      <div class="w-[20%] h-screen border-r-2 border-gray-800-500">
-        <h1 class="text-2xl font-[700] pt-8 pl-4 bg-yellow-300 rounded-r-sm text-gray-700 drop-shadow-md">
-          Channels :
+    <section class="flex w-full">
+      <div class="w-[15%] h-full border-r-2 border-gray-800-500">
+        <h1 class="text-2xl font-[700] pt-8 pl-4 rounded-r-sm text-gray-700">
+          Channels
         </h1>
+        <div class="pt-4 pl-5 flex flex-col justify-between">
+          <h3> <strong>#</strong> fitness club1</h3>
+          <h3> <strong>#</strong> fitness club2</h3>
+          <h3> <strong>#</strong> fitness club3</h3>
+        </div>
       </div>
 
-      <div class="w-[80%] relative">
-        <h1 class="w-[100%] bg-yellow-200 pl-7 text-4xl py-3 text-gray-700 drop-shadow-md border-b-2">
-          <%= @room.name %>
+      <div class="w-[85%] relative">
+        <h1 class="w-[100%] bg-yellow-200 pl-7 text-3xl py-3 text-gray-700 drop-shadow-md border-b-2">
+          <%= "# #{@room.name}" %>
         </h1>
 
-        <div class="h-[100%] flex flex-col justify-evenly pl-8">
+        <div class="flex flex-col justify-evenly pl-8">
           <div
             :for={message <- @messages}
             id="messages_card"
@@ -83,7 +87,7 @@ defmodule FitnessWeb.ChatLive do
             <%= message.inserted_at %>
             <%= message.user.username %>
           </div>
-          <.form
+          <%!-- <.form
             :let={f}
             for={@changeset}
             phx-submit="create"
@@ -121,7 +125,7 @@ defmodule FitnessWeb.ChatLive do
                 </svg>
               </button>
             </div>
-          </.form>
+          </.form> --%>
         </div>
       </div>
     </section>

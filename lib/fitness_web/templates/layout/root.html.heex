@@ -25,7 +25,7 @@
     </script>
   </head>
   <body>
-    <header>
+    <%!-- <header>
       <section>
         <nav class="bg-gray-800 flex justify-between items-center px-2 py-2">
           <%= if assigns[:current_user] do %>
@@ -176,7 +176,7 @@
         </nav>
         <%= render("_user_menu.html", assigns) %>
       </section>
-    </header>
+    </header> --%>
     <%= @inner_content %>
   </body>
 </html>

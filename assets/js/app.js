@@ -25,7 +25,7 @@ import { Socket } from "phoenix"
 import { LiveSocket } from "phoenix_live_view"
 import topbar from "../vendor/topbar"
 
-import easyMDE from "easyMDE"
+import easyMDE from "easymde"
 
 let Hooks = {}
 
