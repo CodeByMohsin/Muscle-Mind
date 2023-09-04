@@ -28,6 +28,8 @@ defmodule FitnessWeb.ConnCase do
 
       # The default endpoint for testing
       @endpoint FitnessWeb.Endpoint
+
+      use FitnessWeb, :verified_routes
     end
   end
 
