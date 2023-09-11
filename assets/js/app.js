@@ -32,38 +32,62 @@ let Hooks = {}
 
 Hooks.easyMDE = {
     mounted() {
-       console.log("hello")
         const editorInstance = new easyMDE({
             element: this.el,
             forceSync: true,
             initialValue: "Hello world!",
-            toolbar: ["bold", "italic", "heading", "|", "quote"],
+            toolbar: ["bold", "italic", "heading", "|", "quote", "upload-image"],
             minHeight: "120px",
-            status: false
+            status: false,
+            uploadImage: true
         })
         editorInstance.codemirror.on("change", () => {
-            console.log("changed")
             this.pushEventTo(
                 this.el,
                 "change",
                 { richtext_data: editorInstance.value() }
             )
         })
+    }
+}
+
+
+Hooks.InfiniteScroll = {
+    page() { return this.el.dataset.page; },
+    loadMore(entries) {
+        const target = entries[0];
+        console.log("trigger")
+        if (target.isIntersecting && this.pending == this.page()) {
+            this.pending = this.page() + 1;
+            this.pushEvent("next-page", {});
+        }
+    },
+    mounted() {
+
+        this.pending = this.page();
+        this.observer = new IntersectionObserver(
+            (entries) => this.loadMore(entries),
+            {
+
+                root: null, // window by default
+                rootMargin: "0px",
+                threshold: 0.7,
+            }
+
+        );
+        this.observer.observe(this.el);
+    },
+    destroyed() {
+        this.observer.unobserve(this.el);
     },
     updated() {
+        this.pending = this.page();
+    },
+};
 
-        console.log("updated")
 
 
-    }
-}
 
-Hooks.helloWorld = {
-    mounted(){
-        console.log("executed")
-    }
-
-}
 
 let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
 let liveSocket = new LiveSocket("/live", Socket, { hooks: Hooks, params: { _csrf_token: csrfToken } })

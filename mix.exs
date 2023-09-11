@@ -55,7 +55,9 @@ defmodule Fitness.MixProject do
       {:seqfuzz, "~> 0.2.0"},
       {:chartkick, "~> 1.0"},
       {:earmark, "~> 1.4"},
-      {:html_sanitize_ex, "~> 1.4"}
+      {:html_sanitize_ex, "~> 1.4"},
+      {:timex, "~> 3.7"},
+      {:wallaby, "~> 0.30", runtime: false, only: :test}
     ]
   end
 

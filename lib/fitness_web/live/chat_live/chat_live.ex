@@ -1,7 +1,9 @@
 defmodule FitnessWeb.ChatLive do
   use FitnessWeb, :live_view
+  import FitnessWeb.MessageComponent
 
   alias Fitness.Chats
+  alias Fitness.Chats.Helpers
 
   @impl true
   def mount(_params, _session, socket) do
@@ -9,24 +11,39 @@ defmodule FitnessWeb.ChatLive do
 
     rooms = Chats.list_rooms()
 
-    room = hd(Chats.list_rooms())
+    socket =
+      socket
+      |> assign(rooms: rooms)
+      |> assign(non_empty_state?: false)
+      |> assign(current_user: current_user)
 
+    {:ok, socket}
+  end
+
+  @impl true
+  def handle_params(%{"room_id" => room_id}, _uri, socket) do
     changeset =
       Chats.change_message(%{
-        room_id: room.id,
-        user_id: current_user.id,
+        room_id: room_id,
+        user_id: socket.assigns.current_user.id,
         data: ""
       })
+
+    if connected?(socket) do
+      Phoenix.PubSub.subscribe(Fitness.PubSub, "new_message")
+    end
+
+    room = Chats.get_room(room_id)
 
     socket =
       socket
       |> assign(changeset: changeset)
       |> assign(room: room)
-      |> assign(rooms: rooms)
-      |> assign(current_user: current_user)
-      |> assign(messages: Chats.list_message(room.id))
+      |> assign(page: 1, per_page: 10)
+      |> paginate_messages(1)
+      |> assign(end_of_timeline?: false)
 
-    {:ok, socket}
+    {:noreply, socket}
   end
 
   @impl true
@@ -37,87 +54,83 @@ defmodule FitnessWeb.ChatLive do
 
   @impl true
   def handle_event("change", params, socket) do
-    IO.inspect(params)
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("switch-room", params, socket) do
     {:noreply, socket}
   end
 
   @impl true
   def handle_event("create", %{"message" => params}, socket) do
+    producer_pid = self()
+
     params =
       params
       |> Map.put("user_id", socket.assigns.current_user.id)
       |> Map.put("room_id", socket.assigns.room.id)
 
-    html = Earmark.as_html!(params["data"]) |> HtmlSanitizeEx.markdown_html()
-
-    IO.inspect(html)
+    html = Helpers.to_html!(params["data"]) |> Helpers.santize_message()
 
     case Chats.create_message(Map.merge(params, %{"data" => html})) do
       {:ok, _message} ->
-        {:noreply, assign(socket, messages: Chats.list_message(socket.assigns.room.id))}
+        {:noreply, socket}
 
       {:error, changeset} ->
         {:noreply, assign(socket, changeset: changeset)}
     end
   end
 
+  # Code snippets from LiveView Docs
+
+  def handle_event("next-page", _, socket) do
+    {:noreply, paginate_messages(socket, socket.assigns.page + 1)}
+  end
+
+  def handle_event("prev-page", %{"_overran" => true}, socket) do
+    {:noreply, paginate_messages(socket, 1)}
+  end
+
+  def handle_event("prev-page", _, socket) do
+    if socket.assigns.page > 1 do
+      {:noreply, paginate_messages(socket, socket.assigns.page - 1)}
+    else
+      {:noreply, socket}
+    end
+  end
+
+  defp paginate_messages(socket, new_page) when new_page >= 1 do
+    %{per_page: per_page, page: cur_page} = socket.assigns
+
+    messages =
+      Chats.list_messages(socket.assigns.room.id,
+        offset: (new_page - 1) * per_page,
+        limit: per_page
+      )
+
+    socket =
+      if new_page > cur_page do
+        stream(socket, :messages, messages, at: 0, limit: 1000)
+      else
+        stream(socket, :messages, Enum.reverse(messages), at: 0, limit: 1000)
+      end
+
+    case messages do
+      [] ->
+        assign(socket, end_of_timeline?: true)
+
+      [_ | _] ->
+        socket
+        |> assign(end_of_timeline?: false)
+        |> assign(:page, new_page)
+    end
+  end
+
   @impl true
-  def render(assigns) do
-    ~H"""
-    <section class="w-full h-[calc(100%-20rem)]">
-      <h1 class="fixed w-full bg-[#232323] text-2xl text-center py-6 text-white drop-shadow-2xl">
-        # <%= @room.name %>
-      </h1>
+  def handle_info({:new_message, new_message}, socket) do
+    socket = stream_insert(socket, :messages, new_message, at: -1)
 
-      <div class="w-full h-[50rem] flex flex-col gap-4 pt-36 pb-24 pl-12 bg-[#6b6a6a] overflow-auto scroll-none">
-        <div
-          :for={message <- @messages}
-          id="messages_card"
-          phx-update="stream"
-          class="card bg-yellow-100 w-11/12"
-        >
-          <%= raw(message.data) %>
-
-          <%= message.inserted_at %>
-          <%= message.user.username %>
-        </div>
-      </div>
-      <.form
-        :let={f}
-        for={@changeset}
-        phx-submit="create"
-        id="easy_text_editor_form"
-        phx-validate="validate"
-      >
-
-        <div class="fixed z-10 bottom-0 w-[100%] bg-yellow-100">
-          <div id="rich-text-editor" phx-update="ignore">
-            <%= textarea(f, :data,
-              id: "rich_text_input",
-              phx_hook: "easyMDE",
-              class: "hidden"
-            ) %>
-          </div>
-
-            <button type="submit" id="easy_text_editor_submit" class="absolute right-[7rem] bottom-4 z-50">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="yellow"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="w-8 h-8"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                />
-              </svg>
-            </button>
-          </div>
-      </.form>
-    </section>
-    """
+    {:noreply, socket}
   end
 end

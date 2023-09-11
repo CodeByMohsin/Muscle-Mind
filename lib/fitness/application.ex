@@ -15,9 +15,10 @@ defmodule Fitness.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Fitness.PubSub},
       # Start the Endpoint (http/https)
-      FitnessWeb.Endpoint
+      FitnessWeb.Endpoint,
       # Start a worker by calling: Fitness.Worker.start_link(arg)
       # {Fitness.Worker, arg}
+      {Task.Supervisor, name: FitnessSeedSupervisor}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

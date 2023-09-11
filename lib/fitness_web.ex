@@ -104,6 +104,7 @@ defmodule FitnessWeb do
       import FitnessWeb.ErrorHelpers
       import FitnessWeb.Gettext
       alias FitnessWeb.Router.Helpers, as: Routes
+      import FitnessWeb.Helpers
       unquote(verified_routes())
     end
   end

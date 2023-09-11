@@ -1,0 +1,68 @@
+<nav class="bg-[#292828] h-screen w-24 fixed z-50 transition-all hover:w-80 focus:w-80 hover:text-2xl">
+  <h1 class="text-white hover:bg-yellow-200 w-full hover:text-black pl-2 pt-6 pb-6 font-semibold">
+    Channels
+  </h1>
+
+  <div :for={room <- @rooms} id={"room_#{room.id}"} class="bg-yellow-200">
+    <a href="#" phx-click="switch-room" phx-value-room={room.id}>
+      # <%= room.name %>
+    </a>
+  </div>
+</nav>
+<section class="flex flex-1 flex-col w-[calc(100%-6rem)]  bg-[#6b6a6a] ml-auto h-[calc(100%-20rem)]">
+  <h1 class="top-0 fixed w-full bg-[#232323] text-2xl text-center py-6 text-white drop-shadow-2xl">
+    # <%= @room.name %>
+  </h1>
+
+  <div class="flex-1 w-full flex flex-col overflow-auto  scroll-smooth">
+    <%= if not @end_of_timeline? do %>
+      <div
+        id="infinite-scroll-marker"
+        class="w-10 h-10 z-10"
+        phx-hook="InfiniteScroll"
+        data-page={@page}
+      >
+      </div>
+    <% end %>
+
+    <.message_card messages={@streams.messages} />
+  </div>
+  <.form
+    :let={f}
+    for={@changeset}
+    phx-submit="create"
+    id="easy_text_editor_form"
+    phx-validate="validate"
+  >
+    <div class="relative z-10  mb-1 w-[100%] bg-yellow-100">
+      <div id="rich-text-editor" phx-update="ignore">
+        <%= textarea(f, :data,
+          id: "rich_text_input",
+          phx_hook: "easyMDE",
+          class: "hidden"
+        ) %>
+      </div>
+
+      <button
+        type="submit"
+        id="easy_text_editor_submit"
+        class="absolute right-[2rem] bottom-4 z-50"
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="yellow"
+          viewBox="0 0 24 24"
+          stroke-width="1.5"
+          stroke="currentColor"
+          class="w-8 h-8"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+          />
+        </svg>
+      </button>
+    </div>
+  </.form>
+</section>

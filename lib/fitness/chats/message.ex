@@ -8,9 +8,9 @@ defmodule Fitness.Chats.Schema.Message do
   @primary_key {:id, :binary_id, autogenerate: true}
 
   schema "messages" do
-    field :data, :string
-    belongs_to :user, User, type: :integer
-    belongs_to :room, Room, type: :binary_id
+    field(:data, :string)
+    belongs_to(:user, User, type: :integer)
+    belongs_to(:room, Room, type: :binary_id)
 
     timestamps()
   end

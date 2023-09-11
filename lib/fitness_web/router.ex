@@ -41,8 +41,7 @@ defmodule FitnessWeb.Router do
            :workout_zone
 
       live "/workout_templates/:id/show/edit", WorkoutTemplateLive.Show, :edit
-
-      live "/chat", ChatLive
+      live "/chat/:room_id", ChatLive
     end
   end
 

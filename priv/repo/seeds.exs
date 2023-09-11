@@ -125,20 +125,12 @@ Accounts.register_user(%{
 
 # create fake msg date
 
-{:ok, room} = Chats.create_room(%{name: "fitness club"})
-
-Chats.create_message(%{data: "thanks for have me here", user_id: user_1.id, room_id: room.id})
+{:ok, room} = Chats.create_room(%{name: "random"})
 
 Chats.create_message(%{
-  data: "no problem dude, How are you?",
+  data: "Hello World!",
   user_id: user_2.id,
   room_id: room.id
 })
 
-Chats.create_message(%{data: "wonderful thanks", user_id: user_1.id, room_id: room.id})
-
-Chats.create_message(%{
-  data: "enjoy here we talk to later bye..",
-  user_id: user_2.id,
-  room_id: room.id
-})
+IO.puts("your room: #{room.id}")
