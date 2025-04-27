@@ -45,7 +45,6 @@ defmodule Fitness.WorkoutTemplates do
     Repo.get!(WorkoutItem, id)
   end
 
-
   @doc """
   Creates a workout_template.
 

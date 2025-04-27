@@ -16,7 +16,6 @@ defmodule FitnessWeb.ScoreBoardLive do
       |> assign(:user_id, 0)
       |> assign(:workout_templates, WorkoutTemplates.list_workout_templates())
 
-
     {:ok, socket}
   end
 
@@ -75,15 +74,17 @@ defmodule FitnessWeb.ScoreBoardLive do
   end
 
   @impl true
-  def handle_info({:update_users, {updated_users, update_workout_template, updated_player_score, updated_user_id}}, socket) do
-
+  def handle_info(
+        {:update_users,
+         {updated_users, update_workout_template, updated_player_score, updated_user_id}},
+        socket
+      ) do
     socket =
       socket
       |> assign(player_score: updated_player_score)
       |> assign(workout_templates: update_workout_template)
       |> assign(users: updated_users)
       |> assign(user_id: updated_user_id)
-
 
     {:noreply, socket}
   end

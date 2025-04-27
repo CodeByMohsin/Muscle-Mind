@@ -30,10 +30,10 @@ defmodule Fitness.WorkoutTemplatesTest do
       user = user_fixture()
       valid_attrs = %{name: "some name", user_id: user.id}
 
-       assert {:ok, %WorkoutTemplate{} = workout_template} =
+      assert {:ok, %WorkoutTemplate{} = workout_template} =
                WorkoutTemplates.create_workout_template(valid_attrs)
 
-       assert workout_template.name == "some name"
+      assert workout_template.name == "some name"
     end
 
     test "create_workout_template/1 with invalid data returns error changeset" do

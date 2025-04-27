@@ -17,8 +17,9 @@ config :fitness, FitnessWeb.Endpoint,
   pubsub_server: Fitness.PubSub,
   live_view: [signing_salt: "vOF6D4CD"]
 
-
-  config :tailwind, version: "3.3.1", default: [
+config :tailwind,
+  version: "3.3.1",
+  default: [
     args: ~w(
       --config=tailwind.config.js
       --input=css/app.css
@@ -27,7 +28,7 @@ config :fitness, FitnessWeb.Endpoint,
     cd: Path.expand("../assets", __DIR__)
   ]
 
-  config :chartkick, json_serializer: Jason
+config :chartkick, json_serializer: Jason
 
 # Configures the mailer
 #

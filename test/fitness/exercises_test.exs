@@ -21,7 +21,15 @@ defmodule Fitness.ExercisesTest do
     end
 
     test "create_exercise/1 with valid data creates a exercise" do
-      valid_attrs = %{description: "some description", gif_url: "some gif_url", level: "some level", name: "some name", type: "some type", equipment: "some equipment",body_part: "some body part"}
+      valid_attrs = %{
+        description: "some description",
+        gif_url: "some gif_url",
+        level: "some level",
+        name: "some name",
+        type: "some type",
+        equipment: "some equipment",
+        body_part: "some body part"
+      }
 
       assert {:ok, %Exercise{} = exercise} = Exercises.create_exercise(valid_attrs)
       assert exercise.description == "some description"
@@ -39,7 +47,14 @@ defmodule Fitness.ExercisesTest do
 
     test "update_exercise/2 with valid data updates the exercise" do
       exercise = exercise_fixture()
-      update_attrs = %{description: "some updated description", gif_url: "some updated gif_url", level: "some updated level", name: "some updated name", type: "some updated type"}
+
+      update_attrs = %{
+        description: "some updated description",
+        gif_url: "some updated gif_url",
+        level: "some updated level",
+        name: "some updated name",
+        type: "some updated type"
+      }
 
       assert {:ok, %Exercise{} = exercise} = Exercises.update_exercise(exercise, update_attrs)
       assert exercise.description == "some updated description"

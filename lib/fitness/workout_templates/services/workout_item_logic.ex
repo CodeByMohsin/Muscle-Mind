@@ -1,10 +1,8 @@
 defmodule Fitness.WorkoutTemplates.Services.WorkoutItemLogic do
   alias Fitness.WorkoutTemplates
 
-
   # calculate single workout template score
   def update_workout_template_score(workout_template) do
-
     list_of_complete_workout_items =
       Enum.filter(workout_template.workout_items, fn each ->
         each.check_box == true
@@ -13,21 +11,21 @@ defmodule Fitness.WorkoutTemplates.Services.WorkoutItemLogic do
     if length(list_of_complete_workout_items) == length(workout_template.workout_items) do
       total_score = Enum.reduce(list_of_complete_workout_items, 0, fn _each, acc -> acc + 20 end)
 
-        WorkoutTemplates.update_workout_template(workout_template, %{
-          "workout_template_score" => "#{total_score + 50}",
-          "is_finished" => "true"
-        })
+      WorkoutTemplates.update_workout_template(workout_template, %{
+        "workout_template_score" => "#{total_score + 50}",
+        "is_finished" => "true"
+      })
 
-        true
+      true
     else
       total_score = Enum.reduce(list_of_complete_workout_items, 0, fn _each, acc -> acc + 20 end)
 
-        WorkoutTemplates.update_workout_template(workout_template, %{
-          "workout_template_score" => "#{total_score}",
-          "is_finished" => "true"
-        })
+      WorkoutTemplates.update_workout_template(workout_template, %{
+        "workout_template_score" => "#{total_score}",
+        "is_finished" => "true"
+      })
 
-        false
+      false
     end
   end
 

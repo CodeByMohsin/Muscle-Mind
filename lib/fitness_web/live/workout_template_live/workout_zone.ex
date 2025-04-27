@@ -142,14 +142,17 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
     current_user = socket.assigns.current_user
 
     WorkoutItemLogic.duplicate_workout_template(workout_template)
-    PlayerScores.update_new_player_score_and_broadcast_score_board(current_user, workout_templates)
+
+    PlayerScores.update_new_player_score_and_broadcast_score_board(
+      current_user,
+      workout_templates
+    )
 
     redirect_value = WorkoutItemLogic.update_workout_template_score(workout_template)
 
     socket =
       case redirect_value do
         true ->
-
           socket
           |> put_flash(
             :bonus,
@@ -158,7 +161,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
           |> push_redirect(to: "/activity_history")
 
         false ->
-
           socket
           |> put_flash(
             :loss,
