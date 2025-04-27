@@ -19,6 +19,12 @@ defmodule FitnessWeb.Router do
     plug :accepts, ["json"]
   end
 
+  scope "/api" do
+    pipe_through :api
+
+    forward "/graphql", Absinthe.Plug, schema: FitnessWeb.Schema
+  end
+
   scope "/", FitnessWeb do
     pipe_through [:browser, :require_authenticated_user]
 

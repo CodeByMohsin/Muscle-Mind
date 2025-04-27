@@ -33,6 +33,11 @@ defmodule Fitness.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
+      # graphql
+      {:absinthe_plug, "~> 1.5"},
+      {:absinthe, "~> 1.7"},
+
+      # core
       {:bcrypt_elixir, "~> 3.0"},
       {:phoenix, "~> 1.6.15"},
       {:phoenix_ecto, "~> 4.4"},
