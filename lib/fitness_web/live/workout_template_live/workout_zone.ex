@@ -3,14 +3,12 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
 
   alias Fitness.WorkoutTemplates
   alias Fitness.WorkoutTemplates.WorkoutItem
-  alias Fitness.Exercises
   alias FitnessWeb.WorkoutTemplateLive.CheckBoxesLiveComponent
-  alias Fitness.Accounts
   alias Fitness.WorkoutTemplates.Services.WorkoutItemLogic
   alias Fitness.Accounts.Services.PlayerScores
 
   @impl true
-  def mount(params, session, socket) do
+  def mount(params, _session, socket) do
     changeset = WorkoutTemplates.change_workout_item(%WorkoutItem{})
     workout_template = WorkoutTemplates.get_workout_template!(params["id"])
 
@@ -27,6 +25,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
      |> assign(:check_complete_checkbox_list, check_complete_checkbox_list)}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
 
@@ -103,8 +102,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
 
   @impl true
   def handle_params(%{"id" => id}, _, socket) do
-    changeset = WorkoutTemplates.change_workout_item(%WorkoutItem{})
-
     {:noreply,
      socket
      |> assign(:workout_template, WorkoutTemplates.get_workout_template!(id))}
@@ -113,7 +110,11 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
   # update my checkboxes
 
   @impl true
-  def handle_event("workout_complete", %{"id" => id, "value" => check_box_value} = params, socket) do
+  def handle_event(
+        "workout_complete",
+        %{"id" => id, "value" => check_box_value} = _params,
+        socket
+      ) do
     id = String.to_integer(id)
     check_box_value = String.to_atom(check_box_value)
 
@@ -123,7 +124,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.WorkoutZone do
   end
 
   @impl true
-  def handle_event("workout_complete", %{"id" => id} = params, socket) do
+  def handle_event("workout_complete", %{"id" => id} = _params, socket) do
     id = String.to_integer(id)
     check_box_value = false
 
