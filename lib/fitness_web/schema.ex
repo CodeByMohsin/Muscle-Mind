@@ -33,6 +33,7 @@ defmodule FitnessWeb.Schema do
     field :equipment, :string
   end
 
+
   object :workout_item do
     field :id, non_null(:id)
     field :sets, :integer
@@ -47,6 +48,7 @@ defmodule FitnessWeb.Schema do
     end
   end
 
+
   object :workout_template do
     field :id, non_null(:id)
     field :name, :string
@@ -54,8 +56,11 @@ defmodule FitnessWeb.Schema do
     field :is_finished, :boolean
 
     field :workout_items, list_of(:workout_item) do
-      resolve(fn template, _, _ ->
-        {:ok, Fitness.Repo.preload(template, :workout_items).workout_items}
+      resolve(fn workout_template, _, _ ->
+
+
+
+        {:ok,  Fitness.WorkoutTemplates.fetch_workout_items_by_workout_template(workout_template)}
       end)
     end
   end

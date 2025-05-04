@@ -4,10 +4,10 @@ defmodule Fitness.WorkoutTemplates do
   """
 
   import Ecto.Query, warn: false
-  alias Fitness.WorkoutTemplates.WorkoutItem
-  alias Fitness.Repo
 
+  alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.WorkoutTemplates.WorkoutTemplate
+  alias Fitness.Repo
 
   @doc """
   Returns the list of workout_templates.
@@ -128,5 +128,12 @@ defmodule Fitness.WorkoutTemplates do
 
   def change_workout_item(%WorkoutItem{} = workout_item, attrs \\ %{}) do
     WorkoutItem.changeset(workout_item, attrs)
+  end
+
+  @doc "Fetch list of workout Item by workout template"
+  @spec fetch_workout_items_by_workout_template(WorkoutTemplate.t()) :: [WorkoutItem.t()]
+  def fetch_workout_items_by_workout_template(workout_template) do
+    from(workout_item in WorkoutItem, where: workout_item == ^workout_template.id)
+    |> Repo.all()
   end
 end
