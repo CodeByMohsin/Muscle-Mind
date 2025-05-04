@@ -115,3 +115,5 @@ Accounts.register_user(%{
   name: "mohsin",
   player_score: "2000"
 })
+
+# just use generator to generate the bunch of workout templates

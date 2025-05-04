@@ -36,6 +36,7 @@ defmodule Fitness.MixProject do
       # graphql
       {:absinthe_plug, "~> 1.5"},
       {:absinthe, "~> 1.7"},
+      {:dataloader, "~> 2.0.0"},
 
       # core
       {:bcrypt_elixir, "~> 3.0"},
