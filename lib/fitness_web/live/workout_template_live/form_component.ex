@@ -2,7 +2,6 @@ defmodule FitnessWeb.WorkoutTemplateLive.FormComponent do
   use FitnessWeb, :live_component
 
   alias Fitness.WorkoutTemplates
-  alias FitnessWeb.WorkoutTemplateLive.WorkoutItemForm
 
   @impl true
   def update(%{workout_template: workout_template} = assigns, socket) do

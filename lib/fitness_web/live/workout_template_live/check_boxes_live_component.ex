@@ -1,10 +1,6 @@
 defmodule FitnessWeb.WorkoutTemplateLive.CheckBoxesLiveComponent do
   use FitnessWeb, :live_component
 
-  alias Fitness.WorkoutTemplates
-  alias Fitness.WorkoutTemplates.WorkoutItem
-  alias Fitness.Exercises
-
   @impl true
   def update(assigns, socket) do
     {:ok,
@@ -17,6 +13,7 @@ defmodule FitnessWeb.WorkoutTemplateLive.CheckBoxesLiveComponent do
      |> assign(:workout_start, assigns.workout_start)}
   end
 
+  @impl true
   def render(assigns) do
     ~H"""
     <div class="p-8 bg-white">
