@@ -2,7 +2,6 @@ defmodule FitnessWeb.Schema do
   use Absinthe.Schema
 
   alias Fitness.Exercises.Exercise
-  alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.WorkoutTemplates.WorkoutTemplate
 
   # Query entry point
@@ -20,6 +19,14 @@ defmodule FitnessWeb.Schema do
         {:ok, Fitness.Repo.all(WorkoutTemplate)}
       end)
     end
+
+    @desc "Fetch a specific workout template"
+    field :get_workout_template, :workout_template do
+      resolve(fn workout_template, _, _ ->
+        {:ok,
+         Fitness.WorkoutTemplates.fetch_workout_items_by_workout_template(workout_template.id)}
+      end)
+    end
   end
 
   # Types
@@ -32,7 +39,6 @@ defmodule FitnessWeb.Schema do
     field :body_part, :string
     field :equipment, :string
   end
-
 
   object :workout_item do
     field :id, non_null(:id)
@@ -48,7 +54,6 @@ defmodule FitnessWeb.Schema do
     end
   end
 
-
   object :workout_template do
     field :id, non_null(:id)
     field :name, :string
@@ -57,10 +62,7 @@ defmodule FitnessWeb.Schema do
 
     field :workout_items, list_of(:workout_item) do
       resolve(fn workout_template, _, _ ->
-
-
-
-        {:ok,  Fitness.WorkoutTemplates.fetch_workout_items_by_workout_template(workout_template)}
+        {:ok, Fitness.WorkoutTemplates.fetch_workout_items_by_workout_template(workout_template)}
       end)
     end
   end

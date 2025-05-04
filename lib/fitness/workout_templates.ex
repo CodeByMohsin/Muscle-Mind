@@ -130,10 +130,10 @@ defmodule Fitness.WorkoutTemplates do
     WorkoutItem.changeset(workout_item, attrs)
   end
 
-  @doc "Fetch list of workout Item by workout template"
-  @spec fetch_workout_items_by_workout_template(WorkoutTemplate.t()) :: [WorkoutItem.t()]
-  def fetch_workout_items_by_workout_template(workout_template) do
-    from(workout_item in WorkoutItem, where: workout_item == ^workout_template.id)
+  def fetch_workout_items_by_workout_template(%{id: workout_template_id} = _workout_template) do
+    from(workout_item in WorkoutItem,
+      where: workout_item.workout_template_id == ^workout_template_id
+    )
     |> Repo.all()
   end
 end
