@@ -4,8 +4,8 @@ defmodule FitnessWeb.Schema do
   alias Fitness.Exercises.Exercise
   alias Fitness.WorkoutTemplates.WorkoutTemplate
 
-   # Types
-   object :exercise do
+  # Types
+  object :exercise do
     field :id, non_null(:id)
     field :name, non_null(:string)
     field :type, :string
@@ -67,11 +67,8 @@ defmodule FitnessWeb.Schema do
       arg(:input, type: non_null(:workout_template_get_input))
 
       resolve(fn _, %{input: %{workout_template_id: workout_template_id}}, _res ->
-        {:ok,
-         Fitness.WorkoutTemplates.get_workout_template!(workout_template_id)}
+        {:ok, Fitness.WorkoutTemplates.get_workout_template!(workout_template_id)}
       end)
     end
   end
-
-
 end

@@ -144,6 +144,4 @@ defmodule Fitness.WorkoutTemplates do
   def query(queryable, _) do
     queryable
   end
-
-
 end
