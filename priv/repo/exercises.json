@@ -54,6 +54,15 @@
     "gif_url": "http://d205bpvrqc9yn1.cloudfront.net/0260.gif"
   },
   {
+    "name": "Overhead Press",
+    "description": "A compound exercise for the shoulders and triceps. Standing with a barbell at shoulder height, press the weight overhead until your arms are fully extended.",
+    "gif_url": "https://example.com/overhead-press.gif",
+    "level": "intermediate",
+    "type": "strength",
+    "equipment": "barbell",
+    "body_part": "shoulders"
+  },
+  {
     "name": "Decline Crunch",
     "type": "Strength",
     "level": "Intermediate",
