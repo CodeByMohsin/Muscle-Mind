@@ -4,33 +4,8 @@ defmodule FitnessWeb.Schema do
   alias Fitness.Exercises.Exercise
   alias Fitness.WorkoutTemplates.WorkoutTemplate
 
-  # Query entry point
-  query do
-    @desc "List all exercises"
-    field :exercises, list_of(:exercise) do
-      resolve(fn _, _, _ ->
-        {:ok, Fitness.Repo.all(Exercise)}
-      end)
-    end
-
-    @desc "List all workout templates"
-    field :workout_templates, list_of(:workout_template) do
-      resolve(fn _, _, _ ->
-        {:ok, Fitness.Repo.all(WorkoutTemplate)}
-      end)
-    end
-
-    @desc "Fetch a specific workout template"
-    field :get_workout_template, :workout_template do
-      resolve(fn workout_template, _, _ ->
-        {:ok,
-         Fitness.WorkoutTemplates.fetch_workout_items_by_workout_template(workout_template.id)}
-      end)
-    end
-  end
-
-  # Types
-  object :exercise do
+   # Types
+   object :exercise do
     field :id, non_null(:id)
     field :name, non_null(:string)
     field :type, :string
@@ -66,4 +41,37 @@ defmodule FitnessWeb.Schema do
       end)
     end
   end
+
+  input_object :workout_template_get_input do
+    field :workout_template_id, non_null(:integer)
+  end
+
+  # Query entry point
+  query do
+    @desc "List all exercises"
+    field :exercises, list_of(:exercise) do
+      resolve(fn _, _, _ ->
+        {:ok, Fitness.Repo.all(Exercise)}
+      end)
+    end
+
+    @desc "List all workout templates"
+    field :workout_templates, list_of(:workout_template) do
+      resolve(fn _, _, _ ->
+        {:ok, Fitness.Repo.all(WorkoutTemplate)}
+      end)
+    end
+
+    @desc "Fetch a specific workout template"
+    field :get_workout_template, :workout_template do
+      arg(:input, type: non_null(:workout_template_get_input))
+
+      resolve(fn _, %{input: %{workout_template_id: workout_template_id}}, _res ->
+        {:ok,
+         Fitness.WorkoutTemplates.get_workout_template!(workout_template_id)}
+      end)
+    end
+  end
+
+
 end
