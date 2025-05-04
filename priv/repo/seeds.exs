@@ -29,39 +29,46 @@ alias Fitness.WorkoutTemplates.WorkoutItem
   })
 
 # Parse the JSON exercise data
-exercise_data = File.read!("priv/repo/exercises.json")
-|> Jason.decode!()
+exercise_data =
+  File.read!("priv/repo/exercises.json")
+  |> Jason.decode!()
 
 # Create all exercises from the JSON data and build a map for easy lookup
 exercises_map = %{}
-exercises_map = Enum.reduce(exercise_data, exercises_map, fn exercise_json, acc ->
-  # Create a unique key for each exercise
-  key = exercise_json["name"]
-        |> String.downcase()
-        |> String.replace(~r/[^a-z0-9]+/, "_")
-        |> String.trim("_")
 
-  # Create the exercise in the database
-  exercise = Repo.insert!(%Exercise{
-    name: exercise_json["name"],
-    description: exercise_json["description"],
-    gif_url: exercise_json["gif_url"],
-    level: String.downcase(exercise_json["level"]),
-    type: String.downcase(exercise_json["type"]),
-    equipment: String.downcase(exercise_json["equipment"]),
-    body_part: String.downcase(exercise_json["body_part"])
-  })
+exercises_map =
+  Enum.reduce(exercise_data, exercises_map, fn exercise_json, acc ->
+    # Create a unique key for each exercise
+    key =
+      exercise_json["name"]
+      |> String.downcase()
+      |> String.replace(~r/[^a-z0-9]+/, "_")
+      |> String.trim("_")
 
-  # Add the exercise to our map
-  Map.put(acc, key, exercise)
-end)
+    # Create the exercise in the database
+    exercise =
+      Repo.insert!(%Exercise{
+        name: exercise_json["name"],
+        description: exercise_json["description"],
+        gif_url: exercise_json["gif_url"],
+        level: String.downcase(exercise_json["level"]),
+        type: String.downcase(exercise_json["type"]),
+        equipment: String.downcase(exercise_json["equipment"]),
+        body_part: String.downcase(exercise_json["body_part"])
+      })
+
+    # Add the exercise to our map
+    Map.put(acc, key, exercise)
+  end)
 
 # Helper function to get exercise by name
 get_exercise = fn name ->
-  key = name
-        |> String.downcase()
-        |> String.replace(~r/[^a-z0-9]+/, "_")
-        |> String.trim("_")
+  key =
+    name
+    |> String.downcase()
+    |> String.replace(~r/[^a-z0-9]+/, "_")
+    |> String.trim("_")
+
   Map.get(exercises_map, key)
 end
 
@@ -76,14 +83,45 @@ push_template =
     workout_template_score: 0
   })
 
-# Add exercises to the push day template
+# Multiple sets of bench press with pyramid weights
 Repo.insert!(%WorkoutItem{
   sets: 1,
+  weight: 20.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: push_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 25.0,
   weight_unit: "kg",
   reps: 8,
   check_box: false,
   exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: push_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
+  weight: 30.0,
+  weight_unit: "kg",
+  reps: 6,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: push_template.id
+})
+
+# Multiple sets of push-ups
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 15,
+  check_box: false,
+  exercise_id: get_exercise.("push-up").id,
   workout_template_id: push_template.id
 })
 
@@ -97,19 +135,10 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: push_template.id
 })
 
+# Multiple sets of overhead press
 Repo.insert!(%WorkoutItem{
-  sets: 3,
-  weight: 0.0,
-  weight_unit: "kg",
-  reps: 10,
-  check_box: false,
-  exercise_id: get_exercise.("chest dip").id,
-  workout_template_id: push_template.id
-})
-
-Repo.insert!(%WorkoutItem{
-  sets: 4,
-  weight: 15.0,
+  sets: 1,
+  weight: 12.0,
   weight_unit: "kg",
   reps: 10,
   check_box: false,
@@ -118,7 +147,18 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 5,
+  sets: 2,
+  weight: 15.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("band shoulder press").id,
+  workout_template_id: push_template.id
+})
+
+# Multiple sets of lateral raises
+Repo.insert!(%WorkoutItem{
+  sets: 1,
   weight: 8.0,
   weight_unit: "kg",
   reps: 12,
@@ -128,7 +168,28 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 6,
+  sets: 2,
+  weight: 6.0,
+  weight_unit: "kg",
+  reps: 15,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell lateral raise").id,
+  workout_template_id: push_template.id
+})
+
+# Multiple sets of triceps dips
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("triceps dip").id,
+  workout_template_id: push_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 0.0,
   weight_unit: "kg",
   reps: 10,
@@ -146,12 +207,12 @@ pull_template =
     workout_template_score: 0
   })
 
-# Add exercises to the pull day template
+# Multiple sets of pull-ups
 Repo.insert!(%WorkoutItem{
   sets: 1,
   weight: 0.0,
   weight_unit: "kg",
-  reps: 8,
+  reps: 10,
   check_box: false,
   exercise_id: get_exercise.("pull-up").id,
   workout_template_id: pull_template.id
@@ -163,12 +224,33 @@ Repo.insert!(%WorkoutItem{
   weight_unit: "kg",
   reps: 8,
   check_box: false,
-  exercise_id: get_exercise.("chin-up").id,
+  exercise_id: get_exercise.("pull-up").id,
   workout_template_id: pull_template.id
 })
 
 Repo.insert!(%WorkoutItem{
   sets: 3,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 6,
+  check_box: false,
+  exercise_id: get_exercise.("pull-up").id,
+  workout_template_id: pull_template.id
+})
+
+# Multiple sets of seated rows
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 40.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("cable seated row").id,
+  workout_template_id: pull_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 50.0,
   weight_unit: "kg",
   reps: 10,
@@ -178,7 +260,28 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 4,
+  sets: 3,
+  weight: 55.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("cable seated row").id,
+  workout_template_id: pull_template.id
+})
+
+# Multiple sets of barbell shrugs
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 40.0,
+  weight_unit: "kg",
+  reps: 15,
+  check_box: false,
+  exercise_id: get_exercise.("barbell shrug").id,
+  workout_template_id: pull_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 50.0,
   weight_unit: "kg",
   reps: 12,
@@ -187,8 +290,19 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: pull_template.id
 })
 
+# Multiple sets of bicep curls
 Repo.insert!(%WorkoutItem{
-  sets: 5,
+  sets: 1,
+  weight: 10.0,
+  weight_unit: "kg",
+  reps: 15,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell biceps curl").id,
+  workout_template_id: pull_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 12.0,
   weight_unit: "kg",
   reps: 12,
@@ -198,12 +312,12 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 6,
-  weight: 20.0,
+  sets: 3,
+  weight: 15.0,
   weight_unit: "kg",
-  reps: 10,
+  reps: 8,
   check_box: false,
-  exercise_id: get_exercise.("barbell curl").id,
+  exercise_id: get_exercise.("dumbbell biceps curl").id,
   workout_template_id: pull_template.id
 })
 
@@ -216,14 +330,55 @@ leg_template =
     workout_template_score: 0
   })
 
-# Add exercises to the leg day template
+# Multiple sets of squats
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 60.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("barbell full squat").id,
+  workout_template_id: leg_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
+  weight: 80.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("barbell full squat").id,
+  workout_template_id: leg_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
+  weight: 90.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("barbell full squat").id,
+  workout_template_id: leg_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 4,
+  weight: 100.0,
+  weight_unit: "kg",
+  reps: 6,
+  check_box: false,
+  exercise_id: get_exercise.("barbell full squat").id,
+  workout_template_id: leg_template.id
+})
+
+# Multiple sets of deadlifts
 Repo.insert!(%WorkoutItem{
   sets: 1,
   weight: 80.0,
   weight_unit: "kg",
   reps: 8,
   check_box: false,
-  exercise_id: get_exercise.("barbell full squat").id,
+  exercise_id: get_exercise.("barbell deadlift").id,
   workout_template_id: leg_template.id
 })
 
@@ -239,16 +394,17 @@ Repo.insert!(%WorkoutItem{
 
 Repo.insert!(%WorkoutItem{
   sets: 3,
-  weight: 20.0,
+  weight: 120.0,
   weight_unit: "kg",
-  reps: 12,
+  reps: 4,
   check_box: false,
-  exercise_id: get_exercise.("dumbbell goblet squat").id,
+  exercise_id: get_exercise.("barbell deadlift").id,
   workout_template_id: leg_template.id
 })
 
+# Multiple sets of walking lunges
 Repo.insert!(%WorkoutItem{
-  sets: 4,
+  sets: 1,
   weight: 0.0,
   weight_unit: "kg",
   reps: 20,
@@ -258,20 +414,41 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 5,
-  weight: 60.0,
+  sets: 2,
+  weight: 0.0,
   weight_unit: "kg",
-  reps: 12,
+  reps: 20,
   check_box: false,
-  exercise_id: get_exercise.("barbell glute bridge").id,
+  exercise_id: get_exercise.("walking lunge").id,
+  workout_template_id: leg_template.id
+})
+
+# Multiple sets of calf raises
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 30.0,
+  weight_unit: "kg",
+  reps: 20,
+  check_box: false,
+  exercise_id: get_exercise.("weighted donkey calf raise").id,
   workout_template_id: leg_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 6,
+  sets: 2,
   weight: 40.0,
   weight_unit: "kg",
   reps: 15,
+  check_box: false,
+  exercise_id: get_exercise.("weighted donkey calf raise").id,
+  workout_template_id: leg_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
+  weight: 50.0,
+  weight_unit: "kg",
+  reps: 10,
   check_box: false,
   exercise_id: get_exercise.("weighted donkey calf raise").id,
   workout_template_id: leg_template.id
@@ -288,14 +465,45 @@ upper_template =
     workout_template_score: 0
   })
 
-# Add exercises to upper body template
+# Multiple sets of bench press
 Repo.insert!(%WorkoutItem{
   sets: 1,
+  weight: 20.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: upper_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 25.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: upper_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
+  weight: 30.0,
   weight_unit: "kg",
   reps: 8,
   check_box: false,
   exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: upper_template.id
+})
+
+# Multiple sets of pull-ups
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("pull-up").id,
   workout_template_id: upper_template.id
 })
 
@@ -311,6 +519,27 @@ Repo.insert!(%WorkoutItem{
 
 Repo.insert!(%WorkoutItem{
   sets: 3,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("pull-up").id,
+  workout_template_id: upper_template.id
+})
+
+# Multiple sets of shoulder press
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 12.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("band shoulder press").id,
+  workout_template_id: upper_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 15.0,
   weight_unit: "kg",
   reps: 10,
@@ -319,43 +548,45 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: upper_template.id
 })
 
+# Multiple sets of bicep curls
 Repo.insert!(%WorkoutItem{
-  sets: 4,
-  weight: 50.0,
-  weight_unit: "kg",
-  reps: 10,
-  check_box: false,
-  exercise_id: get_exercise.("cable seated row").id,
-  workout_template_id: upper_template.id
-})
-
-Repo.insert!(%WorkoutItem{
-  sets: 5,
-  weight: 8.0,
+  sets: 1,
+  weight: 15.0,
   weight_unit: "kg",
   reps: 12,
   check_box: false,
-  exercise_id: get_exercise.("dumbbell lateral raise").id,
+  exercise_id: get_exercise.("barbell curl").id,
   workout_template_id: upper_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 6,
-  weight: 0.0,
+  sets: 2,
+  weight: 20.0,
   weight_unit: "kg",
   reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("barbell curl").id,
+  workout_template_id: upper_template.id
+})
+
+# Multiple sets of triceps dips
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 12,
   check_box: false,
   exercise_id: get_exercise.("triceps dip").id,
   workout_template_id: upper_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 7,
-  weight: 20.0,
+  sets: 2,
+  weight: 0.0,
   weight_unit: "kg",
   reps: 10,
   check_box: false,
-  exercise_id: get_exercise.("barbell curl").id,
+  exercise_id: get_exercise.("triceps dip").id,
   workout_template_id: upper_template.id
 })
 
@@ -368,14 +599,45 @@ lower_template =
     workout_template_score: 0
   })
 
-# Add exercises to lower body template
+# Multiple sets of squats
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 60.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("barbell full squat").id,
+  workout_template_id: lower_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
+  weight: 80.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("barbell full squat").id,
+  workout_template_id: lower_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
+  weight: 100.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("barbell full squat").id,
+  workout_template_id: lower_template.id
+})
+
+# Multiple sets of deadlifts
 Repo.insert!(%WorkoutItem{
   sets: 1,
   weight: 80.0,
   weight_unit: "kg",
   reps: 8,
   check_box: false,
-  exercise_id: get_exercise.("barbell full squat").id,
+  exercise_id: get_exercise.("barbell deadlift").id,
   workout_template_id: lower_template.id
 })
 
@@ -391,6 +653,27 @@ Repo.insert!(%WorkoutItem{
 
 Repo.insert!(%WorkoutItem{
   sets: 3,
+  weight: 120.0,
+  weight_unit: "kg",
+  reps: 4,
+  check_box: false,
+  exercise_id: get_exercise.("barbell deadlift").id,
+  workout_template_id: lower_template.id
+})
+
+# Multiple sets of front squats
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 50.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("barbell front squat").id,
+  workout_template_id: lower_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 60.0,
   weight_unit: "kg",
   reps: 10,
@@ -399,41 +682,43 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: lower_template.id
 })
 
+# Multiple sets of lunges
 Repo.insert!(%WorkoutItem{
-  sets: 4,
-  weight: 30.0,
+  sets: 1,
+  weight: 0.0,
   weight_unit: "kg",
-  reps: 12,
+  reps: 20,
   check_box: false,
-  exercise_id: get_exercise.("barbell step-up").id,
+  exercise_id: get_exercise.("walking lunge").id,
   workout_template_id: lower_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 5,
-  weight: 60.0,
+  sets: 2,
+  weight: 0.0,
   weight_unit: "kg",
-  reps: 12,
+  reps: 20,
   check_box: false,
-  exercise_id: get_exercise.("barbell glute bridge").id,
+  exercise_id: get_exercise.("walking lunge").id,
   workout_template_id: lower_template.id
 })
 
+# Core exercises
 Repo.insert!(%WorkoutItem{
-  sets: 6,
-  weight: 40.0,
+  sets: 1,
+  weight: 0.0,
   weight_unit: "kg",
   reps: 15,
   check_box: false,
-  exercise_id: get_exercise.("weighted donkey calf raise").id,
+  exercise_id: get_exercise.("hanging leg raise").id,
   workout_template_id: lower_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 7,
+  sets: 2,
   weight: 0.0,
   weight_unit: "kg",
-  reps: 12,
+  reps: 15,
   check_box: false,
   exercise_id: get_exercise.("hanging leg raise").id,
   workout_template_id: lower_template.id
@@ -449,12 +734,12 @@ full_body_template =
     workout_template_score: 0
   })
 
-# Add exercises to full body template
+# Multiple sets of squats
 Repo.insert!(%WorkoutItem{
   sets: 1,
-  weight: 80.0,
+  weight: 60.0,
   weight_unit: "kg",
-  reps: 8,
+  reps: 12,
   check_box: false,
   exercise_id: get_exercise.("barbell full squat").id,
   workout_template_id: full_body_template.id
@@ -462,11 +747,11 @@ Repo.insert!(%WorkoutItem{
 
 Repo.insert!(%WorkoutItem{
   sets: 2,
-  weight: 25.0,
+  weight: 80.0,
   weight_unit: "kg",
-  reps: 8,
+  reps: 10,
   check_box: false,
-  exercise_id: get_exercise.("dumbbell bench press").id,
+  exercise_id: get_exercise.("barbell full squat").id,
   workout_template_id: full_body_template.id
 })
 
@@ -474,24 +759,56 @@ Repo.insert!(%WorkoutItem{
   sets: 3,
   weight: 90.0,
   weight_unit: "kg",
-  reps: 6,
+  reps: 8,
   check_box: false,
-  exercise_id: get_exercise.("barbell deadlift").id,
+  exercise_id: get_exercise.("barbell full squat").id,
+  workout_template_id: full_body_template.id
+})
+
+# Multiple sets of bench press
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 20.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell bench press").id,
   workout_template_id: full_body_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 4,
-  weight: 15.0,
+  sets: 2,
+  weight: 25.0,
   weight_unit: "kg",
   reps: 10,
   check_box: false,
-  exercise_id: get_exercise.("band shoulder press").id,
+  exercise_id: get_exercise.("dumbbell bench press").id,
   workout_template_id: full_body_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 5,
+  sets: 3,
+  weight: 30.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: full_body_template.id
+})
+
+# Multiple sets of pull-ups
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("pull-up").id,
+  workout_template_id: full_body_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 0.0,
   weight_unit: "kg",
   reps: 8,
@@ -500,8 +817,30 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: full_body_template.id
 })
 
+# Multiple sets of shoulder press
 Repo.insert!(%WorkoutItem{
-  sets: 6,
+  sets: 1,
+  weight: 12.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("band shoulder press").id,
+  workout_template_id: full_body_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
+  weight: 15.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("band shoulder press").id,
+  workout_template_id: full_body_template.id
+})
+
+# Arm exercises
+Repo.insert!(%WorkoutItem{
+  sets: 1,
   weight: 12.0,
   weight_unit: "kg",
   reps: 12,
@@ -511,7 +850,7 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 7,
+  sets: 1,
   weight: 0.0,
   weight_unit: "kg",
   reps: 12,
@@ -520,8 +859,9 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: full_body_template.id
 })
 
+# Core exercise
 Repo.insert!(%WorkoutItem{
-  sets: 8,
+  sets: 1,
   weight: 0.0,
   weight_unit: "kg",
   reps: 20,
@@ -541,14 +881,55 @@ chest_template =
     workout_template_score: 0
   })
 
-# Add exercises to chest day template
+# Multiple sets of bench press
 Repo.insert!(%WorkoutItem{
   sets: 1,
+  weight: 20.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: chest_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 25.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: chest_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
+  weight: 30.0,
   weight_unit: "kg",
   reps: 8,
   check_box: false,
   exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: chest_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 4,
+  weight: 35.0,
+  weight_unit: "kg",
+  reps: 6,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell bench press").id,
+  workout_template_id: chest_template.id
+})
+
+# Multiple sets of push-ups
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 15,
+  check_box: false,
+  exercise_id: get_exercise.("push-up").id,
   workout_template_id: chest_template.id
 })
 
@@ -562,8 +943,19 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: chest_template.id
 })
 
+# Multiple sets of chest dips
 Repo.insert!(%WorkoutItem{
-  sets: 3,
+  sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("chest dip").id,
+  workout_template_id: chest_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 0.0,
   weight_unit: "kg",
   reps: 10,
@@ -572,18 +964,19 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: chest_template.id
 })
 
+# Multiple sets of incline push-ups
 Repo.insert!(%WorkoutItem{
-  sets: 4,
+  sets: 1,
   weight: 0.0,
   weight_unit: "kg",
-  reps: 12,
+  reps: 15,
   check_box: false,
-  exercise_id: get_exercise.("decline push-up").id,
+  exercise_id: get_exercise.("incline push-up").id,
   workout_template_id: chest_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 5,
+  sets: 2,
   weight: 0.0,
   weight_unit: "kg",
   reps: 12,
@@ -592,13 +985,24 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: chest_template.id
 })
 
+# Multiple sets of decline push-ups
 Repo.insert!(%WorkoutItem{
-  sets: 6,
+  sets: 1,
   weight: 0.0,
   weight_unit: "kg",
-  reps: 10,
+  reps: 15,
   check_box: false,
-  exercise_id: get_exercise.("suspended push-up").id,
+  exercise_id: get_exercise.("decline push-up").id,
+  workout_template_id: chest_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("decline push-up").id,
   workout_template_id: chest_template.id
 })
 
@@ -611,14 +1015,45 @@ back_template =
     workout_template_score: 0
   })
 
-# Add exercises to back day template
+# Multiple sets of pull-ups
 Repo.insert!(%WorkoutItem{
   sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("pull-up").id,
+  workout_template_id: back_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 0.0,
   weight_unit: "kg",
   reps: 8,
   check_box: false,
   exercise_id: get_exercise.("pull-up").id,
+  workout_template_id: back_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 6,
+  check_box: false,
+  exercise_id: get_exercise.("pull-up").id,
+  workout_template_id: back_template.id
+})
+
+# Multiple sets of chin-ups
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("chin-up").id,
   workout_template_id: back_template.id
 })
 
@@ -632,8 +1067,19 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: back_template.id
 })
 
+# Multiple sets of seated rows
 Repo.insert!(%WorkoutItem{
-  sets: 3,
+  sets: 1,
+  weight: 40.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("cable seated row").id,
+  workout_template_id: back_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 50.0,
   weight_unit: "kg",
   reps: 10,
@@ -643,7 +1089,28 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 4,
+  sets: 3,
+  weight: 60.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("cable seated row").id,
+  workout_template_id: back_template.id
+})
+
+# Multiple sets of suspended rows
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("suspended row").id,
+  workout_template_id: back_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 0.0,
   weight_unit: "kg",
   reps: 10,
@@ -652,8 +1119,19 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: back_template.id
 })
 
+# Multiple sets of barbell shrugs
 Repo.insert!(%WorkoutItem{
-  sets: 5,
+  sets: 1,
+  weight: 40.0,
+  weight_unit: "kg",
+  reps: 15,
+  check_box: false,
+  exercise_id: get_exercise.("barbell shrug").id,
+  workout_template_id: back_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 50.0,
   weight_unit: "kg",
   reps: 12,
@@ -663,12 +1141,12 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 6,
-  weight: 10.0,
+  sets: 3,
+  weight: 60.0,
   weight_unit: "kg",
-  reps: 12,
+  reps: 8,
   check_box: false,
-  exercise_id: get_exercise.("kettlebell alternating renegade row").id,
+  exercise_id: get_exercise.("barbell shrug").id,
   workout_template_id: back_template.id
 })
 
@@ -681,14 +1159,87 @@ arms_template =
     workout_template_score: 0
   })
 
-# Add exercises to arms day template
+# Multiple sets of barbell curls
 Repo.insert!(%WorkoutItem{
   sets: 1,
+  weight: 15.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("barbell curl").id,
+  workout_template_id: arms_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
   weight: 20.0,
   weight_unit: "kg",
   reps: 10,
   check_box: false,
   exercise_id: get_exercise.("barbell curl").id,
+  workout_template_id: arms_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
+  weight: 25.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("barbell curl").id,
+  workout_template_id: arms_template.id
+})
+
+# Multiple sets of dumbbell curls
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 10.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell biceps curl").id,
+  workout_template_id: arms_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
+  weight: 12.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell biceps curl").id,
+  workout_template_id: arms_template.id
+})
+
+# Multiple sets of preacher curls
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 10.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell preacher curl").id,
+  workout_template_id: arms_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
+  weight: 12.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("dumbbell preacher curl").id,
+  workout_template_id: arms_template.id
+})
+
+# Multiple sets of triceps dips
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("triceps dip").id,
   workout_template_id: arms_template.id
 })
 
@@ -702,19 +1253,20 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: arms_template.id
 })
 
+# Multiple sets of bench dips
 Repo.insert!(%WorkoutItem{
-  sets: 3,
-  weight: 12.0,
+  sets: 1,
+  weight: 0.0,
   weight_unit: "kg",
-  reps: 12,
+  reps: 15,
   check_box: false,
-  exercise_id: get_exercise.("dumbbell biceps curl").id,
+  exercise_id: get_exercise.("weighted bench dip").id,
   workout_template_id: arms_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 4,
-  weight: 0.0,
+  sets: 2,
+  weight: 10.0,
   weight_unit: "kg",
   reps: 12,
   check_box: false,
@@ -722,21 +1274,22 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: arms_template.id
 })
 
+# Multiple sets of diamond push-ups
 Repo.insert!(%WorkoutItem{
-  sets: 5,
-  weight: 12.0,
+  sets: 1,
+  weight: 0.0,
   weight_unit: "kg",
-  reps: 12,
+  reps: 15,
   check_box: false,
-  exercise_id: get_exercise.("dumbbell preacher curl").id,
+  exercise_id: get_exercise.("diamond push-up").id,
   workout_template_id: arms_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 6,
+  sets: 2,
   weight: 0.0,
   weight_unit: "kg",
-  reps: 15,
+  reps: 12,
   check_box: false,
   exercise_id: get_exercise.("diamond push-up").id,
   workout_template_id: arms_template.id
@@ -752,7 +1305,7 @@ functional_template =
     workout_template_score: 0
   })
 
-# Add exercises to functional fitness template
+# Multiple sets of kettlebell swings
 Repo.insert!(%WorkoutItem{
   sets: 1,
   weight: 16.0,
@@ -765,6 +1318,27 @@ Repo.insert!(%WorkoutItem{
 
 Repo.insert!(%WorkoutItem{
   sets: 2,
+  weight: 20.0,
+  weight_unit: "kg",
+  reps: 15,
+  check_box: false,
+  exercise_id: get_exercise.("kettlebell swing").id,
+  workout_template_id: functional_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
+  weight: 24.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("kettlebell swing").id,
+  workout_template_id: functional_template.id
+})
+
+# Multiple sets of burpees
+Repo.insert!(%WorkoutItem{
+  sets: 1,
   weight: 0.0,
   weight_unit: "kg",
   reps: 15,
@@ -774,8 +1348,29 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 3,
-  weight: 80.0,
+  sets: 2,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("burpee").id,
+  workout_template_id: functional_template.id
+})
+
+# Multiple sets of power cleans
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 60.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("power clean").id,
+  workout_template_id: functional_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
+  weight: 70.0,
   weight_unit: "kg",
   reps: 6,
   check_box: false,
@@ -784,7 +1379,38 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 4,
+  sets: 3,
+  weight: 80.0,
+  weight_unit: "kg",
+  reps: 4,
+  check_box: false,
+  exercise_id: get_exercise.("power clean").id,
+  workout_template_id: functional_template.id
+})
+
+# Multiple sets of thrusters
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 40.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("barbell thruster").id,
+  workout_template_id: functional_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 2,
+  weight: 50.0,
+  weight_unit: "kg",
+  reps: 10,
+  check_box: false,
+  exercise_id: get_exercise.("barbell thruster").id,
+  workout_template_id: functional_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
   weight: 60.0,
   weight_unit: "kg",
   reps: 8,
@@ -793,18 +1419,30 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: functional_template.id
 })
 
+# Multiple sets of mountain climbers
 Repo.insert!(%WorkoutItem{
-  sets: 5,
+  sets: 1,
   weight: 0.0,
   weight_unit: "kg",
-  reps: 20,
+  reps: 30,
   check_box: false,
   exercise_id: get_exercise.("mountain climber").id,
   workout_template_id: functional_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 6,
+  sets: 2,
+  weight: 0.0,
+  weight_unit: "kg",
+  reps: 30,
+  check_box: false,
+  exercise_id: get_exercise.("mountain climber").id,
+  workout_template_id: functional_template.id
+})
+
+# Multiple sets of bear crawls
+Repo.insert!(%WorkoutItem{
+  sets: 1,
   weight: 0.0,
   weight_unit: "kg",
   reps: 12,
@@ -814,18 +1452,39 @@ Repo.insert!(%WorkoutItem{
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 7,
+  sets: 2,
   weight: 0.0,
+  weight_unit: "kg",
+  reps: 12,
+  check_box: false,
+  exercise_id: get_exercise.("bear crawl").id,
+  workout_template_id: functional_template.id
+})
+
+# Multiple sets of kettlebell thrusters
+Repo.insert!(%WorkoutItem{
+  sets: 1,
+  weight: 8.0,
   weight_unit: "kg",
   reps: 10,
   check_box: false,
-  exercise_id: get_exercise.("jump squat").id,
+  exercise_id: get_exercise.("kettlebell thruster").id,
   workout_template_id: functional_template.id
 })
 
 Repo.insert!(%WorkoutItem{
-  sets: 8,
+  sets: 2,
   weight: 10.0,
+  weight_unit: "kg",
+  reps: 8,
+  check_box: false,
+  exercise_id: get_exercise.("kettlebell thruster").id,
+  workout_template_id: functional_template.id
+})
+
+Repo.insert!(%WorkoutItem{
+  sets: 3,
+  weight: 12.0,
   weight_unit: "kg",
   reps: 6,
   check_box: false,
@@ -833,4 +1492,4 @@ Repo.insert!(%WorkoutItem{
   workout_template_id: functional_template.id
 })
 
-IO.puts("Successfully created 5 workout templates with all exercises from the provided JSON data")
+IO.puts("Successfully created 5 workout templates with proper set numbering for each exercise")
