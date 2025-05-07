@@ -15,7 +15,7 @@ defmodule FitnessWeb.Telemetry do
       # Add reporters as children of your supervision tree.
       # {Telemetry.Metrics.ConsoleReporter, metrics: metrics()}
     ]
-
+    FitnessWeb.AbsintheMetrics.setup()
     Supervisor.init(children, strategy: :one_for_one)
   end
 
