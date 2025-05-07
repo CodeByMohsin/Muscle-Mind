@@ -1,6 +1,6 @@
 # Script to generate workout templates from JSON exercise data
 # Run with: mix run priv/repo/workout_templates_generator.exs
-defmodule Fitness.Data.Seed do
+defmodule Fitness.Data.Setup do
   alias Fitness.Repo
   alias Fitness.Accounts
   alias Fitness.Exercises.Exercise
