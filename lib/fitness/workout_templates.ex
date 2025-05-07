@@ -120,7 +120,6 @@ defmodule Fitness.WorkoutTemplates do
 
       iex> change_workout_template(workout_template)
       %Ecto.Changeset{data: %WorkoutTemplate{}}
-
   """
   def change_workout_template(%WorkoutTemplate{} = workout_template, attrs \\ %{}) do
     WorkoutTemplate.changeset(workout_template, attrs)
