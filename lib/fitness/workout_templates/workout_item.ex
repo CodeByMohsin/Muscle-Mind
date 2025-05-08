@@ -17,7 +17,15 @@ defmodule Fitness.WorkoutTemplates.WorkoutItem do
   @doc false
   def changeset(workout, attrs) do
     workout
-    |> cast(attrs, [:sets, :weight, :weight_unit, :check_box, :reps, :exercise_id, :workout_template_id])
+    |> cast(attrs, [
+      :sets,
+      :weight,
+      :weight_unit,
+      :check_box,
+      :reps,
+      :exercise_id,
+      :workout_template_id
+    ])
     |> validate_required([:sets, :weight, :weight_unit, :reps, :workout_template_id, :exercise_id])
   end
 end

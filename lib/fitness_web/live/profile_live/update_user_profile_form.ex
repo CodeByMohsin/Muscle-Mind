@@ -62,7 +62,10 @@ defmodule FitnessWeb.ProfileLive.UpdateUserProfileForm do
 
   @impl true
   def handle_event("remove", _params, socket) do
-    Accounts.update_user_image(socket.assigns.current_user, %{"image" => "/images/user-profile.svg"})
+    Accounts.update_user_image(socket.assigns.current_user, %{
+      "image" => "/images/user-profile.svg"
+    })
+
     {:noreply, socket}
   end
 
@@ -77,10 +80,9 @@ defmodule FitnessWeb.ProfileLive.UpdateUserProfileForm do
       end)
       |> List.to_string()
 
-
-     if uploaded_file != ""  do
-       Accounts.update_user_image(socket.assigns.current_user, %{"image" => uploaded_file})
-     end
+    if uploaded_file != "" do
+      Accounts.update_user_image(socket.assigns.current_user, %{"image" => uploaded_file})
+    end
 
     Accounts.update_user_name(socket.assigns.current_user, %{"name" => updated_name})
 
