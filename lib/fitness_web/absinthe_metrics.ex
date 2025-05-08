@@ -2,74 +2,60 @@ defmodule FitnessWeb.AbsintheMetrics do
   require Logger
 
   def setup do
-    # Attach to the existing Absinthe telemetry events
     :telemetry.attach_many(
-      :absinthe_telemetry,
+      :absinthe_metrics,
       [
         [:absinthe, :execute, :operation, :start],
         [:absinthe, :execute, :operation, :stop],
         [:absinthe, :resolve, :field, :start],
-        [:absinthe, :resolve, :field, :stop],
-        [:absinthe, :resolve, :field, :exception]
+        [:absinthe, :resolve, :field, :stop]
       ],
       &handle_event/4,
-      nil
+      []
     )
 
     Logger.info("Absinthe telemetry handlers attached")
   end
 
-  # Operation events
   defp handle_event([:absinthe, :execute, :operation, :start], _measurements, metadata, _config) do
-    operation_type = metadata.operation.operation || "unknown"
-    operation_name = metadata.operation.name || "anonymous"
-
-    Logger.warning("[GraphQL] Starting operation: #{operation_type} #{operation_name}")
+    operation_name = get_operation_name_from_metadata(metadata)
+    Logger.warning("[GraphQL] Starting operation: #{operation_name}")
   end
 
   defp handle_event([:absinthe, :execute, :operation, :stop], measurements, metadata, _config) do
-    operation_type = metadata.operation.operation || "unknown"
-    operation_name = metadata.operation.name || "anonymous"
+    operation_name = get_operation_name_from_metadata(metadata)
     duration_ms = System.convert_time_unit(measurements.duration, :native, :millisecond)
-
-    Logger.warning("[GraphQL] Completed operation: #{operation_type} #{operation_name} in #{duration_ms}ms")
+    Logger.warning("[GraphQL] Completed operation: #{operation_name} in #{duration_ms}ms")
   end
 
-  # Field resolution events
-  defp handle_event([:absinthe, :resolve, :field, :start], _measurements, _metadata, _config) do
-    # Skip logging field starts to reduce noise
-    :ok
+  defp handle_event( [:absinthe, :resolve, :field, :start], _measurements, _metadata, _config) do
+
+    Logger.warning("[GraphQL] Field start resolving")
   end
 
-  defp handle_event([:absinthe, :resolve, :field, :stop], measurements, metadata, _config) do
-    object_type = metadata.object.identifier
-    field_name = metadata.field.name
+  defp handle_event([:absinthe, :resolve, :field, :stop], measurements, _metadata, _config) do
     duration_ms = System.convert_time_unit(measurements.duration, :native, :millisecond)
 
-    # Focus on key resolvers and slow resolvers
+    Logger.warning("[GraphQL] Field resolved: in #{duration_ms}ms")
+  end
+
+  defp get_operation_name_from_metadata(metadata) do
     cond do
-      # Critical resolvers that we always want to log
-      {object_type, field_name} == {:workout_template, :workout_items} ->
-        Logger.warning("[GraphQL] Resolved workout_items for template in #{duration_ms}ms")
+      # First try params which is most reliable
+      metadata[:params] && metadata[:params]["operationName"] ->
+        metadata[:params]["operationName"]
 
-      {object_type, field_name} == {:workout_item, :exercise} ->
-        Logger.warning("[GraphQL] Resolved exercise for workout_item in #{duration_ms}ms")
+      # Next try options
+      metadata[:options] && Keyword.get(metadata[:options], :operation_name) ->
+        Keyword.get(metadata[:options], :operation_name)
 
-      # Slow resolvers
-      duration_ms > 50 ->
-        Logger.warning("[GraphQL] Slow resolver: #{object_type}.#{field_name} took #{duration_ms}ms")
+      # Finally try operation if it exists
+      metadata[:operation] && metadata[:operation][:name] ->
+        metadata[:operation][:name]
 
-      # Skip logging fast resolvers
+      # Fallback
       true ->
-        :ok
+        "anonymous"
     end
-  end
-
-  defp handle_event([:absinthe, :resolve, :field, :exception], _measurements, metadata, _config) do
-    object_type = metadata.object.identifier
-    field_name = metadata.field.name
-    error = inspect(metadata.reason)
-
-    Logger.warning("[GraphQL] Error resolving #{object_type}.#{field_name}: #{error}")
   end
 end
