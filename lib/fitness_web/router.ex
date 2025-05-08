@@ -22,8 +22,7 @@ defmodule FitnessWeb.Router do
   scope "/api" do
     pipe_through :api
 
-    forward "/graphql", Absinthe.Plug,
-      schema: FitnessWeb.Schema
+    forward "/graphql", Absinthe.Plug, schema: FitnessWeb.Schema
   end
 
   scope "/", FitnessWeb do

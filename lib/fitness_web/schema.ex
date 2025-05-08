@@ -48,7 +48,13 @@ defmodule FitnessWeb.Schema do
     field :weight_unit, :string
 
     field :exercise, :exercise do
-      resolve(dataloader(:exercises, :exercise))
+      if Application.compile_env(:fitness, :use_dataloader, false) do
+        resolve(dataloader(:exercises, :exercise))
+      else
+        resolve(fn workout_item, _, _ ->
+          {:ok, Repo.get(Exercise, workout_item.exercise_id)}
+        end)
+      end
     end
   end
 
@@ -59,7 +65,13 @@ defmodule FitnessWeb.Schema do
     field :is_finished, :boolean
 
     field :workout_items, list_of(:workout_item) do
-      resolve(dataloader(:workout_templates, :workout_items))
+      if Application.compile_env(:fitness, :use_dataloader, false) do
+        resolve(dataloader(:workout_templates, :workout_items))
+      else
+        resolve(fn workout_template, _, _ ->
+          {:ok, WorkoutTemplates.fetch_workout_items_by_workout_template(workout_template)}
+        end)
+      end
     end
   end
 
