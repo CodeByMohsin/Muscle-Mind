@@ -30,41 +30,49 @@ defmodule FitnessWeb.AbsintheMetrics do
     Logger.warning("[GraphQL] Completed operation: #{operation_name} in #{duration_ms}ms")
   end
 
-  defp handle_event([:absinthe, :resolve, :field, :start], _measurements, _metadata, _config) do
-    Logger.warning("[GraphQL] Field start resolving")
+  defp handle_event([:absinthe, :resolve, :field, :start], _measurements, metadata, _config) do
+    field = metadata[:resolution].definition.name
+    parent_type = metadata[:resolution].parent_type.identifier
+    Logger.warning("[GraphQL] Resolving field: #{parent_type}.#{field}")
   end
 
-  defp handle_event([:absinthe, :resolve, :field, :stop], measurements, _metadata, _config) do
+  defp handle_event([:absinthe, :resolve, :field, :stop], measurements, metadata, _config) do
+    field = metadata[:resolution].definition.name
+    parent_type = metadata[:resolution].parent_type.identifier
+    duration_ms = System.convert_time_unit(measurements.duration, :native, :millisecond)
+    Logger.warning("[GraphQL] Resolved field: #{parent_type}.#{field} in #{duration_ms}ms")
+  end
+
+  defp handle_event([:dataloader, :source, :run, :start], _measurements, metadata, _config) do
+    source = metadata[:source]
+    batch_key = metadata[:batch_key]
+
+    Logger.warning(
+      "[Dataloader] Running source: #{inspect(source)}, batch: #{inspect(batch_key)}"
+    )
+  end
+
+  defp handle_event([:dataloader, :source, :run, :stop], measurements, metadata, _config) do
+    source = metadata[:source]
+    batch_key = metadata[:batch_key]
     duration_ms = System.convert_time_unit(measurements.duration, :native, :millisecond)
 
-    Logger.warning("[GraphQL] Field resolved: in #{duration_ms}ms")
-  end
-
-  defp handle_event([:dataloader, :source, :run, :start], _measurements, _metadata, _config) do
-    Logger.warning("[GraphQL] Field start resolving with dataloader")
-  end
-
-  defp handle_event([:dataloader, :source, :run, :stop], measurements, _metadata, _config) do
-    duration_ms = System.convert_time_unit(measurements.duration, :native, :millisecond)
-
-    Logger.warning("[GraphQL] Field resolved: in #{duration_ms}ms")
+    Logger.warning(
+      "[Dataloader] Completed source: #{inspect(source)}, batch: #{inspect(batch_key)} in #{duration_ms}ms"
+    )
   end
 
   defp get_operation_name_from_metadata(metadata) do
     cond do
-      # First try params which is most reliable
       metadata[:params] && metadata[:params]["operationName"] ->
         metadata[:params]["operationName"]
 
-      # Next try options
       metadata[:options] && Keyword.get(metadata[:options], :operation_name) ->
         Keyword.get(metadata[:options], :operation_name)
 
-      # Finally try operation if it exists
       metadata[:operation] && metadata[:operation][:name] ->
         metadata[:operation][:name]
 
-      # Fallback
       true ->
         "anonymous"
     end

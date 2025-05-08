@@ -9,13 +9,18 @@ defmodule FitnessWeb.Schema do
   alias Fitness.WorkoutTemplates
   alias Fitness.Repo
 
+  require Logger
+
   def context(ctx) do
     loader =
       Dataloader.new()
-      |> Dataloader.add_source(:exercises, Dataloader.Ecto.new(Repo, query: &Exercises.query/2))
+      |> Dataloader.add_source(
+        :exercises,
+        Dataloader.Ecto.new(Repo, query: query_with_logging(&Exercises.query/2))
+      )
       |> Dataloader.add_source(
         :workout_templates,
-        Dataloader.Ecto.new(Repo, query: &WorkoutTemplates.query/2)
+        Dataloader.Ecto.new(Repo, query: query_with_logging(&WorkoutTemplates.query/2))
       )
 
     Map.put(ctx, :loader, loader)
@@ -84,6 +89,15 @@ defmodule FitnessWeb.Schema do
       resolve(fn _, %{input: %{workout_template_id: workout_template_id}}, _res ->
         {:ok, Fitness.WorkoutTemplates.get_workout_template!(workout_template_id)}
       end)
+    end
+  end
+
+  def query_with_logging(query_fun) do
+    fn queryable, args ->
+      query = query_fun.(queryable, args)
+      {sql, params} = Ecto.Adapters.SQL.to_sql(:all, Repo, query)
+      Logger.error("Dataloader SQL: #{sql} with params #{inspect(params)}")
+      query
     end
   end
 end
