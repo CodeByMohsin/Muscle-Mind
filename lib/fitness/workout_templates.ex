@@ -4,10 +4,10 @@ defmodule Fitness.WorkoutTemplates do
   """
 
   import Ecto.Query, warn: false
-  alias Fitness.WorkoutTemplates.WorkoutItem
-  alias Fitness.Repo
 
+  alias Fitness.WorkoutTemplates.WorkoutItem
   alias Fitness.WorkoutTemplates.WorkoutTemplate
+  alias Fitness.Repo
 
   @doc """
   Returns the list of workout_templates.
@@ -44,7 +44,6 @@ defmodule Fitness.WorkoutTemplates do
   def get_workout_item!(id) do
     Repo.get!(WorkoutItem, id)
   end
-
 
   @doc """
   Creates a workout_template.
@@ -121,7 +120,6 @@ defmodule Fitness.WorkoutTemplates do
 
       iex> change_workout_template(workout_template)
       %Ecto.Changeset{data: %WorkoutTemplate{}}
-
   """
   def change_workout_template(%WorkoutTemplate{} = workout_template, attrs \\ %{}) do
     WorkoutTemplate.changeset(workout_template, attrs)
@@ -129,5 +127,21 @@ defmodule Fitness.WorkoutTemplates do
 
   def change_workout_item(%WorkoutItem{} = workout_item, attrs \\ %{}) do
     WorkoutItem.changeset(workout_item, attrs)
+  end
+
+  def fetch_workout_items_by_workout_template(%{id: workout_template_id} = _workout_template) do
+    from(workout_item in WorkoutItem,
+      where: workout_item.workout_template_id == ^workout_template_id
+    )
+    |> Repo.all()
+  end
+
+  def query(WorkoutItem, %{workout_template_id: id}) do
+    WorkoutItem
+    |> where([w], w.workout_template_id == ^id)
+  end
+
+  def query(queryable, _) do
+    queryable
   end
 end

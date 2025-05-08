@@ -9,7 +9,10 @@ defmodule FitnessWeb.UserProfileLive do
       socket
       |> assign(:page_title, "User Profile")
       |> assign(:kebab_menu, :off)
-      |> assign(:chart_data, ChartData.all_complete_workout_chart_data(socket.assigns[:current_user].id))
+      |> assign(
+        :chart_data,
+        ChartData.all_complete_workout_chart_data(socket.assigns[:current_user].id)
+      )
 
     {:ok, socket}
   end

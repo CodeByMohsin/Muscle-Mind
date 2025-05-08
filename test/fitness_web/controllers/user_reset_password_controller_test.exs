@@ -12,7 +12,7 @@ defmodule FitnessWeb.UserResetPasswordControllerTest do
   describe "GET /users/reset_password" do
     test "renders the reset password page", %{conn: conn} do
       conn = get(conn, Routes.user_reset_password_path(conn, :new))
-     response = html_response(conn, 200)
+      response = html_response(conn, 200)
       assert response =~ "Forgot your password?"
     end
   end

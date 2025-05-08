@@ -16,6 +16,7 @@ defmodule FitnessWeb.Telemetry do
       # {Telemetry.Metrics.ConsoleReporter, metrics: metrics()}
     ]
 
+    FitnessWeb.AbsintheMetrics.setup()
     Supervisor.init(children, strategy: :one_for_one)
   end
 
