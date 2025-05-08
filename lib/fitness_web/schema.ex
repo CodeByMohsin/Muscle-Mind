@@ -1,10 +1,11 @@
 defmodule FitnessWeb.Schema do
   use Absinthe.Schema
 
+  import Absinthe.Resolution.Helpers
+
   alias Fitness.Exercises.Exercise
   alias Fitness.WorkoutTemplates.WorkoutTemplate
 
-  # Types
   object :exercise do
     field :id, non_null(:id)
     field :name, non_null(:string)
@@ -37,8 +38,11 @@ defmodule FitnessWeb.Schema do
 
     field :workout_items, list_of(:workout_item) do
       resolve(fn workout_template, _, _ ->
+
         {:ok, Fitness.WorkoutTemplates.fetch_workout_items_by_workout_template(workout_template)}
       end)
+
+      resolve(fn -> end)
     end
   end
 
@@ -46,7 +50,6 @@ defmodule FitnessWeb.Schema do
     field :workout_template_id, non_null(:integer)
   end
 
-  # Query entry point
   query do
     @desc "List all exercises"
     field :exercises, list_of(:exercise) do

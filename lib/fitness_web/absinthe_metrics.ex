@@ -8,7 +8,9 @@ defmodule FitnessWeb.AbsintheMetrics do
         [:absinthe, :execute, :operation, :start],
         [:absinthe, :execute, :operation, :stop],
         [:absinthe, :resolve, :field, :start],
-        [:absinthe, :resolve, :field, :stop]
+        [:absinthe, :resolve, :field, :stop],
+        [:dataloader, :source, :run, :start],
+        [:dataloader, :source, :run, :stop]
       ],
       &handle_event/4,
       []
@@ -28,12 +30,21 @@ defmodule FitnessWeb.AbsintheMetrics do
     Logger.warning("[GraphQL] Completed operation: #{operation_name} in #{duration_ms}ms")
   end
 
-  defp handle_event( [:absinthe, :resolve, :field, :start], _measurements, _metadata, _config) do
-
+  defp handle_event([:absinthe, :resolve, :field, :start], _measurements, _metadata, _config) do
     Logger.warning("[GraphQL] Field start resolving")
   end
 
   defp handle_event([:absinthe, :resolve, :field, :stop], measurements, _metadata, _config) do
+    duration_ms = System.convert_time_unit(measurements.duration, :native, :millisecond)
+
+    Logger.warning("[GraphQL] Field resolved: in #{duration_ms}ms")
+  end
+
+  defp handle_event([:dataloader, :source, :run, :start], _measurements, _metadata, _config) do
+    Logger.warning("[GraphQL] Field start resolving with dataloader")
+  end
+
+  defp handle_event([:dataloader, :source, :run, :stop], measurements, _metadata, _config) do
     duration_ms = System.convert_time_unit(measurements.duration, :native, :millisecond)
 
     Logger.warning("[GraphQL] Field resolved: in #{duration_ms}ms")
