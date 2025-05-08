@@ -107,4 +107,8 @@ defmodule Fitness.Exercises do
   def change_exercise(%Exercise{} = exercise, attrs \\ %{}) do
     Exercise.changeset(exercise, attrs)
   end
+
+  def query(queryable, _params) do
+    queryable
+  end
 end

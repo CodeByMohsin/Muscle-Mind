@@ -4,7 +4,26 @@ defmodule FitnessWeb.Schema do
   import Absinthe.Resolution.Helpers
 
   alias Fitness.Exercises.Exercise
+  alias Fitness.Exercises
   alias Fitness.WorkoutTemplates.WorkoutTemplate
+  alias Fitness.WorkoutTemplates
+  alias Fitness.Repo
+
+  def context(ctx) do
+    loader =
+      Dataloader.new()
+      |> Dataloader.add_source(:exercises, Dataloader.Ecto.new(Repo, query: &Exercises.query/2))
+      |> Dataloader.add_source(
+        :workout_templates,
+        Dataloader.Ecto.new(Repo, query: &WorkoutTemplates.query/2)
+      )
+
+    Map.put(ctx, :loader, loader)
+  end
+
+  def plugins do
+    [Absinthe.Middleware.Dataloader | Absinthe.Plugin.defaults()]
+  end
 
   object :exercise do
     field :id, non_null(:id)
@@ -24,9 +43,7 @@ defmodule FitnessWeb.Schema do
     field :weight_unit, :string
 
     field :exercise, :exercise do
-      resolve(fn workout_item, _, _ ->
-        {:ok, Fitness.Repo.get(Exercise, workout_item.exercise_id)}
-      end)
+      resolve(dataloader(:exercises, :exercise))
     end
   end
 
@@ -37,12 +54,7 @@ defmodule FitnessWeb.Schema do
     field :is_finished, :boolean
 
     field :workout_items, list_of(:workout_item) do
-      resolve(fn workout_template, _, _ ->
-
-        {:ok, Fitness.WorkoutTemplates.fetch_workout_items_by_workout_template(workout_template)}
-      end)
-
-      resolve(fn -> end)
+      resolve(dataloader(:workout_templates, :workout_items))
     end
   end
 

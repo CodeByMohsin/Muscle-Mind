@@ -135,4 +135,13 @@ defmodule Fitness.WorkoutTemplates do
     )
     |> Repo.all()
   end
+
+  def query(WorkoutItem, %{workout_template_id: id}) do
+    WorkoutItem
+    |> where([w], w.workout_template_id == ^id)
+  end
+
+  def query(queryable, _) do
+    queryable
+  end
 end
